@@ -1,0 +1,14 @@
+{
+  "name": "swui",
+  "private": true,
+  "description": "Organization Web UI design system — tokens, React primitives, and agent-first docs",
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "pack": "bun run --filter '@swui/ui-tokens' pack && bun run --filter '@swui/ui' pack",
+    "publish:dry": "bun run --filter '@swui/ui-tokens' publish:dry && bun run --filter '@swui/ui' publish:dry",
+    "example:build": "bun run --filter '@swui/ui-consumer-example' build"
+  }
+}

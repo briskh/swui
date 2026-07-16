@@ -1,0 +1,29 @@
+{
+  "name": "@swui/ui-tokens",
+  "version": "0.2.0",
+  "description": "swui design tokens (CSS variables + Tailwind v4 theme bridges)",
+  "type": "module",
+  "files": [
+    "AGENTS.md",
+    "README.md",
+    "docs",
+    "llms.txt",
+    "src"
+  ],
+  "exports": {
+    ".": "./src/tokens.css",
+    "./tokens.css": "./src/tokens.css",
+    "./package.json": "./package.json",
+    "./AGENTS.md": "./AGENTS.md",
+    "./llms.txt": "./llms.txt",
+    "./docs/*": "./docs/*"
+  },
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://npm.inet.swqt.net/"
+  },
+  "scripts": {
+    "pack": "bun pm pack",
+    "publish:dry": "npm publish --dry-run --registry \"${SWUI_NPM_REGISTRY:-https://npm.inet.swqt.net/}\""
+  }
+}

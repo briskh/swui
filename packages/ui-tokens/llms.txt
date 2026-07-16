@@ -1,0 +1,32 @@
+# @swui/ui-tokens
+
+> AI / agent quick index. Prefer AGENTS.md for full rules.
+
+## Package
+
+- Name: `@swui/ui-tokens`
+- Entry CSS: `@swui/ui-tokens/tokens.css` (also `@swui/ui-tokens`)
+- Role: design tokens only (no React)
+
+## Must read
+
+- AGENTS.md
+- docs/TOKENS.md
+- docs/ADOPTION.md
+
+## Sibling packages
+
+- `@swui/ui` — React primitives + ThemeProvider + WideScreenGate
+
+
+## Theme contract
+
+- light-only runtime for Skywalker apps
+- `:root` + reserved `.dark` CSS both ship
+
+## Install sketch
+
+```css
+@import "tailwindcss";
+@import "@swui/ui-tokens/tokens.css";
+```

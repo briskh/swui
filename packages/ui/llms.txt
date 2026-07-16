@@ -1,0 +1,38 @@
+# @swui/ui
+
+> AI / agent quick index. Prefer AGENTS.md for rules.
+
+## Package
+
+- Name: `@swui/ui`
+- Peers: React 19, Radix family, lucide, CVA, … (see package.json)
+- Tokens: require `@swui/ui-tokens/tokens.css` in the app
+
+## Must read
+
+- AGENTS.md
+- docs/DESIGN-SUMMARY.md
+- docs/COMPONENT-CATALOG.md
+- docs/DO-AND-DONT.md
+- docs/ADOPTION.md
+
+## Theme
+
+- ThemeProvider locks light mode
+- ThemeControl renders null
+
+## Includes
+
+- Primitives (Button, forms, tables, overlays, …)
+- WideScreenGate / WideScreenPlaceholder
+
+## Not in this package
+
+- AppShell / TopBar / product route IA
+- Runtime API clients / business features
+- Components showcase host app
+- Separate ui-shell package (folded here)
+
+## Sibling
+
+- `@swui/ui-tokens` — CSS tokens

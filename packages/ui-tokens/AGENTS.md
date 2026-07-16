@@ -1,0 +1,31 @@
+# @swui/ui-tokens — Agent instructions
+
+**Read this file first** when installing or changing Skywalker design tokens in any consuming project.
+
+## What this package is
+
+CSS design tokens for organization-wide organization Web UI style:
+
+- Semantic CSS custom properties (`--primary`, `--background`, …)
+- Tailwind CSS v4 `@theme inline` bridges
+- `@custom-variant dark` (`.dark` class)
+
+It does **not** include React components. For primitives (including `WideScreenGate`) use `@swui/ui`.
+
+## First hop (AI)
+
+1. This file (`AGENTS.md`)
+2. [`llms.txt`](./llms.txt) — compact index
+3. [`docs/TOKENS.md`](./docs/TOKENS.md) — token tables and theme contract
+4. [`docs/ADOPTION.md`](./docs/ADOPTION.md) — install and Tailwind wiring
+
+## Hard rules
+
+- Prefer semantic tokens (`bg-primary`, `text-muted-foreground`) over hard-coded chroma.
+- Do **not** fork a second token file in the consumer; bump this package instead.
+- Runtime theme contract for organization apps is **light-only** today. `.dark` variables ship for future use; do not enable dark mode in skywalker-family apps until dual-theme is explicitly re-enabled upstream.
+- Token **values** in `src/tokens.css` are authoritative for published packages. Keep consumer docs aligned with that file.
+
+## Registry
+
+Default private registry: `https://npm.inet.swqt.net/` (override with `SWUI_NPM_REGISTRY`).
