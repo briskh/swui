@@ -8,7 +8,7 @@ React 19 UI primitives (shadcn / Radix style) plus:
 
 - `cn` utility
 - date helpers for DatePicker (UTC store / local display)
-- light-only `ThemeProvider` / `useTheme` / `ThemeControl` (control is a no-op)
+- global `ThemeProvider` / `useTheme` / `ThemeControl` with system, light, and dark preferences
 - `WideScreenGate` / `WideScreenPlaceholder` (820/821 compact gate)
 
 Requires peer: `@swui/ui-tokens` CSS in the app, plus React / Radix / lucide peers listed in `package.json`.
@@ -28,7 +28,7 @@ Requires peer: `@swui/ui-tokens` CSS in the app, plus React / Radix / lucide pee
 1. Prefer existing primitives from this package. Do not invent long-lived local variants with ad hoc colors, radius, focus rings, or state styling.
 2. Use semantic tokens from `@swui/ui-tokens` (`bg-primary`, `text-muted-foreground`, …).
 3. Icons: **lucide-react named imports only**. Icon-only controls need `aria-label`; decorative icons beside text use `aria-hidden="true"`.
-4. Theme: **light-only** via `ThemeProvider`. Do not mount `.dark` in organization apps until dual-theme is re-enabled.
+4. Theme: use one global `ThemeProvider`; `ThemeControl` owns system/light/dark preference and consumers must not mount a competing local theme controller.
 5. Toasts: use `Toaster` / `notify*` from this package only — no second Sonner wrapper.
 6. Dense tables: `DataTable` (client) vs `ServerDataTable` (server cursor) — do not overload one with the other. Use `WideScreenGate` for non-adaptable dense tables (`<=820px` gate).
 7. Do **not** expect product `AppShell` / `TopBar` / route IA in this package — those stay in each app.

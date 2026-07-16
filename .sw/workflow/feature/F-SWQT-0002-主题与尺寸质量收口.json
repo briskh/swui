@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 6,
+  "kind": "feature",
+  "featureId": "F-SWQT-0002",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Feature F-SWQT-0002: 主题与尺寸质量收口",
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-16T15:07:18.152Z",
+  "updatedAt": "2026-07-16T15:07:18.152Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "background": {
+      "sectionStatus": "done",
+      "items": {
+        "trigger": "对 R-SWUI-001 的完成度审计发现：实现主线已交付，但目标态中的完整质量矩阵、真实表格阈值证据、双 tarball 消费布局与可重复 CI 尚未由现有证据证明。",
+        "affectedParties": "@swui/ui、@swui/ui-tokens 的维护者和所有消费应用。",
+        "whyNow": "用户已确认按自动模式收口，且 1.0.0 尚未发布。",
+        "bullets": [
+          "保留 F-SWQT-0001 的历史交付记录，不回写其生命周期。",
+          "仅补齐质量、消费者与自动化验证契约；不发布私有 registry。"
+        ]
+      }
+    },
+    "problem-statement": {
+      "sectionStatus": "done",
+      "items": {
+        "coreProblem": "当前两项页面级浏览器用例和一个隔离 tarball 布局不能证明 R-SWUI-001 所要求的核心组件×主题×视口矩阵、代表性 data-dense 表格、双发布态消费者布局及可重复合并门禁。",
+        "nonGoals": [
+          "不改变既有主题 API、token 值或组件视觉设计，除非新增测试暴露真实缺陷。",
+          "不实际发布 npm 包或修改私有 registry。",
+          "不重写 F-SWQT-0001 的 delivered 状态或审计记录。"
+        ]
+      }
+    },
+    "context-constraints": {
+      "sectionStatus": "done",
+      "items": {
+        "projectConstraints": "共享组件库，不拥有产品路由或 AppShell；必须保持语义 token 和单一 ThemeProvider 约束。",
+        "technicalConstraints": "使用现有 Bun、Vite、React、Playwright、axe 与 Tailwind v4 依赖；新增验证必须离线可重复。",
+        "runtimeConstraints": "浏览器基线使用 Playwright 管理的 Chromium；宿主 Chromium 在此环境可能 SIGTRAP。",
+        "compatibilityConstraints": "发布前只验证 tarball，不触发 registry publish；两包版本保持一致。",
+        "documentationConstraints": "经验和命令必须继续由 docs/README.md 可达。",
+        "projectCompanionRefs": ".cursor/skills/project-swqt-companion/SKILL.md",
+        "notes": "private registry dry-run 仍需登录，作为发布前外部权限门禁。"
+      }
+    },
+    "research-evidence": {
+      "sectionStatus": "done",
+      "items": {
+        "summary": "本地审计已定位缺口。Context7 查询的 Playwright v1.61 官方资料确认可通过 projects 与 colorScheme 定义多环境测试，并保留 Chromium 截图断言基线。",
+        "sources": [
+          "docs/research/R-SWUI-001-theme-consistency-governance-research.md（本地目标态与验收标准）",
+          "Playwright v1.61 官方文档：test projects、emulation colorScheme、screenshot assertions（2026-07-16，经 Context7 查询）"
+        ]
+      }
+    },
+    "options-telos": {
+      "sectionStatus": "done",
+      "items": {
+        "options": [
+          {
+            "id": "A",
+            "name": "维持现有最小页面验证",
+            "fitWhen": "只需演示主题能力而不承诺报告全部目标态。",
+            "benefits": "无额外实现成本。",
+            "costs": "无法证明 R-SWUI-001 的完整质量与发布态验收。",
+            "risks": "组件、视口和外部安装回归会漏检。",
+            "notWhen": "需要严格达到研究报告目标态。",
+            "telos": {
+              "technical": "不足",
+              "economic": "短期低成本但高回归风险",
+              "legal": "无新增影响",
+              "operational": "验证信号不足",
+              "strategic": "不符合已确认目标"
+            }
+          },
+          {
+            "id": "B",
+            "name": "完整质量收口",
+            "fitWhen": "需要将报告中的质量目标转为可重复门禁。",
+            "benefits": "补齐组件矩阵、真实表格、双 tarball 布局、静态 token 规则和 CI。",
+            "costs": "增加测试夹具与维护成本。",
+            "risks": "快照与 tarball 夹具需要稳定维护。",
+            "notWhen": "明确不再维护 1.0.0 质量承诺。",
+            "telos": {
+              "technical": "满足目标态",
+              "economic": "以前置测试换取更低回归成本",
+              "legal": "无新增影响",
+              "operational": "形成可重复门禁",
+              "strategic": "符合共享组件库发布承诺"
+            }
+          }
+        ],
+        "recommendedOption": "B",
+        "recommendationRationale": "用户已接受质量收口建议并选择 auto。"
+      }
+    },
+    "decision-summary": {
+      "sectionStatus": "done",
+      "items": {
+        "decision": "采用完整质量收口，创建独立 Feature 保留历史交付可追溯性。",
+        "rationale": "R-SWUI-001 明确要求完整质量矩阵、真实浏览器验收与两种发布态消费者布局。",
+        "userConfirmation": "用户先确认接受建议，随后明确选择 auto（2026-07-16）。",
+        "changePosture": "migrate-forward",
+        "changePostureSource": "user-confirmed",
+        "postureChoiceMechanism": "markdown-fallback",
+        "recommendedPostureId": "B",
+        "userPostureSelection": "B"
+      }
+    },
+    "acceptance-criteria": {
+      "sectionStatus": "done",
+      "items": {
+        "criteria": [
+          "核心交互组件在 light/dark 与 compact、data-dense、lg、xl 视口具备稳定浏览器、a11y 与截图证据。",
+          "data-dense 820/821px 使用真实 DataTable 或等价代表性密集表格验证，而非占位内容。",
+          "静态门禁检查未登记裸色/尺寸、未知 token 引用、循环 alias 与绕过主题选择器的 dark 分支。",
+          "两个独立 tarball 消费布局（nested 与 hoisted）均验证 tokens.css、@source、组件 CSS 和主题行为。",
+          "这些门禁由仓库 CI 配置或等价脚本可重复执行，并在 docs 中记录。"
+        ],
+        "observableSuccess": "任一主题、视口、组件样式或打包安装回归均能被本地和 CI 门禁发现。",
+        "testabilityRisks": "截图在不同浏览器版本可能漂移；固定 Playwright Chromium 与基线更新审查缓解。"
+      }
+    },
+    "step-breakdown": {
+      "sectionStatus": "done",
+      "items": {
+        "steps": [
+          {
+            "stepId": "S-SWQT-0007",
+            "title": "组件质量矩阵与静态主题门禁",
+            "phase": "quality-matrix",
+            "dependencies": "无；先建立真实组件与 data-dense 证据。",
+            "materialized": true,
+            "summary": "扩展 Playwright fixture、主题/视口项目、a11y/视觉矩阵和静态设计规则。",
+            "status": "designed",
+            "boundary": "浏览器夹具、静态检查和文档；不发布包。",
+            "purpose": "将 R-SWUI-001 的组件质量目标转为可重复测试。",
+            "executionOwner": "swui-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0008",
+            "title": "双布局发布态消费者与 CI 门禁",
+            "phase": "release-validation",
+            "dependencies": "S-SWQT-0007 的稳定测试命令。",
+            "materialized": true,
+            "summary": "验证 nested/hoisted 两种 tarball 消费布局，并将全部门禁接入 CI。",
+            "status": "designed",
+            "boundary": "tarball 夹具、CI 和文档；不执行私有 registry publish。",
+            "purpose": "证明发布产物可消费并使验收成为合并门禁。",
+            "executionOwner": "swui-maintainers"
+          }
+        ]
+      }
+    },
+    "open-questions": {
+      "sectionStatus": "done",
+      "items": {
+        "questions": [],
+        "risks": [
+          "私有 registry 登录未配置，因此真实 npm publish dry-run 保持发布前外部阻塞。"
+        ],
+        "resolvedClarifications": [
+          {
+            "topic": "推进方式",
+            "conclusion": "用户选择 auto；自动推进仅限本地 Feature 交付，不发布 registry。",
+            "evidence": [
+              "用户消息：auto"
+            ]
+          }
+        ]
+      }
+    },
+    "handoff-gate": {
+      "sectionStatus": "done",
+      "items": {
+        "confirmedInto": "auto",
+        "progress": "用户已确认完整质量收口与自动推进。",
+        "validationGate": "所有新浏览器、静态、消费者与 CI 门禁必须通过；registry publish 仍需单独授权。",
+        "doNotClobber": "不得改写 F-SWQT-0001 的历史状态。",
+        "nextAction": "创建并设计质量矩阵与发布验证 Steps。",
+        "informationComplete": "Yes",
+        "nextHandoff": "design",
+        "references": [
+          "R-SWUI-001",
+          "F-SWQT-0001 review audit"
+        ]
+      }
+    }
+  },
+  "closingStepId": "S-SWQT-0008"
+}

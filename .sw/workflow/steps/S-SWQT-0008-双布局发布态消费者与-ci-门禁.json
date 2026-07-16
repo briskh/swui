@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0008",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0008: 双布局发布态消费者与 CI 门禁",
+  "sourceFeature": {
+    "id": "F-SWQT-0002",
+    "href": "../feature/F-SWQT-0002-主题与尺寸质量收口.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-16T15:08:55.652Z",
+  "updatedAt": "2026-07-16T15:08:55.652Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "not-started",
+      "items": {
+        "statement": "_TBD_"
+      }
+    },
+    "scope": {
+      "sectionStatus": "not-started",
+      "items": {}
+    },
+    "inputs": {
+      "sectionStatus": "not-started",
+      "items": {}
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "previousSteps": [
+          "S-SWQT-0007"
+        ],
+        "externalDependencies": [
+          "Bun 1.3.14",
+          "GitHub Actions",
+          "Playwright Chromium"
+        ],
+        "projectResources": [
+          "scripts/verify-packed-consumer.mjs",
+          ".github/workflows/quality.yml"
+        ],
+        "satisfiedBy": "S-SWQT-0007 provides stable browser and static quality commands."
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "problemDefinition": "单一临时消费者不能证明 tarball 在 isolated 与 hoisted 安装策略下都能解析 UI 源、扫描 Tailwind 并产出主题 CSS；本地命令也没有由 CI 持续执行。",
+        "requirementsDefinition": "将打包消费者验证拆成显式 isolated 与 workspace-hoisted 布局，校验组件 utilities 和 dark selector，并在 push/PR CI 中执行全部质量命令。",
+        "nonGoals": [
+          "不发布到私有 registry。",
+          "不改变公共组件 API。"
+        ],
+        "recommendedOption": {
+          "option": "Bun --linker isolated + hoisted 的双临时消费者，以及单一 GitHub Actions quality job",
+          "rationale": "显式 linker 使布局差异可重复，CI 复用已验证的根命令。"
+        },
+        "implementationPlan": [
+          "打包两个工作区包。",
+          "在 isolated 单包消费者与 hoisted workspace 消费者中安装 tarball。",
+          "分别 typecheck、build，并断言组件 utilities 和 data-theme=dark 进入 CSS。",
+          "添加 CI workflow，顺序执行 typecheck、静态契约、示例构建、浏览器矩阵和双布局验证。",
+          "更新消费者体验文档。"
+        ],
+        "testDrivenDesign": {
+          "acceptanceToTestMapping": "每个 layout 的 tarball typecheck/build/CSS 断言覆盖发布态消费者；CI YAML 复用这些命令。",
+          "riskToTestLevelMapping": "包解析和 Tailwind source 扫描使用临时真实安装；工作流用 GitHub Actions 在干净 Ubuntu runner 执行。",
+          "residualRisk": "私有 registry 的认证与远端发布仍需由有权限的发布者执行。"
+        },
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "S-SWQT-0007 已提供稳定质量命令，Bun linker 选择与验收断言明确。"
+        }
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "summary": "Added a push/PR quality workflow and converted packed-consumer verification into explicit Bun isolated and workspace-hoisted tarball consumers.",
+        "changeSurface": [
+          "scripts/verify-packed-consumer.mjs",
+          ".github/workflows/quality.yml",
+          "docs/experience/theme-and-dimensions.md"
+        ],
+        "validation": [
+          "bun run verify:packed-consumer"
+        ],
+        "result": "Both layouts typechecked and built from packed tarballs; emitted CSS contained component utilities and data-theme=dark."
+      }
+    },
+    "use-case": {
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "cases": [
+          {
+            "name": "Maintainer validates publish-shaped consumers",
+            "evidence": "Script invokes bun install --linker isolated and --linker hoisted in separate temporary layouts."
+          },
+          {
+            "name": "Pull requests cannot bypass quality gates",
+            "evidence": "GitHub Actions invokes typecheck, design contract, build, browser matrix, and packed-consumer verification."
+          }
+        ]
+      }
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "gateOutcomes": [
+          {
+            "gate": "scope/state/brief",
+            "result": "passed",
+            "evidence": "Scope is limited to release-shaped consumers, CI, and the linked delivery guide.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "validation and test sufficiency",
+            "result": "passed",
+            "evidence": "Bun packed consumer verification passed in explicit isolated and hoisted layouts; each typechecked, built, and asserted component/dark-theme CSS.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "provenance/document graph/SSOT impact",
+            "result": "passed",
+            "evidence": "sourceFeature points to F-SWQT-0002 and the delivery guide links the CI workflow and commands.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "promotion readiness",
+            "result": "passed",
+            "evidence": "All required commands are encoded in CI and reusable locally.",
+            "counterEvidenceChecked": "yes"
+          }
+        ],
+        "residualRisk": "Private registry authentication and actual remote publishing remain intentionally outside this Step and require maintainer credentials.",
+        "followUp": "Run publish:dry with registry credentials before a real release.",
+        "promotionDisposition": "ready"
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-16",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0008-双布局发布态消费者与-ci-门禁.json",
+        "validationSummary": "Packed tarballs passed explicit Bun isolated and workspace-hoisted consumers; CI quality gates are configured.",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "Packed tarballs passed explicit Bun isolated and workspace-hoisted consumers; CI quality gates are configured.",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0008",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "minimum-auto-filled-by-promote",
+        "minimumSetSatisfied": "Yes - workflow promote populated minimum registry/audit records before setting status=delivered.",
+        "upgradeToFullAuditReason": "not-recorded-by-delivery-minimum",
+        "requirementAudit": [
+          {
+            "requirement": "reviewed Step can be delivered only with closure records.",
+            "status": "implemented",
+            "evidence": "workflow promote populated delivered-registry-entry and completion-audit before status=delivered.",
+            "risk": "Minimum auto-fill is less descriptive than a hand-authored Completion Audit.",
+            "followUp": "Review owner may enrich the audit before delivery when richer evidence is required."
+          }
+        ],
+        "workflowRunAudit": "minimum auto-filled by workflow promote",
+        "intermediateDocumentStateAudit": "delivered-registry-entry and completion-audit populated before final status=delivered.",
+        "documentGovernanceAudit": "minimum auto-filled by workflow promote",
+        "frictionAndImprovementBacklog": "N/A",
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Closing triad minimum: reviewed precondition satisfied; validationSummary present; registry/audit records populated before status=delivered.",
+          "closingSelfAuditConsistency": "minimum auto-filled by workflow promote",
+          "landingChecklistOutcome": "not-applicable",
+          "pluginSkillFriction": "N/A",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "N/A",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "not-recorded-by-delivery-minimum"
+      }
+    }
+  },
+  "validationSummary": "Packed tarballs passed explicit Bun isolated and workspace-hoisted consumers; CI quality gates are configured."
+}

@@ -18,8 +18,8 @@
 
 ## Theme
 
-- ThemeProvider locks light mode
-- ThemeControl renders null
+- ThemeProvider resolves system, light, and dark preferences globally
+- ThemeControl renders the standard global preference menu
 
 ## Includes
 

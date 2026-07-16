@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:browser": "playwright test",
+    "test:browser:update": "playwright test --update-snapshots"
   },
   "dependencies": {
     "@swui/ui": "workspace:*",
@@ -17,14 +19,18 @@
     "lucide-react": "^1.16.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
+    "recharts": "^3.0.0",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
+    "@types/node": "^24.0.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "typescript": "^5.9.3",
-    "vite": "^7.2.7"
+    "vite": "^7.2.7",
+    "@axe-core/playwright": "^4.11.0",
+    "@playwright/test": "^1.58.2"
   }
 }

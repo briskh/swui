@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 3,
+  "entries": {
+    "F-SWQT-0001": {
+      "kind": "feature",
+      "status": "delivered",
+      "path": ".sw/workflow/feature/F-SWQT-0001-主题与尺寸一致性治理.json",
+      "deliveryComplete": true,
+      "title": "Feature F-SWQT-0001: 主题与尺寸一致性治理",
+      "stepPlan": {
+        "steps": [
+          "S-SWQT-0001",
+          "S-SWQT-0002",
+          "S-SWQT-0003",
+          "S-SWQT-0004",
+          "S-SWQT-0005",
+          "S-SWQT-0006"
+        ],
+        "computedOrder": [
+          "S-SWQT-0001",
+          "S-SWQT-0002",
+          "S-SWQT-0003",
+          "S-SWQT-0004",
+          "S-SWQT-0005",
+          "S-SWQT-0006"
+        ]
+      }
+    },
+    "F-SWQT-0002": {
+      "kind": "feature",
+      "status": "delivered",
+      "path": ".sw/workflow/feature/F-SWQT-0002-主题与尺寸质量收口.json",
+      "deliveryComplete": true,
+      "title": "Feature F-SWQT-0002: 主题与尺寸质量收口",
+      "stepPlan": {
+        "steps": [
+          "S-SWQT-0007",
+          "S-SWQT-0008"
+        ],
+        "computedOrder": [
+          "S-SWQT-0007",
+          "S-SWQT-0008"
+        ]
+      }
+    },
+    "F-SWQT-0003": {
+      "kind": "feature",
+      "status": "delivered",
+      "path": ".sw/workflow/feature/F-SWQT-0003-研究报告目标态验收闭环.json",
+      "deliveryComplete": true,
+      "title": "Feature F-SWQT-0003: 研究报告目标态验收闭环",
+      "stepPlan": {
+        "steps": [
+          "S-SWQT-0003-1",
+          "S-SWQT-0003-2",
+          "S-SWQT-0003-3"
+        ],
+        "computedOrder": [
+          "S-SWQT-0003-1",
+          "S-SWQT-0003-2",
+          "S-SWQT-0003-3"
+        ]
+      }
+    },
+    "S-SWQT-0001": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0001-契约与基线盘点.json",
+      "sourceFeatureId": "F-SWQT-0001",
+      "title": "Step S-SWQT-0001: 契约与基线盘点",
+      "validationSummary": "R-SWUI-001、设计例外登记与项目经验文档可追溯；schema、静态契约和文档索引复核通过。",
+      "deliveredAt": "2026-07-16T00:00:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0002": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0002-主题与尺寸-token-基础.json",
+      "sourceFeatureId": "F-SWQT-0001",
+      "title": "Step S-SWQT-0002: 主题与尺寸 token 基础",
+      "validationSummary": "tokens.css 尺寸/断点/容器契约、核心控件迁移、静态设计契约检查及构建验证均通过。",
+      "deliveredAt": "2026-07-16T00:00:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0003": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0003-全局主题运行时与-themecontrol.json",
+      "sourceFeatureId": "F-SWQT-0001",
+      "title": "Step S-SWQT-0003: 全局主题运行时与 ThemeControl",
+      "validationSummary": "ThemeProvider、首屏 head 初始化、localStorage 覆盖、系统监听、跨标签同步与 ThemeControl 已由浏览器测试复核。",
+      "deliveredAt": "2026-07-16T00:00:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0003-1": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0003-1-step-s-swqt-0003-1-核心状态矩阵与覆盖统计.json",
+      "sourceFeatureId": "F-SWQT-0003",
+      "title": "Step S-SWQT-0003-1: Step S-SWQT-0003-1: 核心状态矩阵与覆盖统计",
+      "validationSummary": "Typecheck, static contract, production build, eight-project browser matrix (34 passed; 6 intentional scope skips), and isolated/hoisted packed-consumer browser verification passed.",
+      "deliveredAt": "2026-07-17T00:30:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0003-2": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0003-2-主题-token-与图表例外治理.json",
+      "sourceFeatureId": "F-SWQT-0003",
+      "title": "Step S-SWQT-0003-2: 主题 token 与图表例外治理",
+      "validationSummary": "Formal-theme semantic token and contrast checks, chart screenshot/axe matrix, consumer typecheck/build, and both packed-consumer browser matrices passed.",
+      "deliveredAt": "2026-07-17T00:40:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0003-3": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0003-3-打包消费者浏览器验收与发布证据边界.json",
+      "sourceFeatureId": "F-SWQT-0003",
+      "title": "Step S-SWQT-0003-3: 打包消费者浏览器验收与发布证据边界",
+      "validationSummary": "Nested isolated and workspace-hoisted tarball consumers typechecked, built, validated emitted CSS, and each passed the eight-project browser matrix (34 passed; 6 intentional scope skips).",
+      "deliveredAt": "2026-07-17T00:50:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0004": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0004-核心组件双主题与数据密度迁移.json",
+      "sourceFeatureId": "F-SWQT-0001",
+      "title": "Step S-SWQT-0004: 核心组件双主题与数据密度迁移",
+      "validationSummary": "核心控件统一 token 尺寸；Calendar、表头与 loading 迁移；data-dense 820px 边界和例外登记已通过浏览器与静态检查。",
+      "deliveredAt": "2026-07-16T00:00:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0005": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0005-质量门禁与内置浏览器验收.json",
+      "sourceFeatureId": "F-SWQT-0001",
+      "title": "Step S-SWQT-0005: 质量门禁与内置浏览器验收",
+      "validationSummary": "Playwright 视觉回归、axe WCAG 2.2 AA、主题/跨标签/820px 浏览器验收及静态设计契约门禁均通过。",
+      "deliveredAt": "2026-07-16T00:00:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0006": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0006-发布态消费者验证与项目经验沉淀.json",
+      "sourceFeatureId": "F-SWQT-0001",
+      "title": "Step S-SWQT-0006: 发布态消费者验证与项目经验沉淀",
+      "validationSummary": "1.0.0 tarball 在隔离布局完成安装、类型检查、构建及组件 utility 验证；项目经验文档已索引，打包内容复核通过。",
+      "deliveredAt": "2026-07-16T00:00:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0007": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0007-组件质量矩阵与静态主题门禁.json",
+      "sourceFeatureId": "F-SWQT-0002",
+      "title": "Step S-SWQT-0007: 组件质量矩阵与静态主题门禁",
+      "validationSummary": "Core browser/a11y matrix, 820/821 real-table gate, token contract, and screenshot baselines passed.",
+      "deliveredAt": "2026-07-16T00:00:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0008": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0008-双布局发布态消费者与-ci-门禁.json",
+      "sourceFeatureId": "F-SWQT-0002",
+      "title": "Step S-SWQT-0008: 双布局发布态消费者与 CI 门禁",
+      "validationSummary": "Packed tarballs passed explicit Bun isolated and workspace-hoisted consumers; CI quality gates are configured.",
+      "deliveredAt": "2026-07-16T00:00:00.000Z",
+      "rootMount": false
+    }
+  },
+  "edges": [
+    {
+      "from": "S-SWQT-0001",
+      "to": "F-SWQT-0001",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0002",
+      "to": "S-SWQT-0001",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0002",
+      "to": "F-SWQT-0001",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0003",
+      "to": "S-SWQT-0002",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0003",
+      "to": "F-SWQT-0001",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0003-1",
+      "to": "F-SWQT-0003",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0003-2",
+      "to": "S-SWQT-0003-1",
+      "rel": "dependsOn",
+      "kind": "defaultSeq"
+    },
+    {
+      "from": "S-SWQT-0003-2",
+      "to": "F-SWQT-0003",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0003-3",
+      "to": "S-SWQT-0003-2",
+      "rel": "dependsOn",
+      "kind": "defaultSeq"
+    },
+    {
+      "from": "S-SWQT-0003-3",
+      "to": "F-SWQT-0003",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0004",
+      "to": "S-SWQT-0003",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0004",
+      "to": "F-SWQT-0001",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0005",
+      "to": "S-SWQT-0004",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0005",
+      "to": "F-SWQT-0001",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0006",
+      "to": "S-SWQT-0005",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0006",
+      "to": "F-SWQT-0001",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0007",
+      "to": "F-SWQT-0002",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0008",
+      "to": "S-SWQT-0007",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0008",
+      "to": "F-SWQT-0002",
+      "rel": "sourceFeature"
+    }
+  ],
+  "generatedAt": "2026-07-16T16:15:43.018Z",
+  "contentHash": "sha256:3d0fc33335c3eade2f5e65b4f8a21b36f545a8198cf238c90514db5ec8af5be2"
+}

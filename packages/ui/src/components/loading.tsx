@@ -28,7 +28,7 @@ export function LoadingButtonContent({ children, className, ...props }: React.Co
 
 export function SkeletonStack({
   className,
-  rows = ["h-5 w-40", "h-10 w-full", "h-10 w-3/4"],
+  rows = ["h-5 w-40", "h-control-md w-full", "h-control-md w-3/4"],
   ...props
 }: React.ComponentProps<"div"> & { rows?: string[] }) {
   return (
@@ -74,4 +74,3 @@ export function ProgressBlock({
     </div>
   );
 }
-

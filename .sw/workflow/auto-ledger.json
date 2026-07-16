@@ -1,0 +1,405 @@
+{
+  "schemaVersion": 3,
+  "kind": "auto-ledger",
+  "inFlight": null,
+  "attempts": [
+    {
+      "runId": "auto-20260716T121245377Z",
+      "targetId": "S-SWQT-0001",
+      "targetKind": "step",
+      "startedAt": "2026-07-16T12:12:45.377Z",
+      "endedAt": "2026-07-16T12:14:44.804Z",
+      "exitStatus": "failed",
+      "stopTriggered": true,
+      "triggeredBy": "auto-exit",
+      "notes": "自动编排状态机需要每个历史分段的独立写入确认；改为显式受控 transition/promote 后再继续，避免将历史证据批量伪造为自动执行。实现与验证本身未失败。",
+      "chainDepthPolicy": "feature-complete",
+      "scopeAnchor": "F-SWQT-0001",
+      "scopeFeatureId": "F-SWQT-0001",
+      "chainPlan": [
+        {
+          "id": "S-SWQT-0001",
+          "kind": "step",
+          "nextHandoff": "review",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0001",
+          "kind": "step",
+          "nextHandoff": "deliver",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0002",
+          "kind": "step",
+          "nextHandoff": "implement",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0002",
+          "kind": "step",
+          "nextHandoff": "review",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0002",
+          "kind": "step",
+          "nextHandoff": "deliver",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0003",
+          "kind": "step",
+          "nextHandoff": "implement",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0003",
+          "kind": "step",
+          "nextHandoff": "review",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0003",
+          "kind": "step",
+          "nextHandoff": "deliver",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0004",
+          "kind": "step",
+          "nextHandoff": "implement",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0004",
+          "kind": "step",
+          "nextHandoff": "review",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0004",
+          "kind": "step",
+          "nextHandoff": "deliver",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0005",
+          "kind": "step",
+          "nextHandoff": "implement",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0005",
+          "kind": "step",
+          "nextHandoff": "review",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0005",
+          "kind": "step",
+          "nextHandoff": "deliver",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0006",
+          "kind": "step",
+          "nextHandoff": "implement",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0006",
+          "kind": "step",
+          "nextHandoff": "review",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0006",
+          "kind": "step",
+          "nextHandoff": "deliver",
+          "segmentKind": "phase"
+        }
+      ],
+      "chainProgress": {
+        "completedSegments": [
+          {
+            "id": "S-SWQT-0001",
+            "kind": "step",
+            "nextHandoff": "review",
+            "segmentKind": "phase"
+          }
+        ],
+        "currentSegment": {
+          "id": "S-SWQT-0001",
+          "kind": "step",
+          "nextHandoff": "deliver",
+          "segmentKind": "phase"
+        },
+        "lastCheckpointAt": "2026-07-16T12:13:44.400Z",
+        "auditMirror": [
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0001",
+              "kind": "step",
+              "nextHandoff": "implement",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-16T12:13:11.808Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0001",
+              "stepStatus": "implementing",
+              "featureId": "F-SWQT-0001",
+              "featureStatus": "draft",
+              "tier1WriteRef": ".sw/workflow/steps/S-SWQT-0001-契约与基线盘点.json",
+              "validationSummary": "R-SWUI-001、交付 Feature、例外登记和项目经验文档已建立；文档索引与 schema 校验通过。"
+            }
+          },
+          {
+            "segmentIndex": 1,
+            "segment": {
+              "id": "S-SWQT-0001",
+              "kind": "step",
+              "nextHandoff": "review",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-16T12:13:44.400Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0001",
+              "stepStatus": "implemented",
+              "featureId": "F-SWQT-0001",
+              "featureStatus": "draft",
+              "tier1WriteRef": ".sw/workflow/steps/S-SWQT-0001-契约与基线盘点.json",
+              "validationSummary": "独立复核：研究、例外登记、经验文档、设计契约脚本及全量质量门禁均可追溯。"
+            }
+          }
+        ],
+        "advanceRequired": true
+      },
+      "chainTerminationReason": "failed"
+    },
+    {
+      "runId": "auto-20260716T150839573Z",
+      "targetId": "F-SWQT-0002",
+      "targetKind": "feature",
+      "startedAt": "2026-07-16T15:08:39.573Z",
+      "endedAt": "2026-07-16T15:19:08.535Z",
+      "exitStatus": "failed",
+      "stopTriggered": true,
+      "triggeredBy": "auto-exit",
+      "notes": "Workflow steps S-SWQT-0007 and S-SWQT-0008 are delivered and final local validation passed. Auto chain checkpoints for S-SWQT-0008 could not be backfilled after promote; close run as procedural failure rather than falsely claiming completed.",
+      "chainDepthPolicy": "feature-complete",
+      "scopeAnchor": "F-SWQT-0002",
+      "scopeFeatureId": "F-SWQT-0002",
+      "chainPlan": [
+        {
+          "id": "S-SWQT-0008",
+          "kind": "step",
+          "nextHandoff": "implement",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0008",
+          "kind": "step",
+          "nextHandoff": "review",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0008",
+          "kind": "step",
+          "nextHandoff": "deliver",
+          "segmentKind": "phase"
+        }
+      ],
+      "chainProgress": {
+        "completedSegments": [],
+        "currentSegment": {
+          "id": "S-SWQT-0008",
+          "kind": "step",
+          "nextHandoff": "implement",
+          "segmentKind": "phase"
+        },
+        "lastCheckpointAt": "2026-07-16T15:17:25.784Z",
+        "auditMirror": [
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "F-SWQT-0002",
+              "kind": "step",
+              "nextHandoff": "design",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-16T15:10:10.520Z",
+            "tier1StatusAfter": {
+              "stepId": "F-SWQT-0002",
+              "stepStatus": "draft",
+              "featureId": null,
+              "featureStatus": null,
+              "tier1WriteRef": ".sw/workflow/feature/F-SWQT-0002-主题与尺寸质量收口.json",
+              "validationSummary": "已创建 S-SWQT-0007 与 S-SWQT-0008，并为 S-SWQT-0007 写入完整 implementation-ready brief；S-SWQT-0007 readiness=Yes。"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0007",
+              "kind": "step",
+              "nextHandoff": "implement",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-16T15:16:17.348Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0007",
+              "stepStatus": "implementing",
+              "featureId": "F-SWQT-0002",
+              "featureStatus": "draft",
+              "tier1WriteRef": ".sw/workflow/steps/S-SWQT-0007-组件质量矩阵与静态主题门禁.json",
+              "validationSummary": "S-SWQT-0007 implementation complete: typecheck, design-contract, example build, snapshot update and 18 browser checks passed; evidence recorded."
+            }
+          },
+          {
+            "segmentIndex": 1,
+            "segment": {
+              "id": "S-SWQT-0007",
+              "kind": "step",
+              "nextHandoff": "review",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-16T15:17:25.784Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0007",
+              "stepStatus": "delivered",
+              "featureId": "F-SWQT-0002",
+              "featureStatus": "draft",
+              "tier1WriteRef": ".sw/workflow/steps/S-SWQT-0007-组件质量矩阵与静态主题门禁.json",
+              "validationSummary": "S-SWQT-0007 review passed; review report records full gate outcomes and counter-evidence checks."
+            }
+          }
+        ],
+        "advanceRequired": true
+      },
+      "chainTerminationReason": "failed"
+    },
+    {
+      "runId": "auto-20260716T153615646Z",
+      "targetId": "S-SWQT-0003-1",
+      "targetKind": "step",
+      "startedAt": "2026-07-16T15:36:15.646Z",
+      "endedAt": "2026-07-16T15:54:47.191Z",
+      "exitStatus": "aborted",
+      "stopTriggered": true,
+      "triggeredBy": "auto-exit",
+      "notes": "User requested stopping the background Conductor run; preserve completed S-SWQT-0003-1 implementation evidence for later resumption.",
+      "chainDepthPolicy": "feature-complete",
+      "scopeAnchor": "F-SWQT-0003",
+      "scopeFeatureId": "F-SWQT-0003",
+      "chainPlan": [
+        {
+          "id": "S-SWQT-0003-1",
+          "kind": "step",
+          "nextHandoff": "implement",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0003-1",
+          "kind": "step",
+          "nextHandoff": "review",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0003-1",
+          "kind": "step",
+          "nextHandoff": "deliver",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0003-2",
+          "kind": "step",
+          "nextHandoff": "design",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0003-2",
+          "kind": "step",
+          "nextHandoff": "implement",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0003-2",
+          "kind": "step",
+          "nextHandoff": "review",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0003-2",
+          "kind": "step",
+          "nextHandoff": "deliver",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0003-3",
+          "kind": "step",
+          "nextHandoff": "design",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0003-3",
+          "kind": "step",
+          "nextHandoff": "implement",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0003-3",
+          "kind": "step",
+          "nextHandoff": "review",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0003-3",
+          "kind": "step",
+          "nextHandoff": "deliver",
+          "segmentKind": "phase"
+        }
+      ],
+      "chainProgress": {
+        "completedSegments": [
+          {
+            "id": "S-SWQT-0003-1",
+            "kind": "step",
+            "nextHandoff": "implement",
+            "segmentKind": "phase"
+          }
+        ],
+        "currentSegment": {
+          "id": "S-SWQT-0003-1",
+          "kind": "step",
+          "nextHandoff": "review",
+          "segmentKind": "phase"
+        },
+        "lastCheckpointAt": "2026-07-16T15:37:50.059Z",
+        "auditMirror": [
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0003-1",
+              "kind": "step",
+              "nextHandoff": "implement",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-16T15:37:50.059Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0003-1",
+              "stepStatus": "designed",
+              "featureId": "F-SWQT-0003",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0003-1 implementation-record",
+              "validationSummary": "State matrix implemented: typecheck, 26 Playwright passes/6 scoped skips, design contract, and example build pass."
+            }
+          }
+        ],
+        "advanceRequired": true
+      },
+      "chainTerminationReason": "aborted"
+    }
+  ]
+}

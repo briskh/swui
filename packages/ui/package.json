@@ -1,7 +1,7 @@
 {
   "name": "@swui/ui",
-  "version": "0.2.0",
-  "description": "swui React UI primitives and light-only theme provider",
+  "version": "1.0.0",
+  "description": "swui React UI primitives with global theme provider",
   "type": "module",
   "sideEffects": false,
   "files": [

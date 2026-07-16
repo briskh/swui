@@ -6,7 +6,7 @@ Import from `@swui/ui` or `@swui/ui/<name>`.
 
 | Export | Notes |
 |--------|--------|
-| `Button` | Variants: default, secondary, outline, ghost, link, destructive. Sizes: default, sm, icon. |
+| `Button` | Variants: default, secondary, outline, ghost, link, destructive. Sizes: compact, sm, default, lg, icon, icon-compact. |
 
 ## Forms
 
@@ -71,7 +71,7 @@ Import from `@swui/ui` or `@swui/ui/<name>`.
 
 | Export | Notes |
 |--------|--------|
-| `ThemeProvider` `useTheme` `ThemeControl` `Theme` | Light-only. |
+| `ThemeProvider` `useTheme` `ThemeControl` `Theme` | Global `system` / `light` / `dark` preference; effective theme is light or dark. |
 | `cn` | `@swui/ui/utils` |
 | Date helpers | `@swui/ui/date` |
 | `WideScreenGate` `WideScreenPlaceholder` | Compact `<=820px` gate; import from `@swui/ui`. |

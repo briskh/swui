@@ -1,6 +1,12 @@
 node_modules/
 *.tgz
 dist/
+.browser-artifacts/
 .DS_Store
 .env
 .bun-tmp/
+/.tmp/
+# sw:project-runtime-ignore:begin
+/.sw/config.json
+/.sw/daemon/
+# sw:project-runtime-ignore:end

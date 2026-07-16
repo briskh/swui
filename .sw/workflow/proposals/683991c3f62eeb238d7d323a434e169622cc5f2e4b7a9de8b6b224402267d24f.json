@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "proposal_id": "sha256:683991c3f62eeb238d7d323a434e169622cc5f2e4b7a9de8b6b224402267d24f",
+  "created_at": "2026-07-16T16:11:03.224Z",
+  "expires_at": "2026-07-16T16:41:03.224Z",
+  "change": {
+    "schema": "swqt-workflow-write/v1",
+    "action": "workflow.section-set",
+    "rename": null,
+    "files": [
+      [
+        ".sw/workflow/steps/S-SWQT-0003-2-主题-token-与图表例外治理.json",
+        "{\n  \"schemaVersion\": 6,\n  \"kind\": \"step\",\n  \"stepId\": \"S-SWQT-0003-2\",\n  \"status\": \"designed\",\n  \"overlay\": {\n    \"state\": \"none\"\n  },\n  \"links\": [],\n  \"title\": \"Step S-SWQT-0003-2: 主题 token 与图表例外治理\",\n  \"sourceFeature\": {\n    \"id\": \"F-SWQT-0003\",\n    \"href\": \"../feature/F-SWQT-0003-研究报告目标态验收闭环.json\"\n  },\n  \"owner\": \"swui-maintainers\",\n  \"createdAt\": \"2026-07-16T15:34:28.764Z\",\n  \"updatedAt\": \"2026-07-16T15:34:28.764Z\",\n  \"supersedes\": \"N/A\",\n  \"nextHandoff\": \"implement\",\n  \"sections\": {\n    \"goal\": {\n      \"sectionStatus\": \"not-started\",\n      \"items\": {\n        \"statement\": \"_TBD_\"\n      }\n    },\n    \"scope\": {\n      \"sectionStatus\": \"not-started\",\n      \"items\": {}\n    },\n    \"inputs\": {\n      \"sectionStatus\": \"not-started\",\n      \"items\": {}\n    },\n    \"dependencies\": {\n      \"sectionStatus\": \"not-started\",\n      \"items\": {}\n    },\n    \"implementation-ready-brief\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"problemDefinition\": \"静态契约只检查引用存在和少数裸值，图表例外没有双主题实际渲染证据。\",\n        \"requirementsDefinition\": \"校验两套正式主题的必填语义 token、语义前景/背景配对，并以稳定图表夹具记录双主题截图和 axe 证据。\",\n        \"nonGoals\": [\n          \"不新增第三套主题\",\n          \"不改变公共组件 API\"\n        ],\n        \"plainLanguage\": \"让 token 和图表例外都由可复跑证据证明。\",\n        \"candidateOptions\": {\n          \"A\": \"只记录文档例外\",\n          \"B\": \"静态解析加真实浏览器图表夹具\"\n        },\n        \"recommendedOption\": {\n          \"option\": \"B\",\n          \"rationale\": \"同时覆盖 token 漂移和 Recharts 实际渲染。\"\n        },\n        \"openDecisions\": \"none\",\n        \"granularityDecision\": \"fine-enough：token 解析和图表例外共享主题治理验收。\",\n        \"testCaseDesign\": \"静态 token 断言、双主题截图与 axe。\",\n        \"acceptanceToTestMapping\": \"token 规则→check:design-contract；图表例外→theme-chart Playwright。\",\n        \"regressionTestDesign\": \"缺 token、未批准 raw 值或图表回归均失败。\",\n        \"coverageAssessment\": \"target-driven\",\n        \"residualRisk\": \"自动 a11y 不替代产品语义人工审查。\",\n        \"readiness\": {\n          \"readiness\": \"Yes\",\n          \"reason\": \"现有静态脚本、Playwright 和消费者夹具可直接执行。\"\n        }\n      }\n    },\n    \"implementation-record\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"executionContract\": {\n          \"expectedChangeSurface\": \"Semantic-token static contract, Recharts exception mapping, consumer chart fixture, and governance documentation.\",\n          \"acceptanceCriteria\": \"Both formal themes expose required semantic colors and contrast pairs; alias errors and raw values fail; documented Recharts selectors have rendered light/dark evidence.\",\n          \"validationEvidenceRequired\": \"check:design-contract, normal eight-project browser matrix, consumer typecheck/build, and packed-consumer browser verification.\",\n          \"rollbackNotes\": \"Revert the checker, consumer chart fixture, exception record, screenshots, and dependency lock resolution together.\"\n        },\n        \"implementationSummary\": {\n          \"whatChanged\": \"Expanded the static checker with formal-theme semantic-token and contrast-pair verification; added an animated-free semantic Recharts line-chart fixture with screenshot/axe coverage; documented narrow SVG literal-selector exceptions and a dated visual review.\",\n          \"whySatisfiesStep\": \"Token drift is caught statically while the otherwise unavoidable Recharts literal-selector bridge is demonstrated in both formal themes at runtime.\",\n          \"intentionallyUnchanged\": \"No third theme, product page shell, or public component API was introduced.\"\n        },\n        \"changeSurface\": {\n          \"codeAnchors\": \"scripts/check-design-contract.mjs; examples/ui-consumer/src/main.tsx; examples/ui-consumer/browser.spec.mjs\",\n          \"documentationAnchors\": \"docs/experience/design-contract-exceptions.md; docs/experience/quality-matrix.md; docs/experience/theme-and-dimensions.md\",\n          \"configAnchors\": \"examples/ui-consumer/package.json and bun.lock add the chart runtime dependency.\"\n        },\n        \"executionNotes\": {\n          \"decisionsDuringImplementation\": \"Used existing ChartContainer semantic metric variables; limited #fff/#ccc to the component-level Recharts compatibility selectors.\",\n          \"deviationsFromBrief\": \"None.\",\n          \"risksDiscovered\": \"Recharts initial animation destabilized screenshots; setting isAnimationActive=false fixed the root cause and normal-mode suites then passed.\"\n        },\n        \"validationReferences\": [\n          {\n            \"commandOrEvidence\": \"bun run check:design-contract\",\n            \"result\": \"passed\",\n            \"notes\": \"Parses both formal theme blocks and scans approved exception boundaries.\"\n          },\n          {\n            \"commandOrEvidence\": \"bun run --filter @swui/ui-consumer-example test:browser\",\n            \"result\": \"passed\",\n            \"notes\": \"34 passed, 6 intentional scope skips; chart screenshot and axe run in all theme/viewport projects.\"\n          },\n          {\n            \"commandOrEvidence\": \"bun run example:build; typecheck\",\n            \"result\": \"passed\",\n            \"notes\": \"Only non-blocking Vite chunk advisory.\"\n          },\n          {\n            \"commandOrEvidence\": \"bun run verify:packed-consumer\",\n            \"result\": \"passed\",\n            \"notes\": \"Both tarball installation layouts run the browser matrix.\"\n          }\n        ]\n      }\n    },\n    \"use-case\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    },\n    \"review-report\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    },\n    \"delivered-registry-entry\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    },\n    \"completion-audit\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    }\n  }\n}"
+      ]
+    ],
+    "deletions": [],
+    "preconditions": [
+      {
+        "id": "workflow-write",
+        "status": "passed"
+      },
+      {
+        "id": "section-set-structural-preflight",
+        "status": "passed",
+        "section": "implementation-record",
+        "schemaUri": "sws://schemas/workflow/section-items.schema.json",
+        "expectedItemsKind": "object",
+        "currentItemsKind": "object",
+        "proposedItemsKind": "object",
+        "structuralChangeKind": "object-shape-change",
+        "currentSummary": {
+          "kind": "object",
+          "keyCount": 0,
+          "keys": []
+        },
+        "proposedSummary": {
+          "kind": "object",
+          "keyCount": 5,
+          "keys": [
+            "executionContract",
+            "implementationSummary",
+            "changeSurface",
+            "executionNotes",
+            "validationReferences"
+          ]
+        },
+        "payloadHash": "sha256:bcce0cc3594845d9db5bf5be2a2d25ec1331e77bc69eca9ae3ff95b083ff20fa",
+        "payloadFile": {
+          "handleId": "tph-bcce0cc35948-1784218260172289427-1300832-0",
+          "payloadHash": "sha256:bcce0cc3594845d9db5bf5be2a2d25ec1331e77bc69eca9ae3ff95b083ff20fa",
+          "binding": "sectionSet-payload-hash"
+        }
+      }
+    ],
+    "validation_handoff": [
+      "sw workflow validate --id … --root /home/blade/swui",
+      "sw workflow ledger --incremental --apply --root /home/blade/swui"
+    ],
+    "rollback_note": "git checkout -- .sw/workflow/steps/S-SWQT-0003-2-主题-token-与图表例外治理.json",
+    "lifecycle_sync_feature": null,
+    "repairMode": false
+  }
+}

@@ -1,6 +1,6 @@
 # `@swui/ui`
 
-Skywalker React UI primitives (shadcn/Radix based) plus light-only `ThemeProvider` and `WideScreenGate`.
+Skywalker React UI primitives (shadcn/Radix based) plus global `ThemeProvider`, `ThemeControl`, and `WideScreenGate`.
 
 ## AI / agents
 
@@ -33,7 +33,7 @@ Declare peer dependencies listed in `package.json` (React 19, Radix packages, lu
 
 ## Theme
 
-Runtime contract is **light-only**. Dark CSS tokens ship in `@swui/ui-tokens` for future use.
+Runtime contract supports global `system`, `light`, and `dark` preferences. Use `ThemeProvider` as the only theme authority.
 
 ```tsx
 import { ThemeProvider, Button, WideScreenGate } from "@swui/ui";

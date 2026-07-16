@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "proposal_id": "sha256:3d48fce6b08c86a695c8ab637569a23626f817282423b66148a636a52e3cafc2",
+  "created_at": "2026-07-16T16:09:40.257Z",
+  "expires_at": "2026-07-16T16:39:40.257Z",
+  "change": {
+    "schema": "swqt-workflow-write/v1",
+    "action": "workflow.section-set",
+    "rename": null,
+    "files": [
+      [
+        ".sw/workflow/steps/S-SWQT-0003-1-step-s-swqt-0003-1-核心状态矩阵与覆盖统计.json",
+        "{\n  \"schemaVersion\": 6,\n  \"kind\": \"step\",\n  \"stepId\": \"S-SWQT-0003-1\",\n  \"status\": \"implemented\",\n  \"overlay\": {\n    \"state\": \"none\"\n  },\n  \"links\": [],\n  \"title\": \"Step S-SWQT-0003-1: Step S-SWQT-0003-1: 核心状态矩阵与覆盖统计\",\n  \"sourceFeature\": {\n    \"id\": \"F-SWQT-0003\",\n    \"href\": \"../feature/F-SWQT-0003-研究报告目标态验收闭环.json\"\n  },\n  \"owner\": \"swui-maintainers\",\n  \"createdAt\": \"2026-07-16T15:34:18.996Z\",\n  \"updatedAt\": \"2026-07-16T15:34:18.996Z\",\n  \"supersedes\": \"N/A\",\n  \"nextHandoff\": \"review\",\n  \"sections\": {\n    \"goal\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"statement\": \"建立 Button、Input、Select 与图标按钮的可审计状态矩阵，并把状态覆盖与明确例外变成可回归的浏览器证据。\"\n      }\n    },\n    \"scope\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"inScope\": [\n          \"在真实消费者夹具中呈现 default、hover、focus-visible、disabled、loading、error、empty、selected 等适用状态。\",\n          \"以双主题、compact/data-dense/lg/xl 视口运行截图与 axe。\",\n          \"生成组件×状态×主题×视口覆盖清单和例外统计。\"\n        ],\n        \"outOfScope\": [\n          \"新增公共组件 API。\",\n          \"私有 registry 发布。\"\n        ]\n      }\n    },\n    \"inputs\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"researchEvidence\": \"R-SWUI-001 缺口复核：现有 fixture 只覆盖少量组件和常态，缺少系统状态矩阵与覆盖基线。\",\n        \"integrationSurface\": \"examples/ui-consumer/browser.spec.mjs 与 Playwright projects。\"\n      }\n    },\n    \"dependencies\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"previousSteps\": [],\n        \"externalDependencies\": [\n          \"Bun 1.3.14\",\n          \"Playwright Chromium\",\n          \"@axe-core/playwright\"\n        ],\n        \"userDecisions\": [\n          \"用户选择 Option B 并发送 auto。\"\n        ],\n        \"projectResources\": [\n          \"examples/ui-consumer\",\n          \"scripts/verify-packed-consumer.mjs\"\n        ],\n        \"axisPositioning\": \"required: design-system runtime + browser/a11y validation; UI state fixture and test evidence share one invariant.\",\n        \"axisSplitSnapshot\": \"本 Step 聚合状态夹具、矩阵与统计，因为三者必须共同证明每个状态实际可渲染且可审计。\",\n        \"temporaryArtifactLifecycle\": \"not-applicable：仅使用已有 Playwright 输出目录，不创建长期临时交接物。\"\n      }\n    },\n    \"implementation-ready-brief\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"problemDefinition\": \"现有浏览器矩阵只验证少数常态组件，无法证明核心组件的状态面在主题和断点下均可用。\",\n        \"requirementsDefinition\": \"为核心组件建立稳定状态夹具、矩阵测试、截图/axe 证据和例外统计；每项例外必须有原因。\",\n        \"nonGoals\": [\n          \"不扩张组件 API。\",\n          \"不把 hover 伪状态伪造成浏览器无法验证的事实。\"\n        ],\n        \"plainLanguage\": \"让每个用户可见状态都有一张可复跑的证据表，而不是只靠默认外观。\",\n        \"candidateOptions\": {\n          \"A\": \"只扩展现有常态快照。\",\n          \"B\": \"建立命名状态夹具、矩阵清单与浏览器断言。\"\n        },\n        \"recommendedOption\": {\n          \"option\": \"B\",\n          \"rationale\": \"能同时捕获状态回归、可访问性回归和覆盖退化。\"\n        },\n        \"openDecisions\": \"none；状态集合由组件现有公开 props/语义决定。\",\n        \"granularityDecision\": \"fine-enough：夹具、测试和统计共享同一状态覆盖不变量；若新增独立组件域或视觉审查工具，再拆分。\",\n        \"implementationPlan\": [\n          \"盘点核心组件的可表达状态。\",\n          \"构建可访问的状态夹具和显式矩阵元数据。\",\n          \"增加 Playwright 截图、axe 与覆盖统计断言。\",\n          \"将例外及其原因写入文档。\"\n        ],\n        \"testCaseDesign\": \"每个矩阵元至少映射一个真实 DOM 状态；主题/视口以现有 projects 交叉；axe 覆盖可访问性。\",\n        \"acceptanceToTestMapping\": \"AC1/AC2→Playwright 矩阵与截图；AC3→统计脚本；AC4→例外清单校验。\",\n        \"regressionTestDesign\": \"新增状态或删除状态时矩阵断言与快照立即失败。\",\n        \"coverageAssessment\": \"target-driven\",\n        \"residualRisk\": \"原生 hover/focus 的视觉差异仍受浏览器平台影响，使用语义状态和截图基线降低风险。\",\n        \"readiness\": {\n          \"readiness\": \"Yes\",\n          \"reason\": \"已存在消费者、Playwright projects、axe 和基线命令。\"\n        }\n      }\n    },\n    \"implementation-record\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"executionContract\": {\n          \"expectedChangeSurface\": \"examples/ui-consumer state fixtures, Playwright matrix, screenshots, and quality documentation; no public API change.\",\n          \"acceptanceCriteria\": \"Button/Input/Select/icon states receive light/dark × compact/data-dense/lg/xl visual and axe evidence, including actual hover and disabled Select.\",\n          \"validationEvidenceRequired\": \"Consumer typecheck, static contract, production build, normal Playwright matrix, and packed-consumer browser matrix.\",\n          \"rollbackNotes\": \"Revert the fixture/test/doc changes and generated project screenshot baselines together.\"\n        },\n        \"implementationSummary\": {\n          \"whatChanged\": \"Added named Button, icon-button, Input, Select, empty, and ThemeControl-adjacent state fixtures; added DOM/ARIA/hover/screenshot/axe coverage and 24 project screenshot baselines.\",\n          \"whySatisfiesStep\": \"Every applicable named state now has a rendered fixture and browser evidence across the formal themes and viewport projects.\",\n          \"intentionallyUnchanged\": \"No @swui/ui public component API, product shell, or routing was changed.\"\n        },\n        \"changeSurface\": {\n          \"codeAnchors\": \"examples/ui-consumer/src/main.tsx; examples/ui-consumer/browser.spec.mjs\",\n          \"documentationAnchors\": \"docs/experience/quality-matrix.md\",\n          \"configAnchors\": \"examples/ui-consumer/playwright.config.mjs unchanged; existing eight-project matrix retained.\"\n        },\n        \"executionNotes\": {\n          \"decisionsDuringImplementation\": \"Used real disabled Select and pointer hover rather than documenting unrendered inherited behavior.\",\n          \"deviationsFromBrief\": \"None; matrix remains browser-first.\",\n          \"risksDiscovered\": \"Screenshot update initially exposed unstable Recharts animation; animations were disabled and normal-mode regressions passed afterward.\"\n        },\n        \"validationReferences\": [\n          {\n            \"commandOrEvidence\": \"bun run --filter @swui/ui-consumer-example typecheck\",\n            \"result\": \"passed\",\n            \"notes\": \"TypeScript consumer check.\"\n          },\n          {\n            \"commandOrEvidence\": \"bun run --filter @swui/ui-consumer-example test:browser\",\n            \"result\": \"passed\",\n            \"notes\": \"34 passed, 6 intentional data-dense scope skips across eight projects.\"\n          },\n          {\n            \"commandOrEvidence\": \"bun run check:design-contract; bun run example:build\",\n            \"result\": \"passed\",\n            \"notes\": \"Build has only Vite 500 kB chunk advisory.\"\n          },\n          {\n            \"commandOrEvidence\": \"bun run verify:packed-consumer\",\n            \"result\": \"passed\",\n            \"notes\": \"Nested isolated and workspace-hoisted tarball consumers each ran the browser matrix: 34 passed, 6 intentional skips.\"\n          }\n        ]\n      }\n    },\n    \"use-case\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    },\n    \"review-report\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"reviewProfile\": \"full\",\n        \"decision\": \"reviewed\",\n        \"gateOutcomes\": [\n          {\n            \"gate\": \"scope, state, and brief\",\n            \"result\": \"passed\",\n            \"evidence\": \"Changes are confined to the consumer fixture, Playwright evidence, screenshots, and quality documentation; public APIs remain unchanged; implementation-ready brief is complete.\",\n            \"residualRisk\": \"No public API surface was exercised.\",\n            \"counterEvidenceChecked\": \"yes\"\n          },\n          {\n            \"gate\": \"validation and user-visible flow\",\n            \"result\": \"passed\",\n            \"evidence\": \"Typecheck, design contract, production build, normal browser matrix (34 passed, 6 intentional scope skips), and two packed-consumer browser matrices passed.\",\n            \"residualRisk\": \"Vite reports a non-blocking 695 kB chunk advisory.\",\n            \"counterEvidenceChecked\": \"yes\"\n          },\n          {\n            \"gate\": \"test sufficiency and regression\",\n            \"result\": \"passed\",\n            \"evidence\": \"Named DOM/ARIA states, actual pointer hover, screenshots, and axe run across light/dark × four viewport projects; disabled Select is rendered and asserted.\",\n            \"residualRisk\": \"Native hover visuals remain platform-sensitive, so full-page baselines are pointer-neutral while interaction is exercised separately.\",\n            \"counterEvidenceChecked\": \"yes\"\n          },\n          {\n            \"gate\": \"provenance, documentation graph, and project facts\",\n            \"result\": \"passed\",\n            \"evidence\": \"The Step retains sourceFeature F-SWQT-0003; docs/README links quality-matrix; exceptions include a dated visual-review record.\",\n            \"residualRisk\": \"Private registry credentials remain an explicitly owned external follow-up.\",\n            \"counterEvidenceChecked\": \"yes\"\n          },\n          {\n            \"gate\": \"final-position hygiene and promotion readiness\",\n            \"result\": \"passed\",\n            \"evidence\": \"Stable Step path, browser baselines, and implementation evidence were rechecked after the final disabled-Select correction.\",\n            \"residualRisk\": \"Historical global workflow-numbering findings are recorded outside this Feature boundary.\",\n            \"counterEvidenceChecked\": \"yes\"\n          }\n        ],\n        \"projectCompanionFactDecision\": \"not-needed: existing companion validation handoff remains accurate; quality matrix documents the added local evidence.\",\n        \"residualRisk\": \"Remote registry publication and the legacy repository-wide numbering migration are explicitly non-blocking external/governance follow-ups.\",\n        \"followUp\": \"Promote Step 1, then release the token/chart governance dependency.\",\n        \"promotionDisposition\": \"ready\"\n      }\n    },\n    \"delivered-registry-entry\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    },\n    \"completion-audit\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    }\n  }\n}"
+      ]
+    ],
+    "deletions": [],
+    "preconditions": [
+      {
+        "id": "workflow-write",
+        "status": "passed"
+      },
+      {
+        "id": "section-set-structural-preflight",
+        "status": "passed",
+        "section": "review-report",
+        "schemaUri": "sws://schemas/workflow/section-items.schema.json",
+        "expectedItemsKind": "object",
+        "currentItemsKind": "object",
+        "proposedItemsKind": "object",
+        "structuralChangeKind": "object-shape-change",
+        "currentSummary": {
+          "kind": "object",
+          "keyCount": 0,
+          "keys": []
+        },
+        "proposedSummary": {
+          "kind": "object",
+          "keyCount": 7,
+          "keys": [
+            "reviewProfile",
+            "decision",
+            "gateOutcomes",
+            "projectCompanionFactDecision",
+            "residualRisk",
+            "followUp",
+            "promotionDisposition"
+          ]
+        },
+        "payloadHash": "sha256:cc2ddff16020f997648f358f4b0950246cb1cb5d924baafb55b0ec9280cf06b6",
+        "payloadFile": {
+          "handleId": "tph-cc2ddff16020-1784218177020287667-1296859-0",
+          "payloadHash": "sha256:cc2ddff16020f997648f358f4b0950246cb1cb5d924baafb55b0ec9280cf06b6",
+          "binding": "sectionSet-payload-hash"
+        }
+      }
+    ],
+    "validation_handoff": [
+      "sw workflow validate --id … --root /home/blade/swui",
+      "sw workflow ledger --incremental --apply --root /home/blade/swui"
+    ],
+    "rollback_note": "git checkout -- .sw/workflow/steps/S-SWQT-0003-1-step-s-swqt-0003-1-核心状态矩阵与覆盖统计.json",
+    "lifecycle_sync_feature": null,
+    "repairMode": false
+  }
+}

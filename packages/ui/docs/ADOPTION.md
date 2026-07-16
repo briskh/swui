@@ -23,17 +23,20 @@ Adjust `@source` for monorepo / hoisting.
 ## App shell sketch
 
 ```tsx
-import { ThemeProvider, Button, Toaster, WideScreenGate } from "@swui/ui";
+import { ThemeProvider, ThemeControl, Button, Toaster, WideScreenGate } from "@swui/ui";
 
 export function App({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>
+      <ThemeControl />
       {children}
       <Toaster />
     </ThemeProvider>
   );
 }
 ```
+
+`ThemeProvider` supports `system`, `light`, and `dark` preferences. For applications that render their document head, place `themeInitializationScript` inline before the application bundle to prevent an initial color flash.
 
 ## AI docs inside the installed package
 

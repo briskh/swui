@@ -1,0 +1,224 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0003-2",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0003-2: 主题 token 与图表例外治理",
+  "sourceFeature": {
+    "id": "F-SWQT-0003",
+    "href": "../feature/F-SWQT-0003-研究报告目标态验收闭环.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-16T15:34:28.764Z",
+  "updatedAt": "2026-07-16T15:34:28.764Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "not-started",
+      "items": {
+        "statement": "_TBD_"
+      }
+    },
+    "scope": {
+      "sectionStatus": "not-started",
+      "items": {}
+    },
+    "inputs": {
+      "sectionStatus": "not-started",
+      "items": {}
+    },
+    "dependencies": {
+      "sectionStatus": "not-started",
+      "items": {}
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "problemDefinition": "静态契约只检查引用存在和少数裸值，图表例外没有双主题实际渲染证据。",
+        "requirementsDefinition": "校验两套正式主题的必填语义 token、语义前景/背景配对，并以稳定图表夹具记录双主题截图和 axe 证据。",
+        "nonGoals": [
+          "不新增第三套主题",
+          "不改变公共组件 API"
+        ],
+        "plainLanguage": "让 token 和图表例外都由可复跑证据证明。",
+        "candidateOptions": {
+          "A": "只记录文档例外",
+          "B": "静态解析加真实浏览器图表夹具"
+        },
+        "recommendedOption": {
+          "option": "B",
+          "rationale": "同时覆盖 token 漂移和 Recharts 实际渲染。"
+        },
+        "openDecisions": "none",
+        "granularityDecision": "fine-enough：token 解析和图表例外共享主题治理验收。",
+        "testCaseDesign": "静态 token 断言、双主题截图与 axe。",
+        "acceptanceToTestMapping": "token 规则→check:design-contract；图表例外→theme-chart Playwright。",
+        "regressionTestDesign": "缺 token、未批准 raw 值或图表回归均失败。",
+        "coverageAssessment": "target-driven",
+        "residualRisk": "自动 a11y 不替代产品语义人工审查。",
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "现有静态脚本、Playwright 和消费者夹具可直接执行。"
+        }
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "executionContract": {
+          "expectedChangeSurface": "Semantic-token static contract, Recharts exception mapping, consumer chart fixture, and governance documentation.",
+          "acceptanceCriteria": "Both formal themes expose required semantic colors and contrast pairs; alias errors and raw values fail; documented Recharts selectors have rendered light/dark evidence.",
+          "validationEvidenceRequired": "check:design-contract, normal eight-project browser matrix, consumer typecheck/build, and packed-consumer browser verification.",
+          "rollbackNotes": "Revert the checker, consumer chart fixture, exception record, screenshots, and dependency lock resolution together."
+        },
+        "implementationSummary": {
+          "whatChanged": "Expanded the static checker with formal-theme semantic-token and contrast-pair verification; added an animated-free semantic Recharts line-chart fixture with screenshot/axe coverage; documented narrow SVG literal-selector exceptions and a dated visual review.",
+          "whySatisfiesStep": "Token drift is caught statically while the otherwise unavoidable Recharts literal-selector bridge is demonstrated in both formal themes at runtime.",
+          "intentionallyUnchanged": "No third theme, product page shell, or public component API was introduced."
+        },
+        "changeSurface": {
+          "codeAnchors": "scripts/check-design-contract.mjs; examples/ui-consumer/src/main.tsx; examples/ui-consumer/browser.spec.mjs",
+          "documentationAnchors": "docs/experience/design-contract-exceptions.md; docs/experience/quality-matrix.md; docs/experience/theme-and-dimensions.md",
+          "configAnchors": "examples/ui-consumer/package.json and bun.lock add the chart runtime dependency."
+        },
+        "executionNotes": {
+          "decisionsDuringImplementation": "Used existing ChartContainer semantic metric variables; limited #fff/#ccc to the component-level Recharts compatibility selectors.",
+          "deviationsFromBrief": "None.",
+          "risksDiscovered": "Recharts initial animation destabilized screenshots; setting isAnimationActive=false fixed the root cause and normal-mode suites then passed."
+        },
+        "validationReferences": [
+          {
+            "commandOrEvidence": "bun run check:design-contract",
+            "result": "passed",
+            "notes": "Parses both formal theme blocks and scans approved exception boundaries."
+          },
+          {
+            "commandOrEvidence": "bun run --filter @swui/ui-consumer-example test:browser",
+            "result": "passed",
+            "notes": "34 passed, 6 intentional scope skips; chart screenshot and axe run in all theme/viewport projects."
+          },
+          {
+            "commandOrEvidence": "bun run example:build; typecheck",
+            "result": "passed",
+            "notes": "Only non-blocking Vite chunk advisory."
+          },
+          {
+            "commandOrEvidence": "bun run verify:packed-consumer",
+            "result": "passed",
+            "notes": "Both tarball installation layouts run the browser matrix."
+          }
+        ]
+      }
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "gateOutcomes": [
+          {
+            "gate": "scope, state, and brief",
+            "result": "passed",
+            "evidence": "Implementation is constrained to token governance, a chart compatibility mapping, browser evidence, and documentation; no public API or third theme was added.",
+            "residualRisk": "No product-specific data visualization semantics were claimed.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "static token contract",
+            "result": "passed",
+            "evidence": "check:design-contract verifies every required semantic token and foreground/background pair in :root and [data-theme=dark], plus aliases, cycles, raw values, and theme bypasses.",
+            "residualRisk": "No deprecated token syntax currently exists, so deprecation-reference checking is vacuously satisfied.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "user-visible chart flow and accessibility",
+            "result": "passed",
+            "evidence": "theme-chart uses semantic metric variables, has two rendered curves, screenshots and axe in light/dark × compact/data-dense/lg/xl; reviewed light and dark baselines are recorded in the exception register.",
+            "residualRisk": "Automated axe and baseline inspection do not prove domain-specific analytic correctness.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "packed-consumer regression",
+            "result": "passed",
+            "evidence": "Both isolated and hoisted tarball consumers typecheck, build, validate emitted CSS, switch theme, and run the same browser matrix.",
+            "residualRisk": "Private registry remote publication is an owned external follow-up.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "provenance and final-position hygiene",
+            "result": "passed",
+            "evidence": "Step retains source Feature; docs README exposes the quality and exception records; research report declares historical scope and current Feature ownership.",
+            "residualRisk": "Legacy global workflow-numbering findings are outside this Feature boundary.",
+            "counterEvidenceChecked": "yes"
+          }
+        ],
+        "projectCompanionFactDecision": "not-needed: existing test and validation handoff remains correct; updated experience documentation is the appropriate project fact surface.",
+        "residualRisk": "Remote registry authentication and historical numbering migration remain documented non-blocking follow-ups.",
+        "followUp": "Promote Step 2, which releases packed-consumer evidence Step 3.",
+        "promotionDisposition": "ready"
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-17T00:40:00.000Z",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0003-2-主题-token-与图表例外治理.json",
+        "validationSummary": "Formal-theme semantic token and contrast checks, chart screenshot/axe matrix, consumer typecheck/build, and both packed-consumer browser matrices passed.",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "Formal-theme semantic token and contrast checks, chart screenshot/axe matrix, consumer typecheck/build, and both packed-consumer browser matrices passed.",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0003-2",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "minimum-auto-filled-by-promote",
+        "minimumSetSatisfied": "Yes - workflow promote populated minimum registry/audit records before setting status=delivered.",
+        "upgradeToFullAuditReason": "not-recorded-by-delivery-minimum",
+        "requirementAudit": [
+          {
+            "requirement": "reviewed Step can be delivered only with closure records.",
+            "status": "implemented",
+            "evidence": "workflow promote populated delivered-registry-entry and completion-audit before status=delivered.",
+            "risk": "Minimum auto-fill is less descriptive than a hand-authored Completion Audit.",
+            "followUp": "Review owner may enrich the audit before delivery when richer evidence is required."
+          }
+        ],
+        "workflowRunAudit": "minimum auto-filled by workflow promote",
+        "intermediateDocumentStateAudit": "delivered-registry-entry and completion-audit populated before final status=delivered.",
+        "documentGovernanceAudit": "minimum auto-filled by workflow promote",
+        "frictionAndImprovementBacklog": "N/A",
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Closing triad minimum: reviewed precondition satisfied; validationSummary present; registry/audit records populated before status=delivered.",
+          "closingSelfAuditConsistency": "minimum auto-filled by workflow promote",
+          "landingChecklistOutcome": "not-applicable",
+          "pluginSkillFriction": "N/A",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "N/A",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "not-recorded-by-delivery-minimum"
+      }
+    }
+  },
+  "validationSummary": "Formal-theme semantic token and contrast checks, chart screenshot/axe matrix, consumer typecheck/build, and both packed-consumer browser matrices passed."
+}

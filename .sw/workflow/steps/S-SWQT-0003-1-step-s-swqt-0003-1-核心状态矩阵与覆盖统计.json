@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0003-1",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0003-1: Step S-SWQT-0003-1: 核心状态矩阵与覆盖统计",
+  "sourceFeature": {
+    "id": "F-SWQT-0003",
+    "href": "../feature/F-SWQT-0003-研究报告目标态验收闭环.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-16T15:34:18.996Z",
+  "updatedAt": "2026-07-16T15:34:18.996Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "建立 Button、Input、Select 与图标按钮的可审计状态矩阵，并把状态覆盖与明确例外变成可回归的浏览器证据。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "在真实消费者夹具中呈现 default、hover、focus-visible、disabled、loading、error、empty、selected 等适用状态。",
+          "以双主题、compact/data-dense/lg/xl 视口运行截图与 axe。",
+          "生成组件×状态×主题×视口覆盖清单和例外统计。"
+        ],
+        "outOfScope": [
+          "新增公共组件 API。",
+          "私有 registry 发布。"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "researchEvidence": "R-SWUI-001 缺口复核：现有 fixture 只覆盖少量组件和常态，缺少系统状态矩阵与覆盖基线。",
+        "integrationSurface": "examples/ui-consumer/browser.spec.mjs 与 Playwright projects。"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": [],
+        "externalDependencies": [
+          "Bun 1.3.14",
+          "Playwright Chromium",
+          "@axe-core/playwright"
+        ],
+        "userDecisions": [
+          "用户选择 Option B 并发送 auto。"
+        ],
+        "projectResources": [
+          "examples/ui-consumer",
+          "scripts/verify-packed-consumer.mjs"
+        ],
+        "axisPositioning": "required: design-system runtime + browser/a11y validation; UI state fixture and test evidence share one invariant.",
+        "axisSplitSnapshot": "本 Step 聚合状态夹具、矩阵与统计，因为三者必须共同证明每个状态实际可渲染且可审计。",
+        "temporaryArtifactLifecycle": "not-applicable：仅使用已有 Playwright 输出目录，不创建长期临时交接物。"
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "problemDefinition": "现有浏览器矩阵只验证少数常态组件，无法证明核心组件的状态面在主题和断点下均可用。",
+        "requirementsDefinition": "为核心组件建立稳定状态夹具、矩阵测试、截图/axe 证据和例外统计；每项例外必须有原因。",
+        "nonGoals": [
+          "不扩张组件 API。",
+          "不把 hover 伪状态伪造成浏览器无法验证的事实。"
+        ],
+        "plainLanguage": "让每个用户可见状态都有一张可复跑的证据表，而不是只靠默认外观。",
+        "candidateOptions": {
+          "A": "只扩展现有常态快照。",
+          "B": "建立命名状态夹具、矩阵清单与浏览器断言。"
+        },
+        "recommendedOption": {
+          "option": "B",
+          "rationale": "能同时捕获状态回归、可访问性回归和覆盖退化。"
+        },
+        "openDecisions": "none；状态集合由组件现有公开 props/语义决定。",
+        "granularityDecision": "fine-enough：夹具、测试和统计共享同一状态覆盖不变量；若新增独立组件域或视觉审查工具，再拆分。",
+        "implementationPlan": [
+          "盘点核心组件的可表达状态。",
+          "构建可访问的状态夹具和显式矩阵元数据。",
+          "增加 Playwright 截图、axe 与覆盖统计断言。",
+          "将例外及其原因写入文档。"
+        ],
+        "testCaseDesign": "每个矩阵元至少映射一个真实 DOM 状态；主题/视口以现有 projects 交叉；axe 覆盖可访问性。",
+        "acceptanceToTestMapping": "AC1/AC2→Playwright 矩阵与截图；AC3→统计脚本；AC4→例外清单校验。",
+        "regressionTestDesign": "新增状态或删除状态时矩阵断言与快照立即失败。",
+        "coverageAssessment": "target-driven",
+        "residualRisk": "原生 hover/focus 的视觉差异仍受浏览器平台影响，使用语义状态和截图基线降低风险。",
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "已存在消费者、Playwright projects、axe 和基线命令。"
+        }
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "executionContract": {
+          "expectedChangeSurface": "examples/ui-consumer state fixtures, Playwright matrix, screenshots, and quality documentation; no public API change.",
+          "acceptanceCriteria": "Button/Input/Select/icon states receive light/dark × compact/data-dense/lg/xl visual and axe evidence, including actual hover and disabled Select.",
+          "validationEvidenceRequired": "Consumer typecheck, static contract, production build, normal Playwright matrix, and packed-consumer browser matrix.",
+          "rollbackNotes": "Revert the fixture/test/doc changes and generated project screenshot baselines together."
+        },
+        "implementationSummary": {
+          "whatChanged": "Added named Button, icon-button, Input, Select, empty, and ThemeControl-adjacent state fixtures; added DOM/ARIA/hover/screenshot/axe coverage and 24 project screenshot baselines.",
+          "whySatisfiesStep": "Every applicable named state now has a rendered fixture and browser evidence across the formal themes and viewport projects.",
+          "intentionallyUnchanged": "No @swui/ui public component API, product shell, or routing was changed."
+        },
+        "changeSurface": {
+          "codeAnchors": "examples/ui-consumer/src/main.tsx; examples/ui-consumer/browser.spec.mjs",
+          "documentationAnchors": "docs/experience/quality-matrix.md",
+          "configAnchors": "examples/ui-consumer/playwright.config.mjs unchanged; existing eight-project matrix retained."
+        },
+        "executionNotes": {
+          "decisionsDuringImplementation": "Used real disabled Select and pointer hover rather than documenting unrendered inherited behavior.",
+          "deviationsFromBrief": "None; matrix remains browser-first.",
+          "risksDiscovered": "Screenshot update initially exposed unstable Recharts animation; animations were disabled and normal-mode regressions passed afterward."
+        },
+        "validationReferences": [
+          {
+            "commandOrEvidence": "bun run --filter @swui/ui-consumer-example typecheck",
+            "result": "passed",
+            "notes": "TypeScript consumer check."
+          },
+          {
+            "commandOrEvidence": "bun run --filter @swui/ui-consumer-example test:browser",
+            "result": "passed",
+            "notes": "34 passed, 6 intentional data-dense scope skips across eight projects."
+          },
+          {
+            "commandOrEvidence": "bun run check:design-contract; bun run example:build",
+            "result": "passed",
+            "notes": "Build has only Vite 500 kB chunk advisory."
+          },
+          {
+            "commandOrEvidence": "bun run verify:packed-consumer",
+            "result": "passed",
+            "notes": "Nested isolated and workspace-hoisted tarball consumers each ran the browser matrix: 34 passed, 6 intentional skips."
+          }
+        ]
+      }
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "gateOutcomes": [
+          {
+            "gate": "scope, state, and brief",
+            "result": "passed",
+            "evidence": "Changes are confined to the consumer fixture, Playwright evidence, screenshots, and quality documentation; public APIs remain unchanged; implementation-ready brief is complete.",
+            "residualRisk": "No public API surface was exercised.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "validation and user-visible flow",
+            "result": "passed",
+            "evidence": "Typecheck, design contract, production build, normal browser matrix (34 passed, 6 intentional scope skips), and two packed-consumer browser matrices passed.",
+            "residualRisk": "Vite reports a non-blocking 695 kB chunk advisory.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "test sufficiency and regression",
+            "result": "passed",
+            "evidence": "Named DOM/ARIA states, actual pointer hover, screenshots, and axe run across light/dark × four viewport projects; disabled Select is rendered and asserted.",
+            "residualRisk": "Native hover visuals remain platform-sensitive, so full-page baselines are pointer-neutral while interaction is exercised separately.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "provenance, documentation graph, and project facts",
+            "result": "passed",
+            "evidence": "The Step retains sourceFeature F-SWQT-0003; docs/README links quality-matrix; exceptions include a dated visual-review record.",
+            "residualRisk": "Private registry credentials remain an explicitly owned external follow-up.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "final-position hygiene and promotion readiness",
+            "result": "passed",
+            "evidence": "Stable Step path, browser baselines, and implementation evidence were rechecked after the final disabled-Select correction.",
+            "residualRisk": "Historical global workflow-numbering findings are recorded outside this Feature boundary.",
+            "counterEvidenceChecked": "yes"
+          }
+        ],
+        "projectCompanionFactDecision": "not-needed: existing companion validation handoff remains accurate; quality matrix documents the added local evidence.",
+        "residualRisk": "Remote registry publication and the legacy repository-wide numbering migration are explicitly non-blocking external/governance follow-ups.",
+        "followUp": "Promote Step 1, then release the token/chart governance dependency.",
+        "promotionDisposition": "ready"
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-17T00:30:00.000Z",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0003-1-step-s-swqt-0003-1-核心状态矩阵与覆盖统计.json",
+        "validationSummary": "Typecheck, static contract, production build, eight-project browser matrix (34 passed; 6 intentional scope skips), and isolated/hoisted packed-consumer browser verification passed.",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "Typecheck, static contract, production build, eight-project browser matrix (34 passed; 6 intentional scope skips), and isolated/hoisted packed-consumer browser verification passed.",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0003-1",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "minimum-auto-filled-by-promote",
+        "minimumSetSatisfied": "Yes - workflow promote populated minimum registry/audit records before setting status=delivered.",
+        "upgradeToFullAuditReason": "not-recorded-by-delivery-minimum",
+        "requirementAudit": [
+          {
+            "requirement": "reviewed Step can be delivered only with closure records.",
+            "status": "implemented",
+            "evidence": "workflow promote populated delivered-registry-entry and completion-audit before status=delivered.",
+            "risk": "Minimum auto-fill is less descriptive than a hand-authored Completion Audit.",
+            "followUp": "Review owner may enrich the audit before delivery when richer evidence is required."
+          }
+        ],
+        "workflowRunAudit": "minimum auto-filled by workflow promote",
+        "intermediateDocumentStateAudit": "delivered-registry-entry and completion-audit populated before final status=delivered.",
+        "documentGovernanceAudit": "minimum auto-filled by workflow promote",
+        "frictionAndImprovementBacklog": "N/A",
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Closing triad minimum: reviewed precondition satisfied; validationSummary present; registry/audit records populated before status=delivered.",
+          "closingSelfAuditConsistency": "minimum auto-filled by workflow promote",
+          "landingChecklistOutcome": "not-applicable",
+          "pluginSkillFriction": "N/A",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "N/A",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "not-recorded-by-delivery-minimum"
+      }
+    }
+  },
+  "validationSummary": "Typecheck, static contract, production build, eight-project browser matrix (34 passed; 6 intentional scope skips), and isolated/hoisted packed-consumer browser verification passed."
+}

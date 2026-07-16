@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "proposal_id": "sha256:95f45cdc3e2960b1a9db76801638b9b1d670ec31d5b594b86f2f206bc5aa775e",
+  "created_at": "2026-07-16T16:03:20.720Z",
+  "expires_at": "2026-07-16T16:33:20.720Z",
+  "change": {
+    "schema": "swqt-workflow-write/v1",
+    "action": "workflow.section-set",
+    "rename": null,
+    "files": [
+      [
+        ".sw/workflow/steps/S-SWQT-0003-2-主题-token-与图表例外治理.json",
+        "{\n  \"schemaVersion\": 6,\n  \"kind\": \"step\",\n  \"stepId\": \"S-SWQT-0003-2\",\n  \"status\": \"designed\",\n  \"overlay\": {\n    \"state\": \"none\"\n  },\n  \"links\": [],\n  \"title\": \"Step S-SWQT-0003-2: 主题 token 与图表例外治理\",\n  \"sourceFeature\": {\n    \"id\": \"F-SWQT-0003\",\n    \"href\": \"../feature/F-SWQT-0003-研究报告目标态验收闭环.json\"\n  },\n  \"owner\": \"swui-maintainers\",\n  \"createdAt\": \"2026-07-16T15:34:28.764Z\",\n  \"updatedAt\": \"2026-07-16T15:34:28.764Z\",\n  \"supersedes\": \"N/A\",\n  \"nextHandoff\": \"implement\",\n  \"sections\": {\n    \"goal\": {\n      \"sectionStatus\": \"not-started\",\n      \"items\": {\n        \"statement\": \"_TBD_\"\n      }\n    },\n    \"scope\": {\n      \"sectionStatus\": \"not-started\",\n      \"items\": {}\n    },\n    \"inputs\": {\n      \"sectionStatus\": \"not-started\",\n      \"items\": {}\n    },\n    \"dependencies\": {\n      \"sectionStatus\": \"not-started\",\n      \"items\": {}\n    },\n    \"implementation-ready-brief\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"problemDefinition\": \"静态契约只检查引用存在和少数裸值，图表例外没有双主题实际渲染证据。\",\n        \"requirementsDefinition\": \"校验两套正式主题的必填语义 token、语义前景/背景配对，并以稳定图表夹具记录双主题截图和 axe 证据。\",\n        \"nonGoals\": [\n          \"不新增第三套主题\",\n          \"不改变公共组件 API\"\n        ],\n        \"plainLanguage\": \"让 token 和图表例外都由可复跑证据证明。\",\n        \"candidateOptions\": {\n          \"A\": \"只记录文档例外\",\n          \"B\": \"静态解析加真实浏览器图表夹具\"\n        },\n        \"recommendedOption\": {\n          \"option\": \"B\",\n          \"rationale\": \"同时覆盖 token 漂移和 Recharts 实际渲染。\"\n        },\n        \"openDecisions\": \"none\",\n        \"granularityDecision\": \"fine-enough：token 解析和图表例外共享主题治理验收。\",\n        \"testCaseDesign\": \"静态 token 断言、双主题截图与 axe。\",\n        \"acceptanceToTestMapping\": \"token 规则→check:design-contract；图表例外→theme-chart Playwright。\",\n        \"regressionTestDesign\": \"缺 token、未批准 raw 值或图表回归均失败。\",\n        \"coverageAssessment\": \"target-driven\",\n        \"residualRisk\": \"自动 a11y 不替代产品语义人工审查。\",\n        \"readiness\": {\n          \"readiness\": \"Yes\",\n          \"reason\": \"现有静态脚本、Playwright 和消费者夹具可直接执行。\"\n        }\n      }\n    },\n    \"implementation-record\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    },\n    \"use-case\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    },\n    \"review-report\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    },\n    \"delivered-registry-entry\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    },\n    \"completion-audit\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    }\n  }\n}"
+      ]
+    ],
+    "deletions": [],
+    "preconditions": [
+      {
+        "id": "workflow-write",
+        "status": "passed"
+      },
+      {
+        "id": "section-set-structural-preflight",
+        "status": "passed",
+        "section": "implementation-ready-brief",
+        "schemaUri": "sws://schemas/workflow/section-items.schema.json",
+        "expectedItemsKind": "object",
+        "currentItemsKind": "object",
+        "proposedItemsKind": "object",
+        "structuralChangeKind": "object-shape-change",
+        "currentSummary": {
+          "kind": "object",
+          "keyCount": 1,
+          "keys": [
+            "readiness"
+          ]
+        },
+        "proposedSummary": {
+          "kind": "object",
+          "keyCount": 14,
+          "keys": [
+            "problemDefinition",
+            "requirementsDefinition",
+            "nonGoals",
+            "plainLanguage",
+            "candidateOptions",
+            "recommendedOption",
+            "openDecisions",
+            "granularityDecision",
+            "testCaseDesign",
+            "acceptanceToTestMapping",
+            "regressionTestDesign",
+            "coverageAssessment",
+            "residualRisk",
+            "readiness"
+          ]
+        },
+        "payloadHash": "sha256:3323f87dfdbe612a63c9a7989e6502eb7579934c850f9f96044f4d5adecc0eb7",
+        "payloadFile": {
+          "handleId": "tph-3323f87dfdbe-1784217797231737244-1252530-0",
+          "payloadHash": "sha256:3323f87dfdbe612a63c9a7989e6502eb7579934c850f9f96044f4d5adecc0eb7",
+          "binding": "sectionSet-payload-hash"
+        }
+      }
+    ],
+    "validation_handoff": [
+      "sw workflow validate --id … --root /home/blade/swui",
+      "sw workflow ledger --incremental --apply --root /home/blade/swui"
+    ],
+    "rollback_note": "git checkout -- .sw/workflow/steps/S-SWQT-0003-2-主题-token-与图表例外治理.json",
+    "lifecycle_sync_feature": null,
+    "repairMode": false
+  }
+}

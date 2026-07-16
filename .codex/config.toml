@@ -1,0 +1,7 @@
+[mcp_servers.sw]
+command = "sw"
+args = ["mcp"]
+
+[mcp_servers.sw.env]
+SW_MCP_URL = "https://agent.swqt.net/mcp"
+SW_MCP_TOKEN = "${SW_MCP_TOKEN}"

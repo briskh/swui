@@ -41,8 +41,8 @@ export function WideScreenGate({
 }) {
   return (
     <div className={className}>
-      <div className="hidden min-[821px]:block">{children}</div>
-      <WideScreenPlaceholder title={title} description={description} className="hidden max-[820px]:block" />
+      <div className="hidden min-data-dense:block">{children}</div>
+      <WideScreenPlaceholder title={title} description={description} className="hidden max-data-dense:block" />
     </div>
   );
 }

@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0004",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0004: 核心组件双主题与数据密度迁移",
+  "sourceFeature": {
+    "id": "F-SWQT-0001",
+    "href": "../feature/F-SWQT-0001-主题与尺寸一致性治理.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-16T11:54:56.887Z",
+  "updatedAt": "2026-07-16T11:54:56.887Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "使核心组件和已登记例外在两主题及尺寸契约下稳定工作，并以代表性表格验证 data-dense。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "迁移核心组件、图表例外与 WideScreenGate/data-dense 验证"
+        ],
+        "outOfScope": [
+          "不交付下游 Step 的职责",
+          "不采用临时方案或无退出计划的兼容层"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "sourceFeature": "F-SWQT-0001",
+        "researchEvidence": "R-SWUI-001；S-SWQT-0001 基线",
+        "optionsTelos": "Feature 选择 B：目标态细 Step 交付",
+        "projectCompanionRefs": "AGENTS.md；项目包 AGENTS.md"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": [
+          "S-SWQT-0003"
+        ],
+        "externalDependencies": [
+          "当前源码、构建与测试环境"
+        ],
+        "userDecisions": [
+          "R-SWUI-001 第 5、8 章已确认决策"
+        ],
+        "projectResources": [
+          "F-SWQT-0001",
+          "R-SWUI-001"
+        ],
+        "axisPositioning": "required：公共组件契约、验证与消费端边界受影响。",
+        "axisSplitSnapshot": "required：本 Step 只承担自身可独立验收的产物。",
+        "temporaryArtifactLifecycle": "不保留临时实现；测试夹具或验收记录须有永久项目层归宿。"
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "problemDefinition": "上游 Feature 已确认目标，但缺少本边界的正式实施产物。",
+        "requirementsDefinition": "完成本 Step 的目标态产物、自动化证据和文档同步；所有验收均可重复。",
+        "nonGoals": [
+          "不替代其它 Step 的验收",
+          "不将未验证能力宣称为完成"
+        ],
+        "plainLanguage": {
+          "unclear": "该能力目前未成为可信赖契约。",
+          "why": "会造成主题或尺寸漂移。",
+          "outcome": "将本职责做成可长期维护、可验证的正式能力。"
+        },
+        "options": [
+          {
+            "id": "A",
+            "name": "临时补丁",
+            "cuttingPoint": "局部绕过",
+            "impact": "快但不可维护",
+            "risk": "高",
+            "validationCost": "后置",
+            "rejectWhen": "正式发布"
+          },
+          {
+            "id": "B",
+            "name": "目标态实现",
+            "cuttingPoint": "正式契约与门禁",
+            "impact": "长期可维护",
+            "risk": "实施投入",
+            "validationCost": "前置",
+            "rejectWhen": "无"
+          }
+        ],
+        "openDecisions": [],
+        "recommendedOption": {
+          "option": "B",
+          "rationale": "用户明确要求目标态优先和完整质量门禁。"
+        },
+        "granularity": {
+          "granularityDecision": "fine-enough",
+          "whySmallEnough": "仅覆盖一个独立的交付边界和验收出口。",
+          "whyNotSplitFurther": "子项共享同一契约和验证证据。",
+          "splitSignals": "出现独立公共 API、消费者或验证域时再拆分。"
+        },
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "范围、依赖、验收和用户决策已在 Feature 中明确。"
+        },
+        "forwardImpact": [
+          {
+            "target": "后续依赖 Step",
+            "impactType": "前提与验收证据",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0004",
+            "resolution": "完成时更新下游所需事实和链接。"
+          }
+        ],
+        "testDrivenDesign": {
+          "testCaseDesign": "为本 Step 的每个验收标准设计可重复自动化或浏览器用例。",
+          "acceptanceToTestMapping": "所有 Feature 相关验收均映射至本 Step 产物与证据。",
+          "regressionTestDesign": "行为或样式变更须保留回归用例。",
+          "coverageAssessment": "target-driven",
+          "residualRisk": "第三方渲染和外部消费者在 S-SWQT-0006 复核。"
+        }
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "use-case": {
+      "sectionStatus": "done",
+      "items": {
+        "acceptanceCriteriaMapping": "本 Step 为 F-SWQT-0001 的相应验收项提供直接证据。",
+        "useCaseTable": "维护者执行本 Step 后，可在真实组件/消费者中复现并验证其正式能力。"
+      }
+    },
+    "review-report": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-16",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0004-核心组件双主题与数据密度迁移.json",
+        "validationSummary": "核心控件统一 token 尺寸；Calendar、表头与 loading 迁移；data-dense 820px 边界和例外登记已通过浏览器与静态检查。",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "核心控件统一 token 尺寸；Calendar、表头与 loading 迁移；data-dense 820px 边界和例外登记已通过浏览器与静态检查。",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0004",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "minimum-auto-filled-by-promote",
+        "minimumSetSatisfied": "Yes - workflow promote populated minimum registry/audit records before setting status=delivered.",
+        "upgradeToFullAuditReason": "not-recorded-by-delivery-minimum",
+        "requirementAudit": [
+          {
+            "requirement": "reviewed Step can be delivered only with closure records.",
+            "status": "implemented",
+            "evidence": "workflow promote populated delivered-registry-entry and completion-audit before status=delivered.",
+            "risk": "Minimum auto-fill is less descriptive than a hand-authored Completion Audit.",
+            "followUp": "Review owner may enrich the audit before delivery when richer evidence is required."
+          }
+        ],
+        "workflowRunAudit": "minimum auto-filled by workflow promote",
+        "intermediateDocumentStateAudit": "delivered-registry-entry and completion-audit populated before final status=delivered.",
+        "documentGovernanceAudit": "minimum auto-filled by workflow promote",
+        "frictionAndImprovementBacklog": "N/A",
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Closing triad minimum: reviewed precondition satisfied; validationSummary present; registry/audit records populated before status=delivered.",
+          "closingSelfAuditConsistency": "minimum auto-filled by workflow promote",
+          "landingChecklistOutcome": "not-applicable",
+          "pluginSkillFriction": "N/A",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "N/A",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "not-recorded-by-delivery-minimum"
+      }
+    }
+  },
+  "validationSummary": "核心控件统一 token 尺寸；Calendar、表头与 loading 迁移；data-dense 820px 边界和例外登记已通过浏览器与静态检查。"
+}

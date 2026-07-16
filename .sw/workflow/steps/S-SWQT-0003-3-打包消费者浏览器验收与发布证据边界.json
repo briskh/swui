@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0003-3",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0003-3: 打包消费者浏览器验收与发布证据边界",
+  "sourceFeature": {
+    "id": "F-SWQT-0003",
+    "href": "../feature/F-SWQT-0003-研究报告目标态验收闭环.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-16T15:34:28.819Z",
+  "updatedAt": "2026-07-16T15:34:28.819Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "not-started",
+      "items": {
+        "statement": "_TBD_"
+      }
+    },
+    "scope": {
+      "sectionStatus": "not-started",
+      "items": {}
+    },
+    "inputs": {
+      "sectionStatus": "not-started",
+      "items": {}
+    },
+    "dependencies": {
+      "sectionStatus": "not-started",
+      "items": {}
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "problemDefinition": "现有 tarball 验收只检查构建与 CSS，不证明已安装发布产物在真实浏览器中呈现和切换主题。",
+        "requirementsDefinition": "nested isolated 与 workspace-hoisted 两种 tarball 消费者都必须 typecheck、build、验证 CSS，并运行 Playwright 主题/状态/图表/边界矩阵。",
+        "nonGoals": [
+          "不执行私有 registry 发布",
+          "不使用或请求发布凭据"
+        ],
+        "plainLanguage": "让发布产物在两种真实安装布局中接受和工作区相同的浏览器验收。",
+        "candidateOptions": {
+          "A": "只检查打包 CSS",
+          "B": "打包后启动浏览器矩阵"
+        },
+        "recommendedOption": {
+          "option": "B",
+          "rationale": "可验证运行时解析、渲染与主题交互，而非只验证产物文本。"
+        },
+        "openDecisions": "registry 认证为外部后续项，非当前本地验收阻塞。",
+        "granularityDecision": "fine-enough：两个布局共享同一发布态浏览器不变量。",
+        "testCaseDesign": "每个布局执行现有 8 project Playwright matrix。",
+        "acceptanceToTestMapping": "nested/hoisted→verify:packed-consumer 中 typecheck/build/CSS/browser。",
+        "regressionTestDesign": "包解析、@source、主题运行时或截图失效均会失败。",
+        "coverageAssessment": "target-driven",
+        "residualRisk": "远端私有 registry 认证和发布策略仍需有凭据的发布者验证。",
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "tarball、临时消费者与 Playwright 已在仓库可用。"
+        }
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "executionContract": {
+          "expectedChangeSurface": "Tarball packing, temporary nested and hoisted consumers, emitted CSS checks, and Playwright browser verification.",
+          "acceptanceCriteria": "Each installation layout typechecks, builds, contains token and component CSS, and passes the eight-project browser matrix against installed tarballs.",
+          "validationEvidenceRequired": "verify:packed-consumer plus its underlying package packs, consumer typecheck/build/CSS checks, and browser results.",
+          "rollbackNotes": "The verifier uses a mkdtemp location and removes only its owned temporary directory in finally; no repository consumer is mutated."
+        },
+        "implementationSummary": {
+          "whatChanged": "Extended verify-packed-consumer to install packed ui/ui-tokens tarballs in isolated nested and workspace-hoisted layouts, then execute Playwright against each consumer after CSS checks.",
+          "whySatisfiesStep": "This proves actual installed-package runtime resolution, theme switching, rendering, and the CSS scan path in both supported layouts.",
+          "intentionallyUnchanged": "No remote publication is attempted; private registry authentication remains an external release responsibility."
+        },
+        "changeSurface": {
+          "codeAnchors": "scripts/verify-packed-consumer.mjs",
+          "documentationAnchors": "docs/experience/theme-and-dimensions.md; docs/experience/quality-matrix.md",
+          "configAnchors": "examples/ui-consumer/package.json and playwright config are copied into temporary consumers."
+        },
+        "executionNotes": {
+          "decisionsDuringImplementation": "Reused the same browser matrix to prevent workspace-only and package-shaped acceptance drift.",
+          "deviationsFromBrief": "None.",
+          "risksDiscovered": "A missing Bun PATH was isolated to the host session; explicit command PATH was used without changing user shell configuration."
+        },
+        "validationReferences": [
+          {
+            "commandOrEvidence": "bun run verify:packed-consumer",
+            "result": "passed",
+            "notes": "Nested isolated and workspace-hoisted each typechecked, built, checked CSS, then passed 34 browser tests with 6 intentional scope skips."
+          },
+          {
+            "commandOrEvidence": "bun run --filter @swui/ui-consumer-example test:browser",
+            "result": "passed",
+            "notes": "Source consumer baseline: 34 passed, 6 intentional skips."
+          },
+          {
+            "commandOrEvidence": "publish:dry",
+            "result": "blocked-with-reason(registry-authentication)",
+            "notes": "Not retried: external credentials are explicitly outside local acceptance."
+          }
+        ]
+      }
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "gateOutcomes": [
+          {
+            "gate": "scope and implementation evidence",
+            "result": "passed",
+            "evidence": "Verifier only creates and removes its own mkdtemp consumers; no credentials or remote publish attempt.",
+            "residualRisk": "Actual remote registry operation remains outside local scope.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "packed runtime acceptance",
+            "result": "passed",
+            "evidence": "Both nested isolated and workspace-hoisted tarball consumers typecheck, build, verify emitted component/dark CSS, and run 34 pass/6 intentional scope skips browser matrices.",
+            "residualRisk": "Same browser matrix is a targeted UI suite, not every package consumer.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "test sufficiency and regression",
+            "result": "passed",
+            "evidence": "Failure in package resolution, @source scanning, theme runtime, chart, state, or visual baseline fails one of the two installed-consumer matrices.",
+            "residualRisk": "Remote registry auth is excluded with explicit owner/trigger.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "release boundary and documentation",
+            "result": "passed",
+            "evidence": "Docs explain package-shaped local proof and direct private-registry validation to credentialed maintainers; Feature open question carries owner/trigger/risk.",
+            "residualRisk": "Remote policy/package-name collision remains unverified.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "provenance/final position/promotion",
+            "result": "passed",
+            "evidence": "Step sourceFeature is F-SWQT-0003; stable step path is retained and validation evidence recorded.",
+            "residualRisk": "Historical workflow-numbering remains separately governed.",
+            "counterEvidenceChecked": "yes"
+          }
+        ],
+        "projectCompanionFactDecision": "not-needed: companion validation handoff already declares the local gate; documentation captures expanded browser runtime proof.",
+        "residualRisk": "Private remote registry credentials/policy and unrelated historical numbering migration remain bounded follow-ups.",
+        "followUp": "Promote Step 3, then synchronize Feature lifecycle and conduct Feature-level acceptance audit.",
+        "promotionDisposition": "ready"
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-17T00:50:00.000Z",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0003-3-打包消费者浏览器验收与发布证据边界.json",
+        "validationSummary": "Nested isolated and workspace-hoisted tarball consumers typechecked, built, validated emitted CSS, and each passed the eight-project browser matrix (34 passed; 6 intentional scope skips).",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "Nested isolated and workspace-hoisted tarball consumers typechecked, built, validated emitted CSS, and each passed the eight-project browser matrix (34 passed; 6 intentional scope skips).",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0003-3",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "minimum-auto-filled-by-promote",
+        "minimumSetSatisfied": "Yes - workflow promote populated minimum registry/audit records before setting status=delivered.",
+        "upgradeToFullAuditReason": "not-recorded-by-delivery-minimum",
+        "requirementAudit": [
+          {
+            "requirement": "reviewed Step can be delivered only with closure records.",
+            "status": "implemented",
+            "evidence": "workflow promote populated delivered-registry-entry and completion-audit before status=delivered.",
+            "risk": "Minimum auto-fill is less descriptive than a hand-authored Completion Audit.",
+            "followUp": "Review owner may enrich the audit before delivery when richer evidence is required."
+          }
+        ],
+        "workflowRunAudit": "minimum auto-filled by workflow promote",
+        "intermediateDocumentStateAudit": "delivered-registry-entry and completion-audit populated before final status=delivered.",
+        "documentGovernanceAudit": "minimum auto-filled by workflow promote",
+        "frictionAndImprovementBacklog": "N/A",
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Closing triad minimum: reviewed precondition satisfied; validationSummary present; registry/audit records populated before status=delivered.",
+          "closingSelfAuditConsistency": "minimum auto-filled by workflow promote",
+          "landingChecklistOutcome": "not-applicable",
+          "pluginSkillFriction": "N/A",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "N/A",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "not-recorded-by-delivery-minimum"
+      }
+    }
+  },
+  "validationSummary": "Nested isolated and workspace-hoisted tarball consumers typechecked, built, validated emitted CSS, and each passed the eight-project browser matrix (34 passed; 6 intentional scope skips)."
+}

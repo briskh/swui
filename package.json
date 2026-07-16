@@ -9,6 +9,8 @@
   "scripts": {
     "pack": "bun run --filter '@swui/ui-tokens' pack && bun run --filter '@swui/ui' pack",
     "publish:dry": "bun run --filter '@swui/ui-tokens' publish:dry && bun run --filter '@swui/ui' publish:dry",
-    "example:build": "bun run --filter '@swui/ui-consumer-example' build"
+    "example:build": "bun run --filter '@swui/ui-consumer-example' build",
+    "check:design-contract": "node scripts/check-design-contract.mjs",
+    "verify:packed-consumer": "node scripts/verify-packed-consumer.mjs"
   }
 }

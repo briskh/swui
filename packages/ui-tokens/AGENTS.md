@@ -23,7 +23,7 @@ It does **not** include React components. For primitives (including `WideScreenG
 
 - Prefer semantic tokens (`bg-primary`, `text-muted-foreground`) over hard-coded chroma.
 - Do **not** fork a second token file in the consumer; bump this package instead.
-- Runtime theme contract for organization apps is **light-only** today. `.dark` variables ship for future use; do not enable dark mode in skywalker-family apps until dual-theme is explicitly re-enabled upstream.
+- Runtime theme contract supports light and dark values. Consumers select the effective theme through `@swui/ui` `ThemeProvider`; do not fork token files or mount competing theme selectors.
 - Token **values** in `src/tokens.css` are authoritative for published packages. Keep consumer docs aligned with that file.
 
 ## Registry

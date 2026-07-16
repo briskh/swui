@@ -1,6 +1,6 @@
 export { cn } from "./lib/utils";
 export * from "./lib/date";
-export { ThemeProvider, ThemeControl, useTheme, type Theme } from "./theme";
+export { ThemeProvider, ThemeControl, useTheme, THEME_STORAGE_KEY, themeInitializationScript, type Theme, type ThemePreference } from "./theme";
 
 export * from "./components/accordion";
 export * from "./components/alert";

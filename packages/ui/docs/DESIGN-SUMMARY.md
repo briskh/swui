@@ -14,12 +14,12 @@ Consumer-facing design intent. Token **values** live in `@swui/ui-tokens`.
 
 - Font: Inter stack (see tokens).
 - Base rhythm 4px; common gaps 8 / 12 / 16 / 24 / 32px.
-- Control height ~40px (`h-10`); panel radius max 8px (`--radius`).
+- Default control height is 40px (`h-control-md`); panel radius max 8px (`--radius`).
 
 ## Responsive (library-relevant)
 
 - Compact `<=820px`, wide `>=821px`.
-- Use complete classes: `hidden min-[821px]:block` / `hidden max-[820px]:block` (avoid merge-collapsing `cn("hidden", …, "block")`).
+- Use complete classes: `hidden min-data-dense:block` / `hidden max-data-dense:block` (avoid merge-collapsing `cn("hidden", …, "block")`).
 - **Adapt** when content works as stacks/cards/forms; **gate** dense tables with `WideScreenGate`.
 
 ## Component patterns (short)

@@ -19,7 +19,7 @@
 - Use Radix `Select` for ServerDataTable header filters (use `PopoverSelect` / header Combobox patterns).
 - Put product TopBar / AppShell / route `staticData` IA into this package.
 - Reintroduce a separate `@swui/ui-shell` package without updating SSOT-029.
-- Enable `.dark` in Skywalker product apps while the contract is light-only.
-- Rely on `cn("hidden", condition && "block")` for 820/821 visibility (class merge risk).
+- Mount `.dark` manually in applications; ThemeProvider owns the global selector.
+- Rely on `cn("hidden", condition && "block")` for `data-dense` visibility (class merge risk).
 - Treat `Sidebar` showcase as the production left nav for a new product (compose your own shell).
 - Ship auth/account/session identity UI through these primitives as if it were included (it is not).

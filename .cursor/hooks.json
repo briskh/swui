@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeMCPExecution": [
+      {
+        "command": "sw",
+        "args": [
+          "hook",
+          "beforeMCPExecution"
+        ]
+      }
+    ],
+    "afterMCPExecution": [
+      {
+        "command": "sw",
+        "args": [
+          "hook",
+          "afterMCPExecution"
+        ]
+      }
+    ],
+    "beforeReadFile": [
+      {
+        "command": "sw",
+        "args": [
+          "hook",
+          "beforeReadFile"
+        ]
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "sw",
+        "args": [
+          "hook",
+          "postToolUse"
+        ],
+        "matcher": "Read"
+      }
+    ],
+    "sessionStart": [
+      {
+        "command": "sw",
+        "args": [
+          "hook",
+          "sessionStart"
+        ]
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "sw",
+        "args": [
+          "hook",
+          "beforeShellExecution"
+        ]
+      }
+    ],
+    "beforeSubmitPrompt": [
+      {
+        "command": "sw",
+        "args": [
+          "hook",
+          "beforeSubmitPrompt"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0007",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0007: 组件质量矩阵与静态主题门禁",
+  "sourceFeature": {
+    "id": "F-SWQT-0002",
+    "href": "../feature/F-SWQT-0002-主题与尺寸质量收口.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-16T15:08:46.032Z",
+  "updatedAt": "2026-07-16T15:08:46.032Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "建立核心交互组件的真实浏览器质量矩阵、代表性 data-dense 表格证据和完整静态主题契约门禁。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "扩展示例夹具以渲染 Button、Input、Select、主题菜单和真实 DataTable。",
+          "以 Playwright projects 覆盖 light/dark 与 compact、data-dense、lg、xl 视口，保留 Chromium 截图基线。",
+          "对每个主题/视口运行 axe，并断言 820/821px 的真实表格 gate。",
+          "扩展静态脚本以检查 token 定义、alias 循环和绕过主题选择器的分支。"
+        ],
+        "outOfScope": [
+          "私有 registry 发布与认证。",
+          "新的组件 API 或产品页面布局。"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "sourceFeature": "F-SWQT-0002",
+        "researchEvidence": "R-SWUI-001 §5、§7、§8；Playwright v1.61 官方 projects/colorScheme 文档。",
+        "optionsTelos": "Feature 选择 B：完整质量收口。",
+        "projectCompanionRefs": ".cursor/skills/project-swqt-companion/SKILL.md"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": [],
+        "externalDependencies": [
+          "Bun 1.3.14",
+          "Playwright Chromium",
+          "@axe-core/playwright"
+        ],
+        "userDecisions": [
+          "用户确认 auto 与 Option B"
+        ],
+        "projectResources": [
+          "examples/ui-consumer/browser.spec.mjs",
+          "scripts/check-design-contract.mjs"
+        ],
+        "axisPositioning": "required: application=sdk-design-system; technology=Playwright+Tailwind; validation=browser+a11y+static; layer=project-repo.",
+        "axisSplitSnapshot": "拆分原因：浏览器/静态质量证据与发布布局/CI 具有独立验收与失败根因；本 Step 先提供后者依赖的稳定命令。",
+        "temporaryArtifactLifecycle": "not-applicable：Playwright 产物和 tarball 均由现有 ignore/cleanup 机制管理；不删除无关文件。"
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "problemDefinition": "现有示例仅覆盖两个页面级场景，无法证明报告要求的组件、主题和视口矩阵。",
+        "requirementsDefinition": "新增稳定组件夹具、主题/视口 Playwright projects、a11y/截图断言、真实表格边界断言和静态 token 规则。",
+        "nonGoals": [
+          "不修改公共组件行为，除非新增测试暴露缺陷。",
+          "不执行 npm publish。"
+        ],
+        "plainLanguage": {
+          "unclear": "目前的绿灯只能证明示例页，而不能证明整个组件库目标态。",
+          "why": "主题和响应式回归可能只在未覆盖组件或宽度出现。",
+          "outcome": "让关键组件和阈值在两个主题、四种宽度下都有可重复失败信号。"
+        },
+        "options": [
+          {
+            "id": "A",
+            "name": "补充少量页面断言",
+            "cuttingPoint": "保留单配置测试文件",
+            "impact": "实现快但矩阵不完整",
+            "risk": "仍遗漏主题或视口组合",
+            "validationCost": "低",
+            "rejectWhen": "严格验收 R-SWUI-001"
+          },
+          {
+            "id": "B",
+            "name": "Playwright projects 矩阵与共享夹具",
+            "cuttingPoint": "配置化主题/视口并复用断言",
+            "impact": "完整可重复覆盖",
+            "risk": "快照维护成本",
+            "validationCost": "中",
+            "rejectWhen": "无"
+          }
+        ],
+        "openDecisions": [],
+        "recommendedOption": {
+          "option": "B",
+          "rationale": "官方 Playwright projects 与 colorScheme 直接支持所需矩阵，且避免重复测试代码。"
+        },
+        "granularity": {
+          "granularityDecision": "fine-enough",
+          "whySmallEnough": "共享不变量是质量矩阵和静态契约；消费者安装/CI 已拆到 S-SWQT-0008。",
+          "whyNotSplitFurther": "fixture、projects、截图和 axe 必须共同提供一次浏览器验收信号。",
+          "splitSignals": "若组件缺陷要求改变公开 API 或 token 语义，则拆出独立修复 Step。"
+        },
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "范围、现有夹具、依赖和验收都已明确；没有待定产品决策。"
+        },
+        "forwardImpact": [
+          {
+            "target": "S-SWQT-0008",
+            "impactType": "验收依赖变化",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0007",
+            "resolution": "提供稳定的根级质量命令，供 CI 复用。"
+          }
+        ],
+        "testDrivenDesign": {
+          "testCaseDesign": "每个组件夹具在 light/dark 与四个视口运行真实浏览器、axe 和截图；DataTable 在 820/821px 验证 gate。",
+          "acceptanceToTestMapping": "报告的组件矩阵、WCAG、视觉和 data-dense 验收分别映射到 projects、axe、toHaveScreenshot 与边界用例。",
+          "riskToTestLevelMapping": "用户可见主题/响应式行为使用 browser E2E；token 契约使用静态脚本。",
+          "regressionTestDesign": "新增每个缺口对应的回归断言。",
+          "coverageAssessment": "target-driven",
+          "residualRisk": "第三方组件的全部内部状态仍需逐次扩展，但核心交互组件先覆盖。",
+          "followUp": "S-SWQT-0008 在 CI 与 tarball 布局中复用这些门禁。"
+        },
+        "profileNote": "full：涉及用户可见运行时行为与发布质量承诺。"
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "complete",
+        "summary": "Implemented an 8-project Playwright quality matrix (light/dark × compact/data-dense/lg/xl), representative public Table rendering, 820/821 boundary coverage, and expanded semantic-token static checks.",
+        "changeSurface": [
+          "examples/ui-consumer/src/main.tsx",
+          "examples/ui-consumer/playwright.config.mjs",
+          "examples/ui-consumer/browser.spec.mjs",
+          "scripts/check-design-contract.mjs",
+          "examples/ui-consumer/__screenshots__"
+        ],
+        "validation": [
+          "bun run --filter '@swui/ui-consumer-example' typecheck",
+          "bun run check:design-contract",
+          "bun run example:build",
+          "bun run --filter '@swui/ui-consumer-example' test:browser:update",
+          "bun run --filter '@swui/ui-consumer-example' test:browser"
+        ],
+        "result": "All commands passed; the normal browser run reported 18 passed and 6 viewport-scoped skips."
+      }
+    },
+    "use-case": {
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "complete",
+        "cases": [
+          {
+            "name": "Consumer verifies core components across supported render contexts",
+            "evidence": "Screenshot and axe checks run for every light/dark × compact/data-dense/lg/xl project."
+          },
+          {
+            "name": "Data-dense table respects the 820px visibility boundary",
+            "evidence": "The actual public Table is hidden at 820px and visible at 821px, with axe checks at both widths."
+          }
+        ]
+      }
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "gateOutcomes": [
+          {
+            "gate": "scope/state/brief",
+            "result": "passed",
+            "evidence": "Changes are confined to the example, browser matrix, static checker, and snapshots; status is implemented and the brief is complete.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "validation and user-visible flow",
+            "result": "passed",
+            "evidence": "typecheck, design contract, example build, snapshot update, and normal Playwright matrix passed; normal run: 18 passed, 6 intentional project-scoped skips.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "test sufficiency",
+            "result": "passed",
+            "evidence": "Browser screenshot + axe coverage runs across light/dark × four viewports; a real public Table is asserted at 820/821px; static rules cover token definition/alias checks.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "provenance, document graph, and SSOT impact",
+            "result": "passed",
+            "evidence": "sourceFeature is F-SWQT-0002; docs and CI change project facts, which S-SWQT-0008 owns and documents.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "final-position hygiene and promotion readiness",
+            "result": "passed",
+            "evidence": "Current screenshots are project-scoped and stale two-file baselines were removed; stable paths and validation evidence were rechecked.",
+            "counterEvidenceChecked": "yes"
+          }
+        ],
+        "residualRisk": "The matrix targets core components and representative interactions, not every third-party component state; future public component changes must add a focused fixture or assertion.",
+        "followUp": "S-SWQT-0008 will enforce the matrix in CI and publish-shaped consumer layouts.",
+        "promotionDisposition": "ready"
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-16",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0007-组件质量矩阵与静态主题门禁.json",
+        "validationSummary": "Core browser/a11y matrix, 820/821 real-table gate, token contract, and screenshot baselines passed.",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "Core browser/a11y matrix, 820/821 real-table gate, token contract, and screenshot baselines passed.",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0007",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "minimum-auto-filled-by-promote",
+        "minimumSetSatisfied": "Yes - workflow promote populated minimum registry/audit records before setting status=delivered.",
+        "upgradeToFullAuditReason": "not-recorded-by-delivery-minimum",
+        "requirementAudit": [
+          {
+            "requirement": "reviewed Step can be delivered only with closure records.",
+            "status": "implemented",
+            "evidence": "workflow promote populated delivered-registry-entry and completion-audit before status=delivered.",
+            "risk": "Minimum auto-fill is less descriptive than a hand-authored Completion Audit.",
+            "followUp": "Review owner may enrich the audit before delivery when richer evidence is required."
+          }
+        ],
+        "workflowRunAudit": "minimum auto-filled by workflow promote",
+        "intermediateDocumentStateAudit": "delivered-registry-entry and completion-audit populated before final status=delivered.",
+        "documentGovernanceAudit": "minimum auto-filled by workflow promote",
+        "frictionAndImprovementBacklog": "N/A",
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Closing triad minimum: reviewed precondition satisfied; validationSummary present; registry/audit records populated before status=delivered.",
+          "closingSelfAuditConsistency": "minimum auto-filled by workflow promote",
+          "landingChecklistOutcome": "not-applicable",
+          "pluginSkillFriction": "N/A",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "N/A",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "not-recorded-by-delivery-minimum"
+      }
+    }
+  },
+  "validationSummary": "Core browser/a11y matrix, 820/821 real-table gate, token contract, and screenshot baselines passed."
+}

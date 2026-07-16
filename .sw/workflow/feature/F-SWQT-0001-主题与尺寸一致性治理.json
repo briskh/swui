@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 6,
+  "kind": "feature",
+  "featureId": "F-SWQT-0001",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Feature F-SWQT-0001: 主题与尺寸一致性治理",
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-16T11:54:20.916Z",
+  "updatedAt": "2026-07-16T11:54:20.916Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "background": {
+      "sectionStatus": "done",
+      "items": {
+        "trigger": "R-SWUI-001 已完成主题、尺寸、质量与交付策略的研究和产品决策，需要将其落实为可执行的正式 Feature。",
+        "affectedParties": "@swui/ui-tokens、@swui/ui、所有消费应用、设计与发布维护者。",
+        "whyNow": "当前公开 Theme 类型、CSS 预留和运行时行为不一致；尺寸惯例尚未成为契约，且缺少能够阻止回归的门禁。",
+        "bullets": [
+          "本 Feature 同时交付正式双主题、尺寸系统和质量门禁；门禁不得后置。",
+          "实现必须是长期可维护的目标态，禁止 no-op API、临时开关或发布后补债。",
+          "最终交付必须经过内置浏览器验收，并在项目层沉淀可发现的经验文档。"
+        ]
+      }
+    },
+    "problem-statement": {
+      "sectionStatus": "done",
+      "items": {
+        "coreProblem": "组件库已有语义颜色 token、.dark 变量和 4px 尺寸惯例，但 ThemeProvider 固定浅色、ThemeControl 不渲染、尺寸与断点未形成统一 token 契约，且缺少双主题、无障碍、视觉、发布态消费者和浏览器验收门禁。",
+        "nonGoals": [
+          "不引入 AppShell、TopBar、路由或产品页面网格。",
+          "不支持子树级主题隔离、多品牌主题或高对比度第三套主题。",
+          "不强制迁移至 DTCG JSON；只采用其 token 分层和生命周期治理原则。",
+          "不以临时 feature flag、手工 .dark 注入或一次性脚本作为正式交付。"
+        ]
+      }
+    },
+    "context-constraints": {
+      "sectionStatus": "done",
+      "items": {
+        "projectConstraints": "本仓库是共享 Web UI 设计系统；组件库不得吸收产品壳层职责。所有项目层文档必须从文档树可发现。",
+        "technicalConstraints": "token 真源位于 packages/ui-tokens/src/tokens.css；组件使用 Tailwind v4；ThemeProvider 位于 packages/ui/src/theme.tsx；现有 WideScreenGate 使用 820/821px。",
+        "runtimeConstraints": "主题全局作用于应用根；用户偏好存于 localStorage；system 模式监听 prefers-color-scheme；跨标签页使用 storage 事件；首屏不得出现明显主题闪烁。",
+        "compatibilityConstraints": "真实 ThemeControl 可随下一个主版本发布；现有浅色视觉除 WCAG AA 或明确缺陷外保持不变。",
+        "documentationConstraints": "完成时须在项目 docs/ 产生并索引经验文档；不得只沉淀于 PR、聊天或插件资产。",
+        "projectCompanionRefs": "AGENTS.md；.cursor/skills/project-swqt-companion/SKILL.md；packages/ui/AGENTS.md；packages/ui-tokens/AGENTS.md。",
+        "notes": "尺寸系统与主题系统同级：颜色 token 随主题切换，尺寸 token 默认跨主题稳定。"
+      }
+    },
+    "research-evidence": {
+      "sectionStatus": "done",
+      "items": {
+        "summary": "R-SWUI-001 记录了本地实现事实、行业依据和全部顺序问答决策；本 Feature 以其第 5、6、7、8、9 章作为范围、技术契约、验收、Step 拆分和风险的直接依据。",
+        "sources": [
+          "docs/research/R-SWUI-001-theme-consistency-governance-research.md",
+          "packages/ui-tokens/src/tokens.css",
+          "packages/ui/src/theme.tsx",
+          "packages/ui/src/components/wide-screen-gate.tsx",
+          "packages/ui/docs/DESIGN-SUMMARY.md",
+          "Tailwind CSS theme/responsive documentation；DTCG Format 2025.10；WCAG 2.2；Storybook accessibility/visual testing documentation。"
+        ]
+      }
+    },
+    "options-telos": {
+      "sectionStatus": "done",
+      "items": {
+        "options": [
+          {
+            "id": "A",
+            "name": "局部或临时主题改造",
+            "fitWhen": "只需演示深色模式或短期规避问题。",
+            "benefits": "初始改动少。",
+            "costs": "留下无效 API、未验证 CSS 和持续质量债。",
+            "risks": "与已确认目标态、浏览器验收和发布门禁直接冲突。",
+            "notWhen": "需要正式公开双主题和长期维护时。",
+            "telos": {
+              "technical": "低质量，无法形成一致契约。",
+              "economic": "短期省工，长期返工成本高。",
+              "legal": "无特殊收益。",
+              "operational": "难以审计和排障。",
+              "strategic": "不符合组件库平台化目标。"
+            }
+          },
+          {
+            "id": "B",
+            "name": "一次 Feature、依赖细拆、目标态交付",
+            "fitWhen": "需要正式双主题、尺寸系统及可重复发布质量保障。",
+            "benefits": "公开契约一致，质量门禁完整，经验可复用。",
+            "costs": "需要建立测试、消费者夹具和浏览器验收。",
+            "risks": "范围较大，必须按依赖拆成可验证 Step。",
+            "notWhen": "只允许临时演示而不愿维护时。",
+            "telos": {
+              "technical": "形成长期 token、运行时和测试契约。",
+              "economic": "前置投入换取减少跨项目漂移和返工。",
+              "legal": "通过可访问性验收降低合规风险。",
+              "operational": "CI、浏览器验收和经验文档使维护可重复。",
+              "strategic": "使设计系统成为可信赖的共享基础设施。"
+            }
+          }
+        ],
+        "recommendedOption": "B",
+        "recommendationRationale": "用户已确认完整 Feature 范围、依赖细拆、内置浏览器验收、项目层经验沉淀与目标态优先。",
+        "discussionTopic": "主题与尺寸治理交付策略",
+        "clarification": "已完成；不再保留产品级开放问题。"
+      }
+    },
+    "decision-summary": {
+      "sectionStatus": "done",
+      "items": {
+        "decision": "采用目标态双主题与尺寸系统：system/light/dark 全局偏好、语义 token 分层、4px 尺寸节奏、统一控件尺寸、全局断点、data-dense 专用阈值，以及完整质量和发布门禁。",
+        "rationale": "这是解决当前契约不一致、控制视觉漂移并建立可持续组件库治理的唯一可接受路径。",
+        "userConfirmation": "用户依次确认双主题、系统默认、localStorage 覆盖、全局范围、标准下拉 ThemeControl、跨标签同步、首屏无闪烁、双主题 WCAG AA、自动门禁、两类消费者、尺寸系统、单 Feature 细 Step、内置浏览器验收、项目经验沉淀和目标态优先。",
+        "changePosture": "migrate-forward",
+        "changePostureSource": "user-confirmed",
+        "postureChoiceMechanism": "hir-qap-sequential-gate",
+        "postureChoiceAt": "2026-07-16",
+        "recommendedPostureId": "B",
+        "userPostureSelection": "B",
+        "breakScope": "下一个主版本可将 ThemeControl 从 no-op 提升为真实全局控制，并把 Theme 偏好模型扩展为 system/light/dark。",
+        "userConfirmedBreaking": "Yes"
+      }
+    },
+    "acceptance-criteria": {
+      "sectionStatus": "done",
+      "items": {
+        "criteria": [
+          "ThemeProvider、TypeScript API、DOM 主题选择器、CSS token 和文档一致支持 system/light/dark；不存在 no-op setter 或隐藏的 ThemeControl。",
+          "未设置用户偏好时跟随 prefers-color-scheme；显式覆盖持久化于 localStorage、优先于系统并通过 storage 事件跨标签同步；system 清除覆盖并恢复系统监听。",
+          "首次可见渲染使用有效主题，浅色与深色均满足 WCAG AA；状态不只依赖颜色表达。",
+          "token 包提供语义颜色、基础/语义尺寸、全局断点、容器和间距别名；核心控件统一 compact/sm/md/lg 尺寸契约。",
+          "sm/md/lg/xl 断点为 640/768/1024/1280px，2xl 为 1536px；820/821px 只作为经过代表性表格验证的 data-dense 阈值。",
+          "核心组件在两主题、关键状态和紧凑/data-dense/lg/xl 视口下具备自动 a11y 与视觉回归门禁。",
+          "必须使用内置浏览器验收真实主题切换、跟随系统、跨标签同步、关键视口、表格密度和代表性交互，并保留验收记录。",
+          "发布 tarball 在至少两种消费者安装/hoisting 布局完成 tokens.css、@source、组件渲染和主题行为验证。",
+          "最终在项目 docs/ 中沉淀并索引主题、尺寸、浏览器验收、门禁和消费者接入经验；临时开发路径已移除。"
+        ],
+        "observableSuccess": "两个正式主题在真实消费者中一致渲染，质量门禁与浏览器验收均通过，且后续维护者能从项目文档复用完整流程。",
+        "testabilityRisks": "当前未发现既有测试基础设施；需在 S-SWQT-0005 中选择并建立稳定的故事、视觉、a11y 与浏览器夹具。"
+      }
+    },
+    "step-breakdown": {
+      "sectionStatus": "done",
+      "items": {
+        "steps": [
+          {
+            "stepId": "S-SWQT-0001",
+            "title": "契约与基线盘点",
+            "phase": "baseline",
+            "dependencies": "无；为全部后续 Step 提供事实基线",
+            "materialized": true,
+            "summary": "盘点 token、尺寸、组件状态、例外、消费者和当前缺口。",
+            "status": "designed",
+            "boundary": "仅事实、清单与验收基线，不交付运行时能力。",
+            "purpose": "避免后续实现建立在未验证假设上。",
+            "executionOwner": "swui-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0002",
+            "title": "主题与尺寸 token 基础",
+            "phase": "foundation",
+            "dependencies": "S-SWQT-0001",
+            "materialized": true,
+            "summary": "建立 token 分层、尺寸刻度、间距别名、断点、容器及控件尺寸契约。",
+            "status": "designed",
+            "boundary": "token 与组件尺寸 API 基础，不实现主题持久化。",
+            "purpose": "提供稳定且可消费的设计真源。",
+            "executionOwner": "swui-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0003",
+            "title": "全局主题运行时与 ThemeControl",
+            "phase": "runtime",
+            "dependencies": "S-SWQT-0001、S-SWQT-0002 的契约；可与 S-SWQT-0002 并行编码",
+            "materialized": true,
+            "summary": "实现 system/light/dark、首屏初始化、持久化、系统监听、跨标签同步和下拉控制。",
+            "status": "designed",
+            "boundary": "运行时与公开 API，不迁移全部组件视觉。",
+            "purpose": "让正式主题成为真实可用能力。",
+            "executionOwner": "swui-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0004",
+            "title": "核心组件双主题与数据密度迁移",
+            "phase": "component-migration",
+            "dependencies": "S-SWQT-0002、S-SWQT-0003",
+            "materialized": true,
+            "summary": "迁移核心组件、审计图表例外并验证 data-dense 阈值。",
+            "status": "designed",
+            "boundary": "组件和 token 映射，不建立完整 CI 门禁。",
+            "purpose": "保证真实组件在两主题和尺寸契约下成立。",
+            "executionOwner": "swui-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0005",
+            "title": "质量门禁与内置浏览器验收",
+            "phase": "quality",
+            "dependencies": "S-SWQT-0004",
+            "materialized": true,
+            "summary": "建立状态故事、a11y、视觉、静态规则、浏览器验收流程和记录。",
+            "status": "designed",
+            "boundary": "质量基础设施与真实浏览器验收，不替代发布态消费者测试。",
+            "purpose": "使回归可重复发现并满足用户强制浏览器验收。",
+            "executionOwner": "swui-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0006",
+            "title": "发布态消费者验证与项目经验沉淀",
+            "phase": "release-readiness",
+            "dependencies": "S-SWQT-0001 至 S-SWQT-0005",
+            "materialized": true,
+            "summary": "验证两类 tarball 消费者，完成最终浏览器复验和项目层经验文档。",
+            "status": "designed",
+            "boundary": "发布前验证与知识沉淀，不引入临时兼容路径。",
+            "purpose": "证明外部可消费性并留下长期项目经验。",
+            "executionOwner": "swui-maintainers"
+          }
+        ]
+      }
+    },
+    "open-questions": {
+      "sectionStatus": "done",
+      "items": {
+        "questions": [],
+        "risks": [
+          "data-dense 的最终数值须由代表性表格测量验证，820/821px 不是未经验证的行业标准。",
+          "测试工具、主题预渲染形式和 localStorage key 属于实现选择，必须满足既定验收而非改变产品范围。"
+        ],
+        "resolvedClarifications": [
+          {
+            "topic": "产品级范围",
+            "conclusion": "所有产品级决策已完成；完整质量门禁与能力同属一个 Feature，依赖细拆为 6 个 Step。",
+            "evidence": [
+              "R-SWUI-001 第 5、8 章",
+              "用户顺序问答记录"
+            ]
+          },
+          {
+            "topic": "交付质量",
+            "conclusion": "必须目标态优先、内置浏览器验收、项目层经验沉淀；不接受临时实现。",
+            "evidence": [
+              "R-SWUI-001 第 7、8 章",
+              "用户附加要求"
+            ]
+          }
+        ]
+      }
+    },
+    "handoff-gate": {
+      "sectionStatus": "done",
+      "items": {
+        "confirmedInto": "design",
+        "progress": "研究、范围、用户决策与细粒度 Step 拆分已完成；本轮只创建交付文档，不进入实现。",
+        "validationGate": "全部 Step 必须通过 schema/workflow 验证、研究报告逐项覆盖审计和文档树检查；实现阶段还须满足 Feature 全部验收标准。",
+        "doNotClobber": "不得降低为临时方案、不得遗漏内置浏览器验收或项目层经验沉淀、不得把 data-dense 误作全局断点。",
+        "nextAction": "进入 S-SWQT-0001，先建立事实和验收基线；后续按 Step 依赖推进。",
+        "informationComplete": "Yes",
+        "nextHandoff": "implement",
+        "references": [
+          "docs/research/R-SWUI-001-theme-consistency-governance-research.md",
+          "S-SWQT-0001 至 S-SWQT-0006"
+        ]
+      }
+    }
+  },
+  "closingStepId": "S-SWQT-0006"
+}

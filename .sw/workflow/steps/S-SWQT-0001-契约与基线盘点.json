@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0001",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0001: 契约与基线盘点",
+  "sourceFeature": {
+    "id": "F-SWQT-0001",
+    "href": "../feature/F-SWQT-0001-主题与尺寸一致性治理.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-16T11:54:44.144Z",
+  "updatedAt": "2026-07-16T11:54:44.144Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "建立可审计的主题、尺寸、组件状态、例外、消费者与验收基线，消除后续 Step 的事实不确定性。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "盘点 tokens.css、theme.tsx、核心组件尺寸和 WideScreenGate",
+          "建立核心组件×状态×主题×视口基线矩阵",
+          "登记图表原始颜色、裸尺寸和 dark 分支例外",
+          "定义 data-dense 测量样本与浏览器验收记录模板"
+        ],
+        "outOfScope": [
+          "实现主题运行时",
+          "修改视觉 token 值",
+          "建立 CI 门禁"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "sourceFeature": "F-SWQT-0001",
+        "researchEvidence": "R-SWUI-001 第 3、6、7、8 章",
+        "optionsTelos": "Feature 选择 B：目标态细 Step 交付",
+        "projectCompanionRefs": "AGENTS.md；packages/ui*/AGENTS.md"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": [],
+        "externalDependencies": [
+          "可读取当前包源码与示例"
+        ],
+        "userDecisions": [
+          "所有第 5 章主题/尺寸决策已确认"
+        ],
+        "projectResources": [
+          "R-SWUI-001",
+          "packages/ui/docs/DESIGN-SUMMARY.md"
+        ],
+        "axisPositioning": "required：同时影响 token、组件、测试和消费者后续边界。",
+        "axisSplitSnapshot": "required：本 Step 仅生产事实基线，避免混入实现与验证基础设施。",
+        "temporaryArtifactLifecycle": "允许临时盘点表或截图夹具；必须在项目经验文档中保留永久摘要，完成时清理临时文件。"
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "problemDefinition": "当前事实和例外未被完整清单化，后续实现无法证明覆盖范围。",
+        "requirementsDefinition": "产出可机读或可审计清单、状态矩阵、例外 allowlist、data-dense 测量计划和验收模板。",
+        "nonGoals": [
+          "不实现运行时或主题视觉"
+        ],
+        "plainLanguage": {
+          "unclear": "不知道哪些组件和尺寸需要迁移。",
+          "why": "会遗漏状态、例外或消费者。",
+          "outcome": "先画出完整地图，再按地图交付。"
+        },
+        "options": [
+          {
+            "id": "A",
+            "name": "边实现边盘点",
+            "cuttingPoint": "不单独建立基线",
+            "impact": "快但不可审计",
+            "risk": "遗漏高",
+            "validationCost": "后期高",
+            "rejectWhen": "需要完整验收时"
+          },
+          {
+            "id": "B",
+            "name": "先建立基线",
+            "cuttingPoint": "独立事实 Step",
+            "impact": "后续边界清晰",
+            "risk": "前期投入",
+            "validationCost": "低",
+            "rejectWhen": "无"
+          }
+        ],
+        "openDecisions": [],
+        "recommendedOption": {
+          "option": "B",
+          "rationale": "研究报告要求覆盖审计和目标态推进。"
+        },
+        "granularity": {
+          "granularityDecision": "fine-enough",
+          "whySmallEnough": "只处理事实与清单，不改变运行时。",
+          "whyNotSplitFurther": "各清单共享同一覆盖基线与验收出口。",
+          "splitSignals": "若消费者布局或图表例外需要独立策略则拆分。"
+        },
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "研究、范围和源文件均已确定。"
+        },
+        "forwardImpact": [
+          {
+            "target": "S-SWQT-0002 至 S-SWQT-0006",
+            "impactType": "验收和范围前提",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0001",
+            "resolution": "输出清单并供后续 Step 引用。"
+          }
+        ],
+        "testDrivenDesign": {
+          "testCaseDesign": "盘点完整性检查与代表样本复核。",
+          "acceptanceToTestMapping": "每个基线类别均对应清单条目和复核证据。",
+          "regressionTestDesign": "not-needed：尚未改变运行时代码。",
+          "coverageAssessment": "not-needed",
+          "residualRisk": "动态第三方样式需在后续浏览器验收复核。"
+        }
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "use-case": {
+      "sectionStatus": "done",
+      "items": {
+        "acceptanceCriteriaMapping": "Feature 的 token、组件、data-dense 与浏览器验收要求均以本 Step 的基线为输入。",
+        "useCaseTable": "维护者读取清单，能定位每个核心组件、状态、token、尺寸例外和消费者验证责任。"
+      }
+    },
+    "review-report": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-16",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0001-契约与基线盘点.json",
+        "validationSummary": "R-SWUI-001、设计例外登记与项目经验文档可追溯；schema、静态契约和文档索引复核通过。",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "R-SWUI-001、设计例外登记与项目经验文档可追溯；schema、静态契约和文档索引复核通过。",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0001",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "minimum-auto-filled-by-promote",
+        "minimumSetSatisfied": "Yes - workflow promote populated minimum registry/audit records before setting status=delivered.",
+        "upgradeToFullAuditReason": "not-recorded-by-delivery-minimum",
+        "requirementAudit": [
+          {
+            "requirement": "reviewed Step can be delivered only with closure records.",
+            "status": "implemented",
+            "evidence": "workflow promote populated delivered-registry-entry and completion-audit before status=delivered.",
+            "risk": "Minimum auto-fill is less descriptive than a hand-authored Completion Audit.",
+            "followUp": "Review owner may enrich the audit before delivery when richer evidence is required."
+          }
+        ],
+        "workflowRunAudit": "minimum auto-filled by workflow promote",
+        "intermediateDocumentStateAudit": "delivered-registry-entry and completion-audit populated before final status=delivered.",
+        "documentGovernanceAudit": "minimum auto-filled by workflow promote",
+        "frictionAndImprovementBacklog": "N/A",
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Closing triad minimum: reviewed precondition satisfied; validationSummary present; registry/audit records populated before status=delivered.",
+          "closingSelfAuditConsistency": "minimum auto-filled by workflow promote",
+          "landingChecklistOutcome": "not-applicable",
+          "pluginSkillFriction": "N/A",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "N/A",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "not-recorded-by-delivery-minimum"
+      }
+    }
+  },
+  "validationSummary": "R-SWUI-001、设计例外登记与项目经验文档可追溯；schema、静态契约和文档索引复核通过。"
+}

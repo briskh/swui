@@ -27,7 +27,7 @@ export const PaginationLink = ({ className, isActive, size = "icon", ...props }:
     aria-current={isActive ? "page" : undefined}
     className={cn(
       "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-      size === "icon" ? "size-10" : "h-10 px-4",
+      size === "icon" ? "size-control-md" : "h-control-md px-4",
       isActive ? "border border-input bg-background" : "hover:bg-muted hover:text-foreground",
       className
     )}
@@ -50,10 +50,10 @@ export const PaginationNext = ({ className, ...props }: React.ComponentProps<typ
 );
 
 export const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
-  <span aria-hidden="true" className={cn("flex size-10 items-center justify-center", className)} {...props}>
+  <span aria-hidden="true" className={cn("flex size-control-md items-center justify-center", className)} {...props}>
     <MoreHorizontal className="size-4" />
     <span className="sr-only">More pages</span>
   </span>
 );
 
-export const PaginationButton = ({ className, ...props }: ButtonProps) => <Button variant="ghost" size="icon" className={cn("size-10", className)} {...props} />;
+export const PaginationButton = ({ className, ...props }: ButtonProps) => <Button variant="ghost" size="icon" className={cn("size-control-md", className)} {...props} />;

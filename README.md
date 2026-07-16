@@ -1,6 +1,6 @@
 # swui
 
-Organization-shared Web UI library: design tokens, React primitives, light-only theme, and agent/LLM first-hop docs.
+Organization-shared Web UI library: design tokens, React primitives, global light/dark themes, and agent/LLM first-hop docs. Project-wide experience guidance lives in [`docs/README.md`](docs/README.md).
 
 ## Packages
 

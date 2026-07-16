@@ -45,7 +45,7 @@ export type ServerDataTableProps<TData, TSortKey extends string = string> = {
   bodyMaxHeightClassName?: string;
   /** When true, stretch the table card so its bottom border sits `viewportBottomInsetPx` above the viewport bottom. */
   fillViewport?: boolean;
-  /** Distance from viewport bottom to table card bottom; default matches Tailwind `h-12` (48px). */
+  /** Distance from viewport bottom to table card bottom; default matches `h-control-lg` (48px). */
   viewportBottomInsetPx?: number;
   rowClassName?: string | ((row: TData) => string | undefined);
   scrollResetKey?: React.Key;
@@ -70,7 +70,7 @@ export function serverDataTableHeaderFilterTriggerClassName(active: boolean): st
   return cn(
     serverDataTableHeaderFilterTextClassName,
     serverDataTableHeaderFilterShellClassName,
-    "h-6 w-full gap-1 px-2 py-0 transition-colors [&_svg]:size-3",
+    "h-control-micro w-full gap-1 px-2 py-0 transition-colors [&_svg]:size-3",
     active ? "text-primary hover:text-primary" : "text-muted-foreground hover:text-muted-foreground"
   );
 }
@@ -86,8 +86,8 @@ export const serverDataTableRowClassName = "h-14";
 /** Default number of body rows visible in the scroll viewport before scrolling. */
 export const serverDataTableDefaultVisibleRowCount = 10;
 
-/** Tailwind class for default viewport bottom inset (aligned with TopBar `h-12`). */
-export const serverDataTableViewportBottomInsetClassName = "h-12";
+/** Tailwind class for default viewport bottom inset (48px semantic large-control scale). */
+export const serverDataTableViewportBottomInsetClassName = "h-control-lg";
 
 /** Pixel distance from viewport bottom to table card bottom when `fillViewport` is enabled. */
 export const serverDataTableViewportBottomInsetPx = 48;
@@ -447,7 +447,7 @@ function ServerDataTableSortHeader({
       type="button"
       variant="ghost"
       size="sm"
-      className="-ml-2 h-8 gap-1 px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+      className="-ml-2 h-control-compact gap-1 px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
       onClick={onToggle}
       aria-label={`Sort by ${label}${active ? (direction === "asc" ? ", ascending" : ", descending") : ""}`}
     >

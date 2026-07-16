@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 2,
+  "kind": "instructions",
+  "status": "ratified",
+  "contractUri": "assets/reference/instructions-contract-pointer.md",
+  "instructions": [
+    {
+      "name": "stat",
+      "aliases": [],
+      "caseSensitive": true,
+      "status": "enabled",
+      "skipLayers": ["L1", "L2"],
+      "primarySkill": "workflow-stat",
+      "companionSkills": ["sw-mcp-companion"],
+      "readFirst": [
+        "skills/sw/SKILL.md",
+        "assets/skills/workflow-stat/SKILL.md",
+        "assets/reference/mcp-runbook.md"
+      ],
+      "description": "L0 instruction: workflow posture stat read face (plugin default; project root required for execution).",
+      "boundPrompt": "[L0 instruction: stat]\n\nPrimary skill: workflow-stat.\n\nDiscipline: skip L1/L2 Primary selection only — MUST NOT skip context loading.\n\nRead the instruction readFirst entries supplied by the manifest machine fields.\n\nThen run local CLI sw workflow stat --json with --root when available.",
+      "toolReference": "sw workflow stat",
+      "toolChannel": "sw workflow stat",
+      "fallbackToL2": false,
+      "afterTool": {
+        "handoffFrom": "primarySuggestion.nextHandoff",
+        "loadSkillPattern": "assets/skills/{stage}/SKILL.md"
+      }
+    },
+    {
+      "name": "hitl",
+      "aliases": ["htil"],
+      "caseSensitive": true,
+      "status": "enabled",
+      "skipLayers": ["L1", "L2"],
+      "primarySkill": "workflow-hitl",
+      "companionSkills": ["sw-mcp-companion"],
+      "readFirst": [
+        "skills/sw/SKILL.md",
+        "assets/skills/workflow-hitl/SKILL.md",
+        "assets/reference/workflow-hitl-engage-contract.v1.md"
+      ],
+      "description": "L0 instruction: HITL scan+engage (plugin default; no project root).",
+      "boundPrompt": "[L0 instruction: hitl]\n\nPrimary skill: workflow-hitl.\n\nThen run local CLI sw workflow hitl. Execute hitlEngagement immediately.",
+      "toolReference": "sw workflow hitl",
+      "toolChannel": "sw workflow hitl",
+      "fallbackToL2": false,
+      "afterTool": {
+        "handoffFrom": "hitlEngagement.primarySkill",
+        "engageContract": "assets/reference/workflow-hitl-engage-contract.v1.md"
+      }
+    },
+    {
+      "name": "auto",
+      "aliases": [],
+      "caseSensitive": true,
+      "status": "enabled",
+      "skipLayers": ["L1", "L2"],
+      "primarySkill": "workflow-auto",
+      "companionSkills": ["sw-mcp-companion", "rust-validation"],
+      "readFirst": [
+        "skills/sw/SKILL.md",
+        "assets/skills/workflow-auto/SKILL.md",
+        "assets/reference/workflow-auto-readiness-contract.v1.md",
+        "assets/skills/workflow-stat/SKILL.md",
+        "assets/reference/workflow-auto-chain-contract.v2.md",
+        "assets/reference/workflow-auto-chain-contract.v3.md"
+      ],
+      "description": "L0 instruction: auto consumes workflow posture and advances chainPlan (plugin default; project root required for execution).",
+      "boundPrompt": "[L0 instruction: auto]\n\nPrimary skill: workflow-auto.\n\nRead every readFirst entry before toolReference. Then run local CLI sw workflow auto with --root when available; advance chainPlan until terminal or honest blocker.",
+      "toolReference": "sw workflow auto",
+      "toolChannel": "sw workflow auto",
+      "fallbackToL2": false,
+      "noReadyCandidateLimit": 5,
+      "enablementGateStepIds": [
+        "S-SWQT-0100-3",
+        "S-SWQT-0100-4"
+      ],
+      "afterTool": {
+        "sequence": [
+          "sw workflow auto",
+          "sw workflow auto advance --tier1-write-ref <ref>",
+          "sw workflow auto exit"
+        ],
+        "handoffFrom": "selectedItem.nextHandoff",
+        "loadSkillPattern": "assets/skills/{stage}/SKILL.md"
+      }
+    }
+  ],
+  "readinessInferenceRules": []
+}

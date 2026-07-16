@@ -21,7 +21,7 @@
 
 ## Theme contract
 
-- light-only runtime for Skywalker apps
+- global light/dark runtime is owned by @swui/ui ThemeProvider
 - `:root` + reserved `.dark` CSS both ship
 
 ## Install sketch

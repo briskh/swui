@@ -32,4 +32,4 @@ Adjust `@source` paths for your layout (hoisted monorepo vs nested `node_modules
 
 - Copy `tokens.css` into the app and diverge.
 - Invent parallel `--color-*` tokens for the same semantics.
-- Enable `.dark` in Skywalker product apps until dual-theme is re-enabled upstream.
+- Mount a competing `.dark` selector; use `@swui/ui` `ThemeProvider` as the global theme authority.

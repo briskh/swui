@@ -1,0 +1,23 @@
+---
+description: SWS Agent First Hop — host-loaded surfaces and required first actions
+alwaysApply: true
+---
+
+# SWS First Hop (project)
+
+### Host-loaded surfaces
+
+Cursor has loaded this always-on rule and project `AGENTS.md`, including the managed block between `<!-- SWS:agent-first-hop-index:begin -->` / `<!-- SWS:agent-first-hop-index:end -->`.
+**MUST NOT** edit that managed block (humans or agents); refresh only via `sw repair --dimension host`.
+
+### Required first actions
+
+1. **Select `sw` and read its skill** — read `.agents/skills/sw/SKILL.md` completely.
+2. **Connect `sw mcp` and read the runbook** — read local `sws://reference/mcp-runbook.md`.
+3. **Read the project companion** — use the path declared in `AGENTS.md`.
+4. **Choose the semantic Primary** — read local `sws://routes`, then `sws://skills/<name>`.
+5. **Emit the routing receipt** — only then begin substantive work.
+
+Refresh managed host surfaces with `sw init --dir .` or `sw repair --dimension host --dir . --fix`.
+
+Do not broadly discover MCP resources or guess tool/skill names before these actions.
