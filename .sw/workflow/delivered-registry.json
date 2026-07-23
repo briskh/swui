@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-23T19:31:31.049Z",
+  "generatedAt": "2026-07-23T20:16:57.122Z",
   "source": "workflow-ledger",
   "entries": [
     {
@@ -50,6 +50,13 @@
       "kind": "feature",
       "status": "delivered",
       "path": ".sw/workflow/feature/F-SWQT-0007-html-living-standard-语义合规与原生元素迁移.json",
+      "sourceFeatureId": null
+    },
+    {
+      "id": "F-SWQT-0008",
+      "kind": "feature",
+      "status": "delivered",
+      "path": ".sw/workflow/feature/F-SWQT-0008-swui-mcp-渐进披露-发布新鲜度与消费端设计规范强约束.json",
       "sourceFeatureId": null
     },
     {
@@ -226,6 +233,27 @@
       "status": "delivered",
       "path": ".sw/workflow/steps/S-SWQT-0022-渲染态-html-conformance-回归验证与文档收口.json",
       "sourceFeatureId": "F-SWQT-0007"
+    },
+    {
+      "id": "S-SWQT-0023",
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0023-button-消费合同到-mcp-与-portal-的首个纵向闭环.json",
+      "sourceFeatureId": "F-SWQT-0008"
+    },
+    {
+      "id": "S-SWQT-0024",
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0024-全量-agent-文档-组件披露与-icon-参考面强约束.json",
+      "sourceFeatureId": "F-SWQT-0008"
+    },
+    {
+      "id": "S-SWQT-0025",
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0025-发布新鲜度证据-完整门禁与远端状态收口.json",
+      "sourceFeatureId": "F-SWQT-0008"
     }
   ]
 }

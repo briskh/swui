@@ -4,11 +4,13 @@ Consumer-facing design intent. Token **values** live in `@swqt/ui-tokens`.
 
 ## Checklist (new page / control)
 
+- Actively inspect Portal `/colors`, `/typography`, `/icons`, and the exact component demo before implementation.
 - Prefer existing primitives from this package.
 - Use semantic tokens; do not hard-code chroma as the only state signal.
 - Cover loading, error, empty, ready, refresh/stale, disabled, focus-visible.
 - Icon-only controls need accessible names; tables need visible headers; failures use Alert semantics.
 - Do not add a second toast system or a second icon library.
+- Use native HTML first and ARIA only for semantic gaps; do not simulate controls with neutral elements.
 
 ## Typography & rhythm
 
@@ -44,6 +46,7 @@ Consumer-facing design intent. Token **values** live in `@swqt/ui-tokens`.
 ## Icons
 
 - Library: `lucide-react` named imports only.
+- No emoji-as-icons, second icon library, pasted SVG path, or ad hoc operational SVG.
 - Default size follows host (`[&_svg]:size-4` on buttons).
 - Icon-only: `aria-label`. With text: `aria-hidden="true"` on the icon.
 

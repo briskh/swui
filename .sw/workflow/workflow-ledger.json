@@ -142,6 +142,25 @@
         ]
       }
     },
+    "F-SWQT-0008": {
+      "kind": "feature",
+      "status": "delivered",
+      "path": ".sw/workflow/feature/F-SWQT-0008-swui-mcp-渐进披露-发布新鲜度与消费端设计规范强约束.json",
+      "deliveryComplete": true,
+      "title": "Feature F-SWQT-0008: swui MCP 渐进披露、发布新鲜度与消费端设计规范强约束",
+      "stepPlan": {
+        "steps": [
+          "S-SWQT-0023",
+          "S-SWQT-0024",
+          "S-SWQT-0025"
+        ],
+        "computedOrder": [
+          "S-SWQT-0023",
+          "S-SWQT-0024",
+          "S-SWQT-0025"
+        ]
+      }
+    },
     "S-SWQT-0001": {
       "kind": "step",
       "status": "delivered",
@@ -389,6 +408,36 @@
       "sourceFeatureId": "F-SWQT-0007",
       "title": "Step S-SWQT-0022: 渲染态 HTML conformance、回归验证与文档收口",
       "validationSummary": "Offline source/authored/rendered HTML conformance and all Portal, consumer, package, design, catalog, documentation and workflow closure gates passed.",
+      "deliveredAt": "2026-07-24T00:00:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0023": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0023-button-消费合同到-mcp-与-portal-的首个纵向闭环.json",
+      "sourceFeatureId": "F-SWQT-0008",
+      "title": "Step S-SWQT-0023: Button 消费合同到 MCP 与 Portal 的首个纵向闭环",
+      "validationSummary": "Portal typecheck, 20 unit tests, MCP smoke, design contract and HTML standards passed.",
+      "deliveredAt": "2026-07-24T00:00:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0024": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0024-全量-agent-文档-组件披露与-icon-参考面强约束.json",
+      "sourceFeatureId": "F-SWQT-0008",
+      "title": "Step S-SWQT-0024: 全量 Agent 文档、组件披露与 Icon 参考面强约束",
+      "validationSummary": "Portal build/type/unit/MCP, targeted 8-case browser/Axe/HTML, docs sync, catalog, design and HTML gates passed.",
+      "deliveredAt": "2026-07-24T00:00:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0025": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0025-发布新鲜度证据-完整门禁与远端状态收口.json",
+      "sourceFeatureId": "F-SWQT-0008",
+      "title": "Step S-SWQT-0025: 发布新鲜度证据、完整门禁与远端状态收口",
+      "validationSummary": "All CI-equivalent gates passed; Portal 60/60; source consumer 34/6; packed nested+hoisted 34/6 each; publish dry/audit passed; npm+production remain accurately observed at 1.0.0.",
       "deliveredAt": "2026-07-24T00:00:00.000Z",
       "rootMount": false
     }
@@ -668,8 +717,35 @@
       "from": "S-SWQT-0022",
       "to": "F-SWQT-0007",
       "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0023",
+      "to": "F-SWQT-0008",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0024",
+      "to": "S-SWQT-0023",
+      "rel": "dependsOn",
+      "kind": "defaultSeq"
+    },
+    {
+      "from": "S-SWQT-0024",
+      "to": "F-SWQT-0008",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0025",
+      "to": "S-SWQT-0024",
+      "rel": "dependsOn",
+      "kind": "defaultSeq"
+    },
+    {
+      "from": "S-SWQT-0025",
+      "to": "F-SWQT-0008",
+      "rel": "sourceFeature"
     }
   ],
-  "generatedAt": "2026-07-23T19:30:29.146Z",
-  "contentHash": "sha256:0ff907f63d723581dbc9f2c4c13d5050a06a6cbbc6a143370f320867e5e4eab3"
+  "generatedAt": "2026-07-23T20:15:09.503Z",
+  "contentHash": "sha256:42e0289c2f501975082d7763b6763ee7eac6c84f40c5ab7b7b38f8b4d212cf46"
 }

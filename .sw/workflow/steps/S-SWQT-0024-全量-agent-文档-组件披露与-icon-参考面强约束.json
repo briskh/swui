@@ -1,0 +1,319 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0024",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0024: 全量 Agent 文档、组件披露与 Icon 参考面强约束",
+  "sourceFeature": {
+    "id": "F-SWQT-0008",
+    "href": "../feature/F-SWQT-0008-swui-mcp-渐进披露-发布新鲜度与消费端设计规范强约束.json"
+  },
+  "owner": "swqt-maintainers",
+  "createdAt": "2026-07-23T19:59:12.170Z",
+  "updatedAt": "2026-07-23T19:59:12.170Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "把消费端硬约束推广到两个包、全部组件披露面和 Portal /icons 参考页，同时保持同步真源与有界上下文。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "UI/token AGENTS.md、llms.txt 与 adoption docs",
+          "全部 MCP 组件查询和精确资源",
+          "Portal /icons、导航和 /agent 主动参考顺序",
+          "sync-docs 与 disclosure budgets"
+        ],
+        "outOfScope": [
+          "新增图标库或自绘 SVG",
+          "产品 AppShell/TopBar/routes 抽象",
+          "组件源码复制或本地 fork"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "not-started",
+      "items": {}
+    },
+    "dependencies": {
+      "sectionStatus": "not-started",
+      "items": {}
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "testDrivenDesign": {
+          "testCaseDesign": "所有 catalog.search/component.get/exact resource 共享合同 refs 与绝对 Portal URL；UI/token Agent 文档包含同一强制顺序；/icons 使用 Lucide named imports 和现有控件。",
+          "acceptanceToTestMapping": "MCP unit 覆盖全部工具/资源；sync-docs 与 packed parity 覆盖包文档；Portal browser/a11y 覆盖 /icons 和导航；design/html gates 覆盖视觉与语义。",
+          "riskToTestLevelMapping": "public payload -> unit/schema; package truth -> packed consumer; icon/reference UI -> browser/a11y; bounded disclosure -> byte/count budgets。",
+          "regressionTestDesign": "断言稳定资源总数上限、HTML resource URI、contractRefs 唯一性、绝对 URL、Lucide 图标策略和无 emoji/自绘 SVG。",
+          "coverageAssessment": "touched-code",
+          "coverageMetric": "所有公开 MCP 读取面和两个发布包文档面均有自动断言",
+          "residualRisk": "真实 Agent 遵从度无法由静态测试完全证明。",
+          "followUp": "S-SWQT-0025 运行八提示 walkthrough。"
+        },
+        "explanationSyncBrief": "两个包对同一合同只做短硬提醒，正文由 foundation/HTML docs 和 Portal 参考页承载。",
+        "problemDefinition": "约束分散且 /icons 缺失；本地新增 HTML-first 规则没有贯穿全部 MCP、包和 Portal 暴露面。",
+        "requirementsDefinition": "同步两个包 first-hop 文档；注册 HTML resource；扩展所有组件 payload；新增 /icons 与 /agent 主动参考顺序；维持资源与字节预算。",
+        "nonGoals": [
+          "不新增图标依赖或品牌 glyph。",
+          "不创建 AppShell/TopBar 产品层抽象。",
+          "不复制组件源到 Portal。"
+        ],
+        "plainLanguage": {
+          "unclear": "为什么 token 包也要提醒控件和 HTML。",
+          "why": "Agent 可能从 token 包开始构建页面，必须尽早知道颜色只是基础且控件应来自 @swqt/ui。",
+          "outcome": "无论从哪个包或组件查询进入，都会被导向同一版本锁定规则和真实参考站。",
+          "prose": "入口可以不同，规则真源和实现路径必须一致。"
+        },
+        "options": [
+          {
+            "id": "A",
+            "name": "共享合同 helper + 同步包文档 + Portal icons route",
+            "cuttingPoint": "一份 SSOT、多层短指针。",
+            "impact": "一致且可测试。",
+            "risk": "涉及文件面较多。",
+            "validationCost": "中高但门禁现成。",
+            "rejectWhen": "无法保证 sync-docs。"
+          },
+          {
+            "id": "B",
+            "name": "只更新 AgentPage 文案",
+            "cuttingPoint": "人类站点单面。",
+            "impact": "MCP/包仍可绕过。",
+            "risk": "无法满足 Feature AC。",
+            "validationCost": "低。",
+            "rejectWhen": "要求完整暴露链。"
+          }
+        ],
+        "openDecisions": [],
+        "recommendedOption": {
+          "option": "A",
+          "rationale": "唯一覆盖所有消费入口且不复制合同正文的方案。",
+          "assumptionsFromFeature": "现有 sync-docs 仍是 MCP 文档副本唯一生成路径。",
+          "assumptionChanges": "若目录映射变化，先修生成器而不是手改副本。"
+        },
+        "granularity": {
+          "granularityDecision": "fine-enough",
+          "whySmallEnough": "Agent 文档、MCP payload 和 /icons 共享同一 consumer contract 扩展不变量。",
+          "whyNotSplitFurther": "分拆会允许某一入口短期缺失同一约束。",
+          "splitSignals": "若 icons 需要新增交互组件或设计资产，另拆 UI Feature。",
+          "proposedChildSteps": "none"
+        },
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "合同、路由、工具 schema、文档同步和测试路径均明确。",
+          "missingItems": "none",
+          "partiallySafeToProceed": "N/A"
+        },
+        "forwardImpact": [
+          {
+            "target": "docs/experience/portal-and-mcp.md",
+            "impactType": "事实更新",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0024",
+            "resolution": "同步资源数、first-hop 与 Portal 路由。"
+          },
+          {
+            "target": "S-SWQT-0025",
+            "impactType": "验收前提变化",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0025",
+            "resolution": "运行全矩阵并记录产物字节一致性。"
+          }
+        ],
+        "profileNote": "full public-contract Step；Axis positioning=library/SDK+docs+Portal，公共 payload 与用户可见导航要求完整 brief。"
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "executionContract": {
+          "expectedChangeSurface": "UI/token Agent docs, all component MCP disclosures, Portal /icons and /agent navigation, synchronized generated docs and bounded-resource tests.",
+          "acceptanceCriteria": "Every entry path exposes the same strict consumer contract; /icons uses Lucide and package controls; Portal, MCP and docs-sync gates pass without exceeding budgets.",
+          "validationEvidenceRequired": "Portal build/type/unit/MCP smoke, targeted light/dark browser and HTML/Axe checks, docs sync, catalog, design and HTML contracts.",
+          "rollbackNotes": "Revert docs, Portal route and additive MCP fields together so no entry promises a missing reference."
+        },
+        "implementationSummary": {
+          "whatChanged": "Strengthened UI/token AGENTS, llms and adoption/design guidance; expanded all component payloads; added /icons with Lucide examples and accessible policy; updated /agent and navigation; synchronized 12 generated docs.",
+          "whySatisfiesStep": "Every pre-install and post-install entry now leads to the same blocking contract and active Portal references.",
+          "intentionallyUnchanged": "No new icon dependency, local component fork, product shell, npm publish or production deploy."
+        },
+        "changeSurface": {
+          "codeAnchors": "examples/portal/src/pages/IconsPage.tsx; AgentPage.tsx; navigation.ts; main.tsx; server catalog/handlers.",
+          "configAnchors": "Package 1.1.0 manifests and bun.lock.",
+          "documentationAnchors": "packages/ui{,-tokens}/AGENTS.md, llms.txt, docs; docs/experience/foundation-contract.md and portal-and-mcp.md.",
+          "dataOrMigrationAnchors": "No data migration; generated docs are rebuilt from SSOT."
+        },
+        "executionNotes": {
+          "decisionsDuringImplementation": "Use response-level refs for bounded search, exact-resource refs for standalone reads, fully qualified Portal URLs, and multiline=false SourceCode on /icons to avoid Radix ScrollArea style injection in the validated document.",
+          "deviationsFromBrief": "The /icons HTML check found and avoided an existing ScrollArea authoring issue without changing the shared component outside this Step.",
+          "risksDiscovered": "The static resource budget reaches the declared ceiling of 12; future stable resources require consolidation or a revised budget."
+        },
+        "validationReferences": [
+          {
+            "commandOrEvidence": "Portal build/typecheck and 20 unit tests; MCP smoke",
+            "result": "passed",
+            "notes": "All schemas, resources, tools and synchronized docs pass."
+          },
+          {
+            "commandOrEvidence": "Targeted Portal browser /icons, navigation and /agent in light/dark",
+            "result": "passed",
+            "notes": "8/8 passed with Axe and /icons offline HTML conformance."
+          },
+          {
+            "commandOrEvidence": "sync-docs:check; catalog-export; design contract; HTML standards",
+            "result": "passed",
+            "notes": "12 docs synchronized; 88 catalog exports, 309 package exports and 88 demos."
+          }
+        ],
+        "blocker": {
+          "state": "resolved",
+          "reason": "All Step-local code, docs and focused gates pass.",
+          "owner": "swqt-maintainers",
+          "recoveryTrigger": "New stable resource, icon library policy, Portal route or package first-hop change.",
+          "residualRisk": "Full browser and packed matrices remain for S-SWQT-0025."
+        },
+        "projectFactUpdateCandidates": "update-now in S-SWQT-0025: resource count, /icons route, 1.1.0 source contract and validation commands."
+      }
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "guardedRiskDomain": "Cross-package Agent contract, public MCP disclosure, user-visible Portal navigation and icon policy.",
+        "requirementsStatus": "implemented",
+        "gateOutcomes": [
+          {
+            "gate": "scope/state/research/brief",
+            "result": "passed",
+            "evidence": "Changes are limited to the consumer contract expansion, all disclosure entries and /icons; R-SWQT-0002 and full brief cover the public-contract risk.",
+            "counterEvidenceChecked": "yes: searched for another icon dependency, emoji policy, source copies, raw colors, external fonts and AppShell additions; none were added.",
+            "residualRisk": "Existing repository files outside touched guidance may still contain historical wording."
+          },
+          {
+            "gate": "protocol/docs/UI validation",
+            "result": "passed",
+            "evidence": "Build/type/unit/MCP, targeted 8-case light/dark browser, Axe, /icons HTML, docs sync, catalog, design and HTML gates pass.",
+            "counterEvidenceChecked": "yes: exercised resource ceiling, broad payload budget, generated-byte drift, mobile/desktop navigation and source code markup.",
+            "residualRisk": "Full browser matrix and packed consumers are deferred to the explicit final validation Step, not skipped."
+          },
+          {
+            "gate": "document/provenance/SSOT/promotion",
+            "result": "passed",
+            "evidence": "Root docs reach the contract/release delta; package docs are version-locked SSOT; generated copies are machine-checked; Feature/Step/Research links are stable.",
+            "counterEvidenceChecked": "yes: production and npm remain labeled 1.0.0/stale rather than inheriting local 1.1.0.",
+            "residualRisk": "Dated companion fact needs final outside-in refresh."
+          }
+        ],
+        "testSufficiency": "passed for Step scope; all new UI/protocol logic has automated contract/browser coverage and no hard gate is skipped.",
+        "conditionalGates": "DDL not-applicable; sibling skip rollup not-applicable.",
+        "projectCompanionFactDisposition": "update-now in S-SWQT-0025 after full matrix and remote probes.",
+        "ssotImpactPrerequisite": "passed: package Agent/docs and foundation contract are updated; generated MCP copies match.",
+        "promotionDisposition": "ready",
+        "residualRisk": "Static resources are at the current ceiling; future growth must remain progressive.",
+        "followUp": "Run full local/packed/npm/production evidence matrix in S-SWQT-0025."
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-24",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0024-全量-agent-文档-组件披露与-icon-参考面强约束.json",
+        "validationSummary": "Portal build/type/unit/MCP, targeted 8-case browser/Axe/HTML, docs sync, catalog, design and HTML gates passed.",
+        "testCaseSummary": "All component disclosure paths, resource ceiling, package docs byte sync, /icons and /agent navigation have automated evidence.",
+        "coverageSummary": "touched-code: every new branch or public payload field has unit/protocol/browser coverage; full matrix follows in S-SWQT-0025.",
+        "rootMount": "docs/README.md -> consumer foundation contract, Portal/MCP experience and 1.1.0 release delta.",
+        "ssotImpact": "ssot-updated",
+        "ssotRefs": [
+          "packages/ui/AGENTS.md",
+          "packages/ui/llms.txt",
+          "packages/ui/docs",
+          "packages/ui-tokens/AGENTS.md",
+          "packages/ui-tokens/llms.txt",
+          "docs/experience/foundation-contract.md"
+        ],
+        "sourceWorkflowRefs": [
+          "F-SWQT-0008",
+          "S-SWQT-0024"
+        ],
+        "evidenceInvalidationTrigger": "Package first-hop, MCP disclosure budget, Portal IA or icon/HTML policy change.",
+        "documentTreeMount": "implemented",
+        "archiveSynchronization": "implemented(stable Step path; promote owns registry/ledger)"
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "full",
+        "requirementAudit": [
+          {
+            "requirement": "Two-package Agent/LLM contract consistency",
+            "status": "implemented",
+            "evidence": "UI/token AGENTS, llms and adoption docs require the same fonts/icons/colors/controls/HTML/reference sequence; sync-docs passes.",
+            "risk": "Consumers can ignore prose without local enforcement.",
+            "followUp": "Adopt matching design/HTML gates in consuming repositories."
+          },
+          {
+            "requirement": "All component disclosure and /icons Portal reference",
+            "status": "implemented",
+            "evidence": "Shared helpers cover search/get/resource; /icons and /agent/navigation pass light/dark browser, Axe and HTML checks.",
+            "risk": "Resource list has no remaining count headroom.",
+            "followUp": "Prefer templates/tools for future L2 content."
+          }
+        ],
+        "workflowRunAudit": "Implement and full review evidence are recorded; lifecycle transitions and promotion use deterministic workflow tools.",
+        "intermediateDocumentStateAudit": "Feature breakdown, stable Step, package SSOT, generated docs, Portal and MCP tests agree.",
+        "documentGovernanceAudit": "Root docs and version-locked package files expose the current contract; stale production wording is explicit.",
+        "ssotProjectionAudit": "Package docs and foundation contract are authoritative; sync-docs verifies exact generated projection.",
+        "temporaryArtifactLifecycle": "Workflow payload fixtures are Step-owned and removed at final Feature cleanup; browser artifacts remain tool-owned test output.",
+        "acceptanceToAuthorityPropagation": "The contract propagates to both packages, every component payload, Portal navigation, /agent, /icons and project experience docs.",
+        "closingTriad": [
+          {
+            "question": "Any unimplemented or unregistered Step work?",
+            "answer": "No for S-SWQT-0024.",
+            "evidence": "Both requirement rows are implemented and reviewed."
+          },
+          {
+            "question": "Are registry, ledger, Feature breakdown and stable paths aligned?",
+            "answer": "Yes after deterministic promotion.",
+            "evidence": "Stable Step href matches Feature breakdown and promote updates lifecycle artifacts."
+          },
+          {
+            "question": "Is behavior verified and every exception/skip classified?",
+            "answer": "Yes.",
+            "evidence": "All Step-local gates pass; full-matrix work is a separate designed Step, not an unreported skip."
+          }
+        ],
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Cross-package, MCP and Portal contract expansion is implemented and reviewed.",
+          "closingSelfAuditConsistency": "No remote publication or deployment is claimed.",
+          "landingChecklistOutcome": "no-capture-needed",
+          "pluginSkillFriction": "The HTML check exposed Radix ScrollArea style injection for multiline SourceCode; the page uses the valid non-scroll variant.",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "SSOT docs -> generated resources -> component decision-point refs",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "Complete the full freshness and validation Step."
+      }
+    }
+  },
+  "validationSummary": "Portal build/type/unit/MCP, targeted 8-case browser/Axe/HTML, docs sync, catalog, design and HTML gates passed."
+}

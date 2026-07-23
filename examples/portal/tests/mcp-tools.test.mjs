@@ -39,6 +39,9 @@ describe("mcp tool payloads", () => {
     expect(payload.package?.isLatest).toBe(false);
     expect(payload.meta.stale).toBe(false);
     expect(payload.meta.source).toBe("fixture");
+    expect(payload.sourceVersion).toBe("1.1.0");
+    expect(payload.sourcePublished).toBe(false);
+    expect(payload.releaseStatus).toBe("source-ahead");
 
     const missing = await packageGetPayload("@swqt/ui", "9.9.9");
     expect(missing.found).toBe(false);
@@ -57,6 +60,12 @@ describe("mcp tool payloads", () => {
     const payload = catalogSearchPayload("Button");
     expect(payload.count).toBeGreaterThan(0);
     expect(payload.results.some((entry) => entry.name === "Button")).toBe(true);
+    expect(payload.contractRefs).toContain("swui://foundation/contract");
+    expect(payload.contractRefs).toContain("swui://packages/ui/docs/HTML-STANDARDS.md");
+    expect(payload.referenceSite.icons).toBe("https://ui.swqt.net/icons");
+    expect(payload.results.find((entry) => entry.name === "Button").demoUrl).toBe(
+      "https://ui.swqt.net/components/actions/button"
+    );
 
     const broad = catalogSearchPayload("e");
     expect(broad.limit).toBe(DEFAULT_SEARCH_LIMIT);
@@ -94,8 +103,15 @@ describe("mcp tool payloads", () => {
     const payload = componentGetPayload("Button");
     expect(payload.found).toBe(true);
     expect(payload.component.demoPath).toBe("/components/actions/button");
+    expect(payload.component.demoUrl).toBe("https://ui.swqt.net/components/actions/button");
     expect(payload.component.resourceUri).toBe("swui://components/Button");
     expect(payload.component.importHint.statement).toBe('import { Button } from "@swqt/ui";');
+    expect(payload.contractRefs).toEqual([
+      "swui://foundation/contract",
+      "swui://packages/ui/docs/HTML-STANDARDS.md",
+      "swui://packages/ui/AGENTS.md"
+    ]);
+    expect(payload.referenceSite.component).toBe("https://ui.swqt.net/components/actions/button");
 
     expect(componentGetPayload("FormField").component.importHint.exportName).toBe("SimpleFormField");
     expect(componentGetPayload("DateHelpers").component.importHint.module).toBe("@swqt/ui/date");
@@ -112,8 +128,11 @@ describe("mcp tool payloads", () => {
 
   test("exposes a small static first hop and one component resource template", async () => {
     expect(client.getServerVersion()?.name).toBe("swui");
-    expect(client.getServerVersion()?.version).toBe("1.0.0");
+    expect(client.getServerVersion()?.version).toBe("1.1.0");
     expect(client.getInstructions()).toContain("swui://packages/ui/llms.txt");
+    expect(client.getInstructions()).toContain("swui://packages/ui/docs/HTML-STANDARDS.md");
+    expect(client.getInstructions()).toContain("https://ui.swqt.net/icons");
+    expect(client.getInstructions()).toContain("contractRefs");
     expect(client.getInstructions()).toContain("swui.catalog.search");
     expect(client.getInstructions()).toContain('separate "sw" MCP server');
 
@@ -123,6 +142,9 @@ describe("mcp tool payloads", () => {
     expect(Buffer.byteLength(JSON.stringify(resources), "utf8")).toBeLessThanOrEqual(12 * 1024);
     expect(resources.resources.map((resource) => resource.uri)).toContain(
       "swui://packages/ui-tokens/docs/TOKENS.md"
+    );
+    expect(resources.resources.map((resource) => resource.uri)).toContain(
+      "swui://packages/ui/docs/HTML-STANDARDS.md"
     );
     expect(resources.resources.some((resource) => resource.uri.startsWith("swui://components/"))).toBe(false);
     for (const resource of resources.resources) {
@@ -135,9 +157,12 @@ describe("mcp tool payloads", () => {
     expect(templates.resourceTemplates[0].uriTemplate).toBe("swui://components/{name}");
 
     const button = await client.readResource({ uri: "swui://components/Button" });
-    expect(JSON.parse(button.contents[0].text).importHint.statement).toBe(
+    const buttonPayload = JSON.parse(button.contents[0].text);
+    expect(buttonPayload.importHint.statement).toBe(
       'import { Button } from "@swqt/ui";'
     );
+    expect(buttonPayload.demoUrl).toBe("https://ui.swqt.net/components/actions/button");
+    expect(buttonPayload.contractRefs).toContain("swui://foundation/contract");
   });
 
   test("all tools disclose arguments, output schemas, titles, and read-only annotations", async () => {

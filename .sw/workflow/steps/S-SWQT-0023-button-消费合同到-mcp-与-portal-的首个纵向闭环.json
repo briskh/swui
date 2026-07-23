@@ -1,0 +1,317 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0023",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0023: Button 消费合同到 MCP 与 Portal 的首个纵向闭环",
+  "sourceFeature": {
+    "id": "F-SWQT-0008",
+    "href": "../feature/F-SWQT-0008-swui-mcp-渐进披露-发布新鲜度与消费端设计规范强约束.json"
+  },
+  "owner": "swqt-maintainers",
+  "createdAt": "2026-07-23T19:59:00.262Z",
+  "updatedAt": "2026-07-23T19:59:00.262Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "建立 Button 的端到端渐进披露闭环，使 Agent 在选择组件时同时获得版本锁定的设计、HTML 和参考站约束。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "canonical consumer contract",
+          "HTML-STANDARDS MCP resource",
+          "Button catalog/component/resource contract refs 与绝对 Portal URL",
+          "对应 MCP、Portal、design 与 HTML 门禁"
+        ],
+        "outOfScope": [
+          "Button 公共 API 变更",
+          "npm publish",
+          "production deploy"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "not-started",
+      "items": {}
+    },
+    "dependencies": {
+      "sectionStatus": "not-started",
+      "items": {}
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "testDrivenDesign": {
+          "testCaseDesign": "Button 搜索、精确获取与资源读取必须同时返回 importHint、absolute demo URL、compact contractRefs；initialize 保持短小并给出有序读取路径。",
+          "acceptanceToTestMapping": "合同正文由 design/html gates 验证；MCP unit/smoke 验证 payload、text parity、annotations、资源存在与字节预算；Portal browser 验证参考入口。",
+          "riskToTestLevelMapping": "public contract -> unit/schema; progressive disclosure -> payload budget; user-visible reference -> browser/a11y; docs -> sync check。",
+          "regressionTestDesign": "以当前缺少 HTML resource、absolute URL 与 contractRefs 的响应为负例，新增断言防止回退。",
+          "coverageAssessment": "touched-code",
+          "coverageMetric": "Button 主闭环所有 Feature AC 均有直接测试或后续 Step 映射",
+          "residualRisk": "客户端是否实际读取资源仍依赖 Agent 行为；由固定 prompt walkthrough 在 S-SWQT-0025 补充。",
+          "followUp": "任何 MCP schema 或 Portal URL 变化触发合同测试更新。"
+        },
+        "explanationSyncBrief": "用一页合同表达硬约束，initialize 仅提供短摘要与稳定 URI，不复制全文。",
+        "problemDefinition": "现有 Agent 能找到 Button，但查询响应没有把字体、图标、颜色、控件、HTML 和参考站约束绑定到选择点。",
+        "requirementsDefinition": "建立 canonical consumer contract；暴露 HTML resource；Button 查询返回绝对 demo URL 与紧凑 contract refs；Portal 可直接读取对应参考。",
+        "nonGoals": [
+          "不把完整合同塞进 initialize。",
+          "不修改 Button 公共 API。",
+          "不发布 npm 或部署生产。"
+        ],
+        "plainLanguage": {
+          "unclear": "为什么已有 AGENTS.md 仍需组件查询返回合同指针。",
+          "why": "Agent 常从搜索结果直接实现，未必先读包根文档。",
+          "outcome": "在做出组件选择的同一响应里即可看到必须读取的约束与真实参考页面。",
+          "prose": "不是重复规则，而是把规则入口放到决策发生处。"
+        },
+        "options": [
+          {
+            "id": "A",
+            "name": "响应级 contractRefs + absolute reference URLs",
+            "cuttingPoint": "共享一次紧凑指针，组件项仅带 demoUrl。",
+            "impact": "覆盖决策点且保持 payload 有界。",
+            "risk": "客户端仍需按 URI 读取正文。",
+            "validationCost": "低，可做 schema 与字节断言。",
+            "rejectWhen": "客户端完全不支持 resources。"
+          },
+          {
+            "id": "B",
+            "name": "每个组件内嵌完整规则",
+            "cuttingPoint": "规则随每项重复。",
+            "impact": "单响应信息齐全但上下文膨胀。",
+            "risk": "漂移和预算超限。",
+            "validationCost": "高。",
+            "rejectWhen": "要求渐进披露。"
+          }
+        ],
+        "openDecisions": [],
+        "recommendedOption": {
+          "option": "A",
+          "rationale": "同时满足准确触达、SSOT 与 bounded disclosure。",
+          "assumptionsFromFeature": "Portal 公共基址保持 https://ui.swqt.net。",
+          "assumptionChanges": "若基址可配置，保留稳定默认并由部署环境覆盖。"
+        },
+        "granularity": {
+          "granularityDecision": "fine-enough",
+          "whySmallEnough": "所有动作共享 Button 纵向闭环这一不变量。",
+          "whyNotSplitFurther": "拆开合同、MCP 与 Portal 会产生无法独立证明的半闭环。",
+          "splitSignals": "若 MCP schema 需要破坏性版本升级则拆新 Feature。",
+          "proposedChildSteps": "none"
+        },
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "目标字段、SSOT、URL、门禁和授权边界均明确。",
+          "missingItems": "none",
+          "partiallySafeToProceed": "N/A"
+        },
+        "forwardImpact": [
+          {
+            "target": "S-SWQT-0024",
+            "impactType": "前提与接口变化",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0024",
+            "resolution": "复用合同 URI 与 payload helper 扩展到全部组件。"
+          },
+          {
+            "target": "S-SWQT-0025",
+            "impactType": "验收依赖变化",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0025",
+            "resolution": "把 Button 闭环纳入固定 walkthrough 和四面 freshness。"
+          }
+        ],
+        "profileNote": "full public-contract tracer Step；Axis positioning=library/SDK+docs+local service，split signals 已体现在三 Step 拆分。"
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "executionContract": {
+          "expectedChangeSurface": "Canonical consumer contract, MCP resource/schema/payload, Button exact disclosure, Portal reference entry, and source-version metadata.",
+          "acceptanceCriteria": "Button search/get/resource returns import guidance, absolute demo URL and mandatory contract refs; HTML and foundation resources are readable; initialize remains bounded; local source identifies 1.1.0 against registry fixture 1.0.0.",
+          "validationEvidenceRequired": "Portal typecheck/unit, MCP smoke, design contract, HTML standards and payload budget assertions.",
+          "rollbackNotes": "Additive MCP fields can be reverted together; do not retain docs that promise fields absent from handlers."
+        },
+        "implementationSummary": {
+          "whatChanged": "Expanded the foundation contract, registered the HTML standards resource, added compact contractRefs/referenceSite and demoUrl to component discovery, added source-vs-registry package status, and established the Button closed-loop assertions.",
+          "whySatisfiesStep": "A Button query now reaches the package import, exact Portal demo, design contract and HTML contract without embedding full rule bodies.",
+          "intentionallyUnchanged": "Button public API, component source, npm registry and production deployment remain unchanged."
+        },
+        "changeSurface": {
+          "codeAnchors": "examples/portal/server/catalog.ts; examples/portal/server/handlers.ts; examples/portal/tests/mcp-tools.test.mjs; examples/portal/scripts/mcp-smoke.mjs.",
+          "configAnchors": "packages/ui/package.json; packages/ui-tokens/package.json; bun.lock.",
+          "documentationAnchors": "docs/experience/foundation-contract.md; package Agent/docs first hops.",
+          "dataOrMigrationAnchors": "No data migration; MCP response fields are additive."
+        },
+        "executionNotes": {
+          "decisionsDuringImplementation": "Contract refs are response-level for search/get to avoid per-result repetition; exact resources include the same compact refs. Source version remains distinct from registry metadata.",
+          "deviationsFromBrief": "The implementation established shared helpers for all components while proving Button first, avoiding a temporary Button-only schema.",
+          "risksDiscovered": "Absolute URL tests caught an initially abbreviated initialize URL list; it was corrected to fully qualified references."
+        },
+        "validationReferences": [
+          {
+            "commandOrEvidence": "Portal typecheck and 20-unit-test suite",
+            "result": "passed",
+            "notes": "MCP schemas, bounded search, resources, read-only tools, errors and structured/text parity pass."
+          },
+          {
+            "commandOrEvidence": "Portal MCP smoke",
+            "result": "passed",
+            "notes": "12-resource budget, one template, four tools, Button refs and source-ahead status pass."
+          },
+          {
+            "commandOrEvidence": "check:design-contract; check:html-standards",
+            "result": "passed",
+            "notes": "Foundation and authored HTML contracts remain valid."
+          }
+        ],
+        "blocker": {
+          "state": "resolved",
+          "reason": "The tracer loop and focused gates pass.",
+          "owner": "swqt-maintainers",
+          "recoveryTrigger": "A client rejects additive response fields or the Portal public base changes.",
+          "residualRisk": "Agent compliance still requires the final fixed-prompt walkthrough."
+        },
+        "projectFactUpdateCandidates": "update-now: MCP response contract, source-version semantics, static resource count and Portal references are carried into project docs/companion by S-SWQT-0025."
+      }
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "guardedRiskDomain": "Public MCP response contract, package-version truth, HTML/design constraints, and Button discovery flow.",
+        "requirementsStatus": "implemented",
+        "gateOutcomes": [
+          {
+            "gate": "scope/state/research/brief",
+            "result": "passed",
+            "evidence": "Implementation stays within the Button tracer, additive MCP fields, canonical contract and read-only source-version status; R-SWQT-0002 records current MCP specification and four-surface observations.",
+            "counterEvidenceChecked": "yes: checked for full-rule duplication, component API changes, extra tools/templates and workflow-tool leakage; none were introduced.",
+            "residualRisk": "Clients that ignore resource pointers may still violate guidance."
+          },
+          {
+            "gate": "protocol/design/HTML validation",
+            "result": "passed",
+            "evidence": "Portal typecheck, 20 unit tests, MCP smoke, design contract and HTML standards pass; search payload remains below 16 KiB and resources remain at the 12-entry ceiling.",
+            "counterEvidenceChecked": "yes: exercised empty query, missing component/version, broad search, exact resource, structured/text parity and registry source-ahead state.",
+            "residualRisk": "Network clients are covered by local protocol transport here; final outside-in remains S-SWQT-0025."
+          },
+          {
+            "gate": "document/provenance/SSOT/promotion",
+            "result": "passed",
+            "evidence": "Source Feature and Research are linked; docs root reaches the consumer contract and release delta; generated docs are synced from package SSOT.",
+            "counterEvidenceChecked": "yes: reviewed stale 1.0.0 production and registry facts and did not claim them fixed.",
+            "residualRisk": "Companion dated facts await final full-matrix update."
+          }
+        ],
+        "testSufficiency": "passed: Button discovery, error paths, schemas, annotations, payload budgets, design and HTML contracts are automated.",
+        "conditionalGates": "DDL not-applicable; sibling skip rollup not-applicable because no product gate was skipped.",
+        "projectCompanionFactDisposition": "update-now in S-SWQT-0025 after complete local/packed/npm/production evidence.",
+        "ssotImpactPrerequisite": "passed: package docs and foundation contract are SSOT; MCP generated copies and payload pointers agree.",
+        "promotionDisposition": "ready",
+        "residualRisk": "Agent behavior is not completely enforceable by MCP text; final walkthrough will provide bounded behavioral evidence.",
+        "followUp": "Expand the shared contract to every package and component surface in S-SWQT-0024."
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-24",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0023-button-消费合同到-mcp-与-portal-的首个纵向闭环.json",
+        "validationSummary": "Portal typecheck, 20 unit tests, MCP smoke, design contract and HTML standards passed.",
+        "testCaseSummary": "Button search/get/resource, errors, schemas, read-only annotations, structured/text parity, source-ahead status and disclosure budgets are automated.",
+        "coverageSummary": "touched-code: all tracer requirements map to direct protocol or contract evidence; final Agent behavior remains in S-SWQT-0025.",
+        "rootMount": "docs/README.md -> consumer foundation contract and release delta; stable Step links F-SWQT-0008 and R-SWQT-0002.",
+        "ssotImpact": "ssot-updated",
+        "ssotRefs": [
+          "docs/experience/foundation-contract.md",
+          "packages/ui/AGENTS.md",
+          "packages/ui/docs/HTML-STANDARDS.md",
+          "examples/portal/server/handlers.ts"
+        ],
+        "sourceWorkflowRefs": [
+          "F-SWQT-0008",
+          "S-SWQT-0023"
+        ],
+        "evidenceInvalidationTrigger": "MCP schema redesign, Portal public-base change, package contract change, or source/registry version semantics change.",
+        "documentTreeMount": "implemented",
+        "archiveSynchronization": "implemented(stable Step path; auto advance owns ledger/registry synchronization)"
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "full",
+        "requirementAudit": [
+          {
+            "requirement": "Canonical fonts/icons/colors/controls/HTML/reference contract",
+            "status": "implemented",
+            "evidence": "foundation-contract.md plus UI Agent/HTML docs and MCP stable resources.",
+            "risk": "Consumer repositories need their own lint/test enforcement for hard blocking.",
+            "followUp": "Keep contract refs in every component response."
+          },
+          {
+            "requirement": "Button end-to-end progressive disclosure",
+            "status": "implemented",
+            "evidence": "Search/get/exact resource return importHint, demoUrl, contractRefs and referenceSite; unit and smoke pass.",
+            "risk": "Clients can ignore instructions.",
+            "followUp": "Fixed Agent walkthrough in S-SWQT-0025."
+          }
+        ],
+        "workflowRunAudit": "Discourse Q-05 resolved; design contract materialized; implement and review segments advanced with Tier-1 evidence.",
+        "intermediateDocumentStateAudit": "Feature, Research, stable Step, package docs, generated docs and MCP tests are linked; delivery lifecycle is delegated to auto advance.",
+        "documentGovernanceAudit": "Docs root reaches the canonical contract and release delta; no duplicate full contract was added to initialize.",
+        "ssotProjectionAudit": "Package docs and foundation contract remain SSOT; generated MCP copies are one-way synchronized.",
+        "temporaryArtifactLifecycle": "Workflow payload fixtures are Step-owned and removed during final Feature cleanup; no unrelated files are targeted.",
+        "acceptanceToAuthorityPropagation": "Tracer acceptance propagates to package docs, MCP schemas/resources/tools, Portal references and workflow evidence.",
+        "closingTriad": [
+          {
+            "question": "Any unimplemented or unregistered Step work?",
+            "answer": "No for S-SWQT-0023.",
+            "evidence": "Implementation and review records cover both tracer requirements."
+          },
+          {
+            "question": "Are registry, ledger, Feature breakdown and stable paths aligned?",
+            "answer": "Yes after auto deliver advance.",
+            "evidence": "Stable Step path and Feature breakdown agree; auto owns lifecycle synchronization."
+          },
+          {
+            "question": "Is behavior verified and every exception/skip classified?",
+            "answer": "Yes.",
+            "evidence": "All focused gates pass; no focused product gate skipped; outside-in is explicitly assigned to S-SWQT-0025."
+          }
+        ],
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "The Button tracer is implemented, tested, documented and ready for registry synchronization.",
+          "closingSelfAuditConsistency": "No npm or production freshness is claimed.",
+          "landingChecklistOutcome": "no-capture-needed",
+          "pluginSkillFriction": "close-discourse correctly required a materialized head Step; design readiness also required explicit goal/scope.",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "response-level contract refs plus exact-resource refs",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "Continue S-SWQT-0024 and S-SWQT-0025 within the same auto scope."
+      }
+    }
+  },
+  "validationSummary": "Portal typecheck, 20 unit tests, MCP smoke, design contract and HTML standards passed."
+}

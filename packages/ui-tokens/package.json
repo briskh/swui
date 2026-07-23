@@ -1,6 +1,6 @@
 {
   "name": "@swqt/ui-tokens",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "swui design tokens (CSS variables + Tailwind v4 theme bridges)",
   "repository": {
     "type": "git",

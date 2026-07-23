@@ -1,6 +1,6 @@
 {
   "name": "@swqt/ui",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "swui React UI primitives with global theme provider",
   "repository": {
     "type": "git",

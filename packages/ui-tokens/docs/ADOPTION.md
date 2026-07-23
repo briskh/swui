@@ -38,11 +38,16 @@ Before install, connect the read-only `swui` MCP at `https://agent.swqt.net/mcp/
 - `swui://packages/ui-tokens/AGENTS.md`
 - `swui://packages/ui-tokens/docs/ADOPTION.md`
 - `swui://packages/ui-tokens/docs/TOKENS.md`
+- `swui://foundation/contract`
+- `swui://packages/ui/docs/HTML-STANDARDS.md`
 
 After install, prefer the same-version files under `node_modules/@swqt/ui-tokens/`.
+
+Before implementing UI, actively inspect `https://ui.swqt.net/colors`, `/typography`, `/icons`, and the exact `/components/...` demo. Tokens cover color semantics only; controls come from `@swqt/ui`, icons use Lucide named imports, fonts use repository stacks, and markup follows native HTML-first rules.
 
 ## Do not
 
 - Copy `tokens.css` into the app and diverge.
 - Invent parallel `--color-*` tokens for the same semantics.
 - Mount a competing `.dark` selector; use `@swqt/ui` `ThemeProvider` as the global theme authority.
+- Treat tokens as permission to build local control forks, add external fonts, use emoji/ad hoc SVG icons, or simulate native controls.

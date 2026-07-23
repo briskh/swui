@@ -1,0 +1,337 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0025",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0025: 发布新鲜度证据、完整门禁与远端状态收口",
+  "sourceFeature": {
+    "id": "F-SWQT-0008",
+    "href": "../feature/F-SWQT-0008-swui-mcp-渐进披露-发布新鲜度与消费端设计规范强约束.json"
+  },
+  "owner": "swqt-maintainers",
+  "createdAt": "2026-07-23T19:59:17.242Z",
+  "updatedAt": "2026-07-23T19:59:17.242Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "以完整门禁和四面 freshness matrix 准确证明 1.0.0 发布后的本地改进、packed 产物状态以及 npm/生产远端差异。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "release-delta 清单",
+          "完整 repository 与 packed-consumer 门禁",
+          "npm registry 和 production MCP 只读 outside-in",
+          "project companion 与 workflow evidence 收口"
+        ],
+        "outOfScope": [
+          "npm publish",
+          "production deploy",
+          "历史 workflow-numbering 迁移"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "not-started",
+      "items": {}
+    },
+    "dependencies": {
+      "sectionStatus": "not-started",
+      "items": {}
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "testDrivenDesign": {
+          "testCaseDesign": "分别采集 local source、packed nested/hoisted、npm registry 与 production MCP；任何未发布或未部署面必须明确 stale/pending，不能继承本地通过状态。",
+          "acceptanceToTestMapping": "运行 project companion 全门禁；release-delta 清单逐项映射 6d9a637/be78477；固定 Agent walkthrough 覆盖八类误用。",
+          "riskToTestLevelMapping": "deploy-packaging -> packed consumers; public MCP -> local smoke + remote read-only probe; docs -> sync; UI -> browser; workflow -> validate/doctor。",
+          "regressionTestDesign": "保留 1.0.0 远端/registry 观察作为负面对照；本地响应必须显示新合同，远端未部署时不得误报。",
+          "coverageAssessment": "target-driven",
+          "coverageMetric": "100% Feature acceptance criteria mapped to local/packed/npm/production evidence",
+          "residualRisk": "没有 publish/deploy 授权时远端仍旧；真实 Agent 行为只做固定 walkthrough 与人工可复核记录。",
+          "followUp": "取得单独授权后执行 npm publish 与 production deploy，再重复 outside-in。"
+        },
+        "explanationSyncBrief": "发布新鲜度矩阵把“源码已修复”和“用户已收到”分开表达。",
+        "problemDefinition": "1.0.0 发布后已有两次重大更新；当前生产 MCP 与 npm 包仍是旧合同，容易把本地验证误当远端事实。",
+        "requirementsDefinition": "建立 release-delta；运行完整 gate；验证 packed tarballs；只读查询 npm/production；更新项目 companion 的带日期事实；准确记录未授权外部动作。",
+        "nonGoals": [
+          "不执行 npm publish。",
+          "不执行生产 deploy。",
+          "不把 DNS 或鉴权阻塞伪装为通过。"
+        ],
+        "plainLanguage": {
+          "unclear": "为什么本地全绿仍不能说任务已发布。",
+          "why": "npm 与生产 MCP 是独立状态面，只有真实 registry/endpoint 能证明用户收到。",
+          "outcome": "最终报告明确哪些已修、哪些已打包验证、哪些仍等待发布部署。",
+          "prose": "代码完成不等于分发完成；四个证据面必须分开。"
+        },
+        "options": [
+          {
+            "id": "A",
+            "name": "四面 freshness matrix + read-only outside-in",
+            "cuttingPoint": "不越过外部写授权。",
+            "impact": "事实准确且可复查。",
+            "risk": "远端保持 stale。",
+            "validationCost": "高。",
+            "rejectWhen": "已获得发布部署授权且要求同步执行。"
+          },
+          {
+            "id": "B",
+            "name": "仅报告本地 gates",
+            "cuttingPoint": "忽略分发面。",
+            "impact": "简单但会漏掉核心风险。",
+            "risk": "误报最新。",
+            "validationCost": "中。",
+            "rejectWhen": "用户特别关注上次发布后更新。"
+          }
+        ],
+        "openDecisions": [],
+        "recommendedOption": {
+          "option": "A",
+          "rationale": "满足事实纪律并遵守外部发布授权边界。",
+          "assumptionsFromFeature": "npm 与生产端点允许匿名只读观察。",
+          "assumptionChanges": "若网络或鉴权失败，标为 blocked 并保留本地/packed 安全集。"
+        },
+        "granularity": {
+          "granularityDecision": "fine-enough",
+          "whySmallEnough": "所有动作共享最终 evidence matrix 与 release freshness 不变量。",
+          "whyNotSplitFurther": "拆开会诱发只验证一个面就宣称完成。",
+          "splitSignals": "一旦用户授权发布或部署，分别创建独立外部变更任务。",
+          "proposedChildSteps": "none"
+        },
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "命令、证据面、状态词汇和外部写边界都明确。",
+          "missingItems": "none",
+          "partiallySafeToProceed": "N/A"
+        },
+        "forwardImpact": [
+          {
+            "target": ".cursor/skills/project-swqt-companion/SKILL.md",
+            "impactType": "项目事实更新",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0025",
+            "resolution": "记录最新 local/packed/npm/production 状态和日期。"
+          },
+          {
+            "target": "F-SWQT-0008",
+            "impactType": "终局验收",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0025",
+            "resolution": "逐条回填证据并在未授权面使用 pending/stale。"
+          }
+        ],
+        "profileNote": "full deploy-packaging verification Step；Axis positioning=local source+artifact+registry+production，split signals 保留外部写任务。"
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "executionContract": {
+          "expectedChangeSurface": "Release delta, full CI-equivalent local gates, packed nested/hoisted packages, npm/production read-only probes, Agent walkthrough and dated companion facts.",
+          "acceptanceCriteria": "Every Feature criterion maps to local/packed/npm/production evidence; current distribution remains explicitly stale without publish/deploy authorization.",
+          "validationEvidenceRequired": "Frozen install, docs/catalog/design/HTML, type/unit/MCP, builds, full consumer/Portal browser, packed consumers, publish dry-run/audit, workflow/doctor and outside-in probes.",
+          "rollbackNotes": "Evidence documents can be reverted independently; never revert source changes solely to make version numbers match stale distribution."
+        },
+        "implementationSummary": {
+          "whatChanged": "Added the 1.1.0 release delta and four-surface matrix, ran the complete local and packed validation ladder, audited publish-shaped tarballs, performed npm and production read-only probes, completed the eight-prompt Agent walkthrough, and updated companion/experience facts.",
+          "whySatisfiesStep": "The repository now distinguishes source, artifact, registry and deployed truth with dated, reproducible evidence.",
+          "intentionallyUnchanged": "npm remains 1.0.0 and production MCP/Portal remain the 1.0.0 deployment because publish/deploy require separate authorization."
+        },
+        "changeSurface": {
+          "codeAnchors": "All F-SWQT-0008 source changes validated through CI-equivalent gates.",
+          "configAnchors": "packages/ui/package.json; packages/ui-tokens/package.json; bun.lock.",
+          "documentationAnchors": "release-delta-1.1.0.md; portal-and-mcp.md; R-SWQT-0002; project-swqt-companion.",
+          "dataOrMigrationAnchors": "No data migration; registry and production operations were read-only."
+        },
+        "executionNotes": {
+          "decisionsDuringImplementation": "Use 1.1.0 as the additive public-contract candidate; keep npm and production stale/pending labels; run browser and generated-doc gates serially to avoid known contamination.",
+          "deviationsFromBrief": "The publish audit first reported a missing retained tarball prerequisite; explicit pack then audit passed, and the generated tarballs were removed after evidence capture.",
+          "risksDiscovered": "Production SPA returns HTTP 200 for /icons even though the route content is absent, so content-level browser evidence is required instead of status-code-only probing. The deploy artifact omits repository package manifests; source versions are therefore generated into .generated/release-versions.json during sync-docs and read from that deployed artifact."
+        },
+        "validationReferences": [
+          {
+            "commandOrEvidence": "Frozen install; sync/docs, catalog, HTML, design, typecheck, unit, MCP and both builds",
+            "result": "passed",
+            "notes": "20 Portal units; 88 catalog exports, 309 package exports, 88 demos; all static/type/build gates passed."
+          },
+          {
+            "commandOrEvidence": "Full browser matrices",
+            "result": "passed",
+            "notes": "Portal 60/60; source consumer 34 passed/6 declared skips."
+          },
+          {
+            "commandOrEvidence": "verify:packed-consumer",
+            "result": "passed",
+            "notes": "1.1.0 nested and hoisted layouts each passed type/build/docs and 34 browser cases with 6 declared skips."
+          },
+          {
+            "commandOrEvidence": "publish:dry and npm publish security audit",
+            "result": "passed",
+            "notes": "Both 1.1.0 packages dry-run; audit 0 blocking/4 reviewed public URL warnings."
+          },
+          {
+            "commandOrEvidence": "npm/production outside-in and eight-prompt walkthrough",
+            "result": "passed-with-stale-distribution",
+            "notes": "Local 8/8 expected routes; npm and production remain 1.0.0; production lacks new resources, payload fields and Portal content."
+          }
+        ],
+        "blocker": {
+          "state": "resolved",
+          "reason": "All authorized source, package-candidate and read-only remote evidence is complete.",
+          "owner": "swqt-maintainers",
+          "recoveryTrigger": "Explicit npm publish or production deploy authorization.",
+          "residualRisk": "Users still receive 1.0.0 until those separately authorized distribution actions occur."
+        },
+        "projectFactUpdateCandidates": "update-now completed: companion records local 1.1.0 validation and dated npm/production 1.0.0 stale facts."
+      }
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "guardedRiskDomain": "Release/version truth, publish-shaped artifacts, production MCP/Portal identity and completion claims.",
+        "requirementsStatus": "implemented",
+        "gateOutcomes": [
+          {
+            "gate": "scope/state/research/brief",
+            "result": "passed",
+            "evidence": "Work stays within validation and evidence; R-SWQT-0002 includes current official MCP sources, baseline, post-change matrix and distribution boundary.",
+            "counterEvidenceChecked": "yes: compared local 1.1.0 with exact npm times/versions and live production initialize/resources/Button/Portal content.",
+            "residualRisk": "Remote state can change after the dated observation."
+          },
+          {
+            "gate": "full validation and packaging",
+            "result": "passed",
+            "evidence": "All CI-equivalent static/type/build/unit/MCP gates pass; Portal 60/60; source consumer 34/6; packed nested and hoisted each 34/6; publish dry and audit pass.",
+            "counterEvidenceChecked": "yes: checked broad payload budget, static resource ceiling, generated docs parity, both package layouts, light/dark viewports and audit warnings.",
+            "residualRisk": "Six skips are declared non-applicable viewport projects, not unrun product behavior; bundle-size warnings are non-blocking existing build warnings."
+          },
+          {
+            "gate": "freshness/document/provenance/SSOT/promotion",
+            "result": "passed",
+            "evidence": "Release delta, Research, companion and Portal/MCP docs agree: local/packed 1.1.0 complete; npm/production 1.0.0 stale/pending.",
+            "counterEvidenceChecked": "yes: content-level production browser check disproved the misleading HTTP-200-only /icons signal.",
+            "residualRisk": "No external write was authorized, so distribution freshness remains pending by design."
+          }
+        ],
+        "testSufficiency": "passed: 100% Feature acceptance directions map to direct static, protocol, browser, package or outside-in evidence.",
+        "conditionalGates": "DDL not-applicable; repeated skip rollup present: 6 declared non-data-dense viewport skips repeat in source, nested and hoisted consumer matrices with the same intentional project filter.",
+        "projectCompanionFactDisposition": "update-now completed with dated local/packed/npm/production facts.",
+        "ssotImpactPrerequisite": "passed: release delta and companion current facts link source Workflow and authoritative package/MCP surfaces.",
+        "promotionDisposition": "ready",
+        "residualRisk": "The deployed consumer experience remains old until separately authorized publish/deploy.",
+        "followUp": "After authorization, publish tokens then UI, deploy Portal/MCP, and repeat outside-in checks."
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-24",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0025-发布新鲜度证据-完整门禁与远端状态收口.json",
+        "validationSummary": "All CI-equivalent gates, Portal 60/60, source consumer 34/6, packed nested+hoisted 34/6 each, publish dry-run/audit and read-only outside-in probes completed.",
+        "testCaseSummary": "Eight Agent prompts 8/8 expected routes; MCP resources/tools/errors/budgets, Portal references, package byte parity and production negative controls are covered.",
+        "coverageSummary": "target-driven: every F-SWQT-0008 acceptance criterion maps to source, packed, npm and production evidence; no hard gate skipped.",
+        "rootMount": "docs/README.md -> release delta, consumer foundation contract, Portal/MCP experience and Research index.",
+        "ssotImpact": "ssot-updated",
+        "ssotRefs": [
+          "docs/experience/release-delta-1.1.0.md",
+          "docs/experience/portal-and-mcp.md",
+          "docs/research/R-SWQT-0002-swui-mcp-disclosure-and-consumer-contract-audit.md",
+          ".cursor/skills/project-swqt-companion/SKILL.md"
+        ],
+        "sourceWorkflowRefs": [
+          "F-SWQT-0008",
+          "S-SWQT-0023",
+          "S-SWQT-0024",
+          "S-SWQT-0025"
+        ],
+        "evidenceInvalidationTrigger": "npm publish, production deploy, registry rollback, MCP contract change or Portal content change.",
+        "documentTreeMount": "implemented",
+        "archiveSynchronization": "implemented(stable Step path; final promote and Feature lifecycle sync)"
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "full",
+        "requirementAudit": [
+          {
+            "requirement": "Release delta since npm 1.0.0",
+            "status": "implemented",
+            "evidence": "release-delta-1.1.0.md maps 6d9a637, be78477 and F-SWQT-0008 to consumer-visible evidence.",
+            "risk": "Future commits can make the candidate stale.",
+            "followUp": "Refresh on release or source-contract change."
+          },
+          {
+            "requirement": "Complete local and packed validation",
+            "status": "implemented",
+            "evidence": "Static/type/build/unit/MCP gates, Portal 60/60, source consumer 34/6 and both packed layouts 34/6 pass.",
+            "risk": "Bundle-size warnings remain informational.",
+            "followUp": "Track performance separately if bundle budgets become a hard gate."
+          },
+          {
+            "requirement": "Four-surface freshness and Agent walkthrough",
+            "status": "implemented",
+            "evidence": "Research and companion record local/packed 1.1.0, npm/production 1.0.0, content-level Portal checks and 8/8 prompt routing.",
+            "risk": "Remote observations are time-bound.",
+            "followUp": "Repeat immediately after authorized distribution."
+          }
+        ],
+        "workflowRunAudit": "All three Steps traversed design, implement, review and promote inside one auto scope with Tier-1 write evidence and validation summaries.",
+        "intermediateDocumentStateAudit": "Research, Feature breakdown, three stable Steps, package/docs/MCP source, ledger and companion facts are synchronized; final promote will derive Feature closure.",
+        "documentGovernanceAudit": "Root docs reach the contract, release delta and Research; installed package docs remain version-locked truth; stale remote state is not presented as current source.",
+        "ssotProjectionAudit": "Current project facts live in package/MCP source, release delta and companion; generated docs are byte-checked; npm/production remain explicitly external state.",
+        "temporaryArtifactLifecycle": "Packed-consumer temp directories self-clean; explicit package tarballs created for audit were removed; workflow payload fixtures are removed after final workflow writes; unrelated files were preserved.",
+        "acceptanceToAuthorityPropagation": "All Feature acceptance criteria propagate to package docs, MCP initialization/resources/tools, Portal references, tests, release evidence, companion facts and workflow records.",
+        "workflowBacklogAudit": "External publish/deploy is not a hidden backlog item: it is a separately authorized follow-up with owner=swqt-maintainers, target=npm+production, trigger=explicit authorization, residual risk=users remain on 1.0.0.",
+        "closingTriad": [
+          {
+            "question": "Any unimplemented or unregistered Feature work?",
+            "answer": "No within the authorized source/local/packed/read-only scope.",
+            "evidence": "S0023-S0025 requirement audits cover every Feature acceptance criterion; publish/deploy is an explicit non-goal without separate authorization."
+          },
+          {
+            "question": "Are registry, ledger, Feature breakdown and stable paths aligned?",
+            "answer": "Yes after final deterministic promotion and Feature lifecycle sync.",
+            "evidence": "Three stable Step hrefs match the Feature breakdown; workflow promote/ledger/registry commands own synchronization."
+          },
+          {
+            "question": "Is behavior verified and every exception/skip classified?",
+            "answer": "Yes.",
+            "evidence": "All hard gates pass; the repeated six browser skips are declared non-applicable viewports; four audit warnings are reviewed public service URLs; remote stale state is explicit."
+          }
+        ],
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Source, publish-shaped artifacts, registry and production are separately proven and accurately reported.",
+          "closingSelfAuditConsistency": "No unrun test or unauthorized external write is claimed.",
+          "landingChecklistOutcome": "no-capture-needed",
+          "pluginSkillFriction": "Auto required explicit design goal/scope and lifecycle intents in addition to segment advances; this produced auditable transitions without bypass.",
+          "terminologyCandidates": "releaseStatus=source-ahead",
+          "reusableWorkflowPattern": "local source + packed artifact + registry + production evidence matrix",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "Optional and separately authorized: publish @swqt/ui-tokens@1.1.0 then @swqt/ui@1.1.0, deploy Portal/MCP, repeat outside-in."
+      }
+    }
+  },
+  "validationSummary": "All CI-equivalent gates passed; Portal 60/60; source consumer 34/6; packed nested+hoisted 34/6 each; publish dry/audit passed; npm+production remain accurately observed at 1.0.0."
+}

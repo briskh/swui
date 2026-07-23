@@ -47,6 +47,13 @@ export const portalNavSections: PortalNavSection[] = [
     items: [{ to: "/typography", label: "Typography" }]
   },
   {
+    id: "icons",
+    label: "Icons",
+    sectionPath: "/icons",
+    topBarTo: "/icons",
+    items: [{ to: "/icons", label: "Icons" }]
+  },
+  {
     id: "components",
     label: "Components",
     sectionPath: "/components",

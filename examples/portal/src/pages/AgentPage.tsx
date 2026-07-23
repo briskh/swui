@@ -60,16 +60,32 @@ export function AgentPage() {
               Read the token first hop at <code>swui://packages/ui-tokens/llms.txt</code>.
             </li>
             <li>
+              Read the blocking <code>swui://foundation/contract</code> and{" "}
+              <code>swui://packages/ui/docs/HTML-STANDARDS.md</code>.
+            </li>
+            <li>
+              Actively consult <Link to="/colors">Colors</Link>, <Link to="/typography">Typography</Link>,{" "}
+              <Link to="/icons">Icons</Link>, and the exact <Link to="/components">component demo</Link>.
+            </li>
+            <li>
               Search with a non-empty query; the default limit is 10 and the maximum is 25.
             </li>
             <li>
               Read one exact <code>swui://components/{"{name}"}</code> resource.
             </li>
-            <li>Resolve the exact package version before installing.</li>
+            <li>
+              Resolve the exact package version before installing and compare <code>sourceVersion</code> with{" "}
+              <code>releaseStatus</code>.
+            </li>
           </ol>
           <p>
             The static resource list stays small; component details are available through one resource template. All
             four tools are read-only and return structured content plus equivalent JSON text.
+          </p>
+          <p>
+            Every catalog or component result includes mandatory <code>contractRefs</code> and absolute{" "}
+            <code>referenceSite</code> URLs. Use exported <code>@swqt/ui</code> controls, semantic tokens, repository
+            font stacks, Lucide named imports, and native HTML-first semantics.
           </p>
         </CardContent>
       </Card>

@@ -814,6 +814,186 @@
         "advanceRequired": null
       },
       "chainTerminationReason": "scope-terminal"
+    },
+    {
+      "runId": "auto-20260723T200217003Z",
+      "targetId": "S-SWQT-0023",
+      "targetKind": "step",
+      "startedAt": "2026-07-23T20:02:17.003Z",
+      "endedAt": "2026-07-23T20:15:24.833Z",
+      "exitStatus": "completed",
+      "stopTriggered": true,
+      "triggeredBy": "auto-exit",
+      "notes": null,
+      "chainDepthPolicy": "feature-complete",
+      "scopeAnchor": "F-SWQT-0008",
+      "scopeFeatureId": "F-SWQT-0008",
+      "chainPlan": [],
+      "chainProgress": {
+        "completedSegments": [],
+        "currentSegment": null,
+        "lastCheckpointAt": "2026-07-23T20:15:10.508Z",
+        "auditMirror": [
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0023",
+              "kind": "step",
+              "nextHandoff": "implement",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T20:05:57.390Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0023",
+              "stepStatus": "designed",
+              "featureId": "F-SWQT-0008",
+              "featureStatus": "draft",
+              "tier1WriteRef": "workflow.section-set:S-SWQT-0023:implementation-record"
+            }
+          },
+          {
+            "segmentIndex": 1,
+            "segment": {
+              "id": "S-SWQT-0023",
+              "kind": "step",
+              "nextHandoff": "review",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T20:06:32.244Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0023",
+              "stepStatus": "designed",
+              "featureId": "F-SWQT-0008",
+              "featureStatus": "draft",
+              "tier1WriteRef": "workflow.section-set:S-SWQT-0023:review-report"
+            }
+          },
+          {
+            "segmentIndex": 2,
+            "segment": {
+              "id": "S-SWQT-0023",
+              "kind": "step",
+              "nextHandoff": "deliver",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T20:07:06.454Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0023",
+              "stepStatus": "designed",
+              "featureId": "F-SWQT-0008",
+              "featureStatus": "draft",
+              "tier1WriteRef": "workflow.section-set:S-SWQT-0023:completion-audit",
+              "validationSummary": "Portal typecheck, 20 unit tests, MCP smoke, design contract and HTML standards passed; no focused gate skipped."
+            }
+          },
+          {
+            "segmentIndex": 3,
+            "segment": {
+              "id": "S-SWQT-0024",
+              "kind": "step",
+              "nextHandoff": "implement",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T20:09:54.390Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0024",
+              "stepStatus": "implemented",
+              "featureId": "F-SWQT-0008",
+              "featureStatus": "draft",
+              "tier1WriteRef": "workflow.intent.apply:S-SWQT-0024:implemented"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0024",
+              "kind": "step",
+              "nextHandoff": "review",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T20:10:13.919Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0024",
+              "stepStatus": "reviewed",
+              "featureId": "F-SWQT-0008",
+              "featureStatus": "draft",
+              "tier1WriteRef": "workflow.intent.apply:S-SWQT-0024:reviewed"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0024",
+              "kind": "step",
+              "nextHandoff": "deliver",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T20:10:29.074Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0024",
+              "stepStatus": "delivered",
+              "featureId": "F-SWQT-0008",
+              "featureStatus": "draft",
+              "tier1WriteRef": "workflow.promote:S-SWQT-0024",
+              "validationSummary": "Portal build/type/unit/MCP, targeted 8-case browser/Axe/HTML, docs sync, catalog, design and HTML gates passed."
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0025",
+              "kind": "step",
+              "nextHandoff": "implement",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T20:14:41.619Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0025",
+              "stepStatus": "implemented",
+              "featureId": "F-SWQT-0008",
+              "featureStatus": "draft",
+              "tier1WriteRef": "workflow.intent.apply:S-SWQT-0025:implemented"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0025",
+              "kind": "step",
+              "nextHandoff": "review",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T20:14:54.073Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0025",
+              "stepStatus": "reviewed",
+              "featureId": "F-SWQT-0008",
+              "featureStatus": "draft",
+              "tier1WriteRef": "workflow.intent.apply:S-SWQT-0025:reviewed"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0025",
+              "kind": "step",
+              "nextHandoff": "deliver",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T20:15:10.508Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0025",
+              "stepStatus": "delivered",
+              "featureId": "F-SWQT-0008",
+              "featureStatus": "delivered",
+              "tier1WriteRef": "workflow.promote:S-SWQT-0025",
+              "validationSummary": "All CI-equivalent gates passed; Portal 60/60; source consumer 34/6; packed nested+hoisted 34/6 each; publish dry/audit passed; npm+production remain accurately observed at 1.0.0."
+            }
+          }
+        ],
+        "advanceRequired": null
+      },
+      "chainTerminationReason": "scope-terminal"
     }
   ]
 }

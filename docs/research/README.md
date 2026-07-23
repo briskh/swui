@@ -5,5 +5,6 @@
 - [R-SWUI-003 — swui MCP and SWS MCP integration paths](R-SWUI-003-swui-mcp-sws-integration-research.md) — swui MCP 能否经 SWS 代理；双槽位 vs 本地 facade 联邦 vs 中心聚合（不可行）。
 - [R-SWUI-004 — Storybook MCP vs Playwright fixture draft](R-SWUI-004-storybook-mcp-vs-playwright-fixture-draft.md) — Agent+Story 路线对比、P0/P1 state 清单、工具映射与 Storybook 试点准入条件。
 - [R-SWQT-0001 — HTML Living Standard audit](R-SWQT-0001-html-living-standard-audit.md) — WHATWG/ARIA 标准基线、导出组件审计、迁移候选与 HTML-first 验收方向。
+- [R-SWQT-0002 — swui MCP disclosure and consumer-contract audit](R-SWQT-0002-swui-mcp-disclosure-and-consumer-contract-audit.md) — MCP 渐进披露、发布新鲜度、消费端设计基础与参考站强约束审计。
 
 - Ops SSOT (infrastructure): op repo `docs/research/swui-portal-gw-operating-notes.md` — gw deploy, Caddy/CF/LE, Tailnet `/mcp/swui` (2026-07-23).

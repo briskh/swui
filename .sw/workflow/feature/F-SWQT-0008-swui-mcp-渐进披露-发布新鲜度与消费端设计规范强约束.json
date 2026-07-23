@@ -1,0 +1,323 @@
+{
+  "schemaVersion": 6,
+  "kind": "feature",
+  "featureId": "F-SWQT-0008",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Feature F-SWQT-0008: swui MCP 渐进披露、发布新鲜度与消费端设计规范强约束",
+  "owner": "swqt-maintainers",
+  "createdAt": "2026-07-23T19:36:37.147Z",
+  "updatedAt": "2026-07-23T20:01:16.946Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "background": {
+      "sectionStatus": "done",
+      "items": {
+        "trigger": "用户要求深入审计项目 MCP/Agent 暴露面，确保准确触达与渐进披露，并强制消费端遵守设计基础、HTML 规范和参考站。",
+        "affectedParties": "@swqt/ui 与 @swqt/ui-tokens 消费者、AI coding agents、Portal/MCP 维护者、npm 发布维护者。",
+        "whyNow": "源码在 npm 1.0.0 与生产 MCP 上线后新增了完整 Portal foundation 和 HTML-first 迁移；生产 first-hop 与发布包仍停留在旧内容。",
+        "bullets": [
+          "本地 main 比远端已发布/已部署面多两个重大提交：6d9a637 与 be78477。",
+          "本地、npm、生产 MCP 必须作为三个独立证据面验收。"
+        ]
+      }
+    },
+    "problem-statement": {
+      "sectionStatus": "done",
+      "items": {
+        "coreProblem": "swui 已有可用的渐进发现骨架，但最新设计基础与 HTML-first 约束没有贯穿初始化、稳定资源、组件工具、安装包和生产部署；组件选择返回也缺少强制 contract refs，导致 Agent 可准确找到组件却绕过必要约束。",
+        "nonGoals": [
+          "不把所有文档全文塞入 initialize instructions。",
+          "不让 swui MCP 承担 SWS workflow/intake 工具。",
+          "不在未经明确授权时执行 npm publish 或生产部署。",
+          "不声称 MCP 文案可以替代消费仓库自己的 lint/test enforcement。"
+        ]
+      }
+    },
+    "context-constraints": {
+      "sectionStatus": "done",
+      "items": {
+        "projectConstraints": "swui 是共享 UI library，不提供产品 AppShell/路由；一个全局 ThemeProvider；设计基础以 Portal 和 token/component source 为 SSOT。",
+        "technicalConstraints": "保持 read-only MCP、稳定资源列表有界、组件通过一个 URI template/L2 工具按需披露、structuredContent 与 JSON text 对等。",
+        "runtimeConstraints": "生产端点为 https://agent.swqt.net/mcp/swui；人类参考站为 https://ui.swqt.net；发布包真值来自 npm registry。",
+        "compatibilityConstraints": "工具返回新增字段必须兼容；组件 import hints、资源 URI 与已发布包版本必须可追溯；不静默发布破坏性 API。",
+        "documentationConstraints": "包内 AGENTS.md/llms.txt/docs 是安装后版本锁定真值；MCP 同步副本必须由 sync-docs 生成；Research 只承载证据。",
+        "projectCompanionRefs": ".cursor/skills/project-swqt-companion/SKILL.md Validation handoff。",
+        "notes": "workflow-numbering reports 45 policy findings: 40 pre-existing plus 5 from tool-allocated F0008/S0023-S0025/R0002 identities under a conflicting base-number rule; workflow JSON/layout/closure/lifecycle pass and delivered identities must not be silently renamed。"
+      }
+    },
+    "research-evidence": {
+      "sectionStatus": "done",
+      "items": {
+        "summary": "官方 MCP 2025-11-25 规范支持 initialize instructions、资源和工具的分层；本地 MCP 11 个资源/4 个工具可用，但 HTML 文档与组件级 contract refs 缺失。生产 MCP 与 npm 1.0.0 均落后于 6d9a637/be78477；生产包仍含 Radix Progress peer 且无 HTML-STANDARDS。",
+        "sources": [
+          "docs/research/R-SWQT-0002-swui-mcp-disclosure-and-consumer-contract-audit.md",
+          "https://modelcontextprotocol.io/specification/2025-11-25",
+          "https://modelcontextprotocol.io/specification/2025-11-25/server/index",
+          "https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle",
+          "production swui:// package resources and swui.package.get observed 2026-07-24",
+          "exact npm tarballs @swqt/ui@1.0.0 and @swqt/ui-tokens@1.0.0"
+        ]
+      }
+    },
+    "options-telos": {
+      "sectionStatus": "done",
+      "items": {
+        "options": [
+          {
+            "id": "A",
+            "name": "有界首跳 + 各披露层 contract refs + 发布新鲜度证明",
+            "fitWhen": "需要同时保证低上下文成本、准确触达、严格消费约束和可审计发布差异。",
+            "benefits": "复用现有资源/template/tool；组件选择点直接返回约束与参考站；可独立证明 local/npm/production。",
+            "costs": "需要同步 MCP schema/tests、包文档、Portal icon reference 和发布/部署验收。",
+            "risks": "新增字段与资源可能触碰披露预算；生产对齐仍依赖后续发布部署授权。",
+            "notWhen": "若只需要临时内部说明，不需要对外消费面。",
+            "telos": {
+              "technical": "最符合 MCP resource/tool 分层和 bounded disclosure。",
+              "economic": "增量改造，复用既有 Portal/MCP。",
+              "legal": "使用公共规范和项目自有文档。",
+              "operational": "local/packed/npm/remote 各自有门禁。",
+              "strategic": "把参考站与包变成 Agent 可持续消费的设计系统入口。"
+            }
+          },
+          {
+            "id": "B",
+            "name": "把完整规则注入 initialize",
+            "fitWhen": "客户端完全不支持资源按需读取。",
+            "benefits": "规则早期在场。",
+            "costs": "上下文膨胀、重复真源、版本漂移。",
+            "risks": "Agent 忽略长 instructions；违背渐进披露。",
+            "notWhen": "当前客户端支持资源/工具。",
+            "telos": {
+              "technical": "Presence 高但 Fidelity 难维护。",
+              "economic": "长期维护成本高。",
+              "legal": "无额外收益。",
+              "operational": "每次规则更新都改初始化文本。",
+              "strategic": "不符合项目 progressive-disclosure 方向。"
+            }
+          },
+          {
+            "id": "C",
+            "name": "仅加强文档提醒",
+            "fitWhen": "无需验证 MCP 或发布状态。",
+            "benefits": "改动最小。",
+            "costs": "组件工具和生产端仍可绕过。",
+            "risks": "无法满足准确触达和发布以来更新核对。",
+            "notWhen": "用户要求细致整理与验证。",
+            "telos": {
+              "technical": "覆盖不足。",
+              "economic": "短期便宜、长期返工。",
+              "legal": "无明显差异。",
+              "operational": "缺少 outside-in 证明。",
+              "strategic": "不满足本 Feature。"
+            }
+          }
+        ],
+        "recommendedOption": "A",
+        "recommendationRationale": "A 是唯一同时保持有界首跳、按需精确披露、消费端强约束和发布新鲜度证据的方案。",
+        "discussionTopic": "确认采用方案 A，并选择只完成源码/本地验收，还是在后续取得授权后发布 npm 与部署生产。",
+        "clarification": "MCP/包文档能强烈规定使用方式；消费仓库若要技术性阻断，仍需采用相同 lint/test gates。"
+      }
+    },
+    "decision-summary": {
+      "sectionStatus": "done",
+      "items": {
+        "decision": "采用方案 A：分层渐进披露，并在每个消费决策点附带可执行的设计与 HTML 合同引用，同时建立发布新鲜度证据。",
+        "rationale": "用户目标要求完整对外链路；短 initialize、精确资源、组件级 contract refs 与版本差异证据共同覆盖发现、采用、验证和发布判断。",
+        "userConfirmation": "auto",
+        "confirmedAt": "2026-07-24T00:00:00.000Z",
+        "changePosture": "migrate-forward",
+        "changePostureSource": "user-confirmed"
+      }
+    },
+    "acceptance-criteria": {
+      "sectionStatus": "done",
+      "items": {
+        "criteria": [
+          "建立单一消费端强约束：字体/字形、图标、颜色、控件、HTML-first 与参考站使用均有明确 MUST/MUST NOT 和稳定 URI。",
+          "MCP initialize 只给短强制摘要和有序 first-hop；不复制完整正文。",
+          "稳定资源显式暴露 UI/token first-hop、foundation contract 与 HTML-STANDARDS，且维持数量/字节预算。",
+          "catalog.search、component.get 与 exact component resource 返回 importHint、absolute portal references 和 compact contractRefs。",
+          "组件/控件选择必须引导至已有 @swqt/ui primitive 与对应 Portal demo，不鼓励复制源码或本地 fork。",
+          "Portal 增加可见 icon policy/reference，并在 /agent 明确主动参考 /colors、/typography、/icons、/components。",
+          "Agent/LLM package docs 对两个包一致强调 foundation、HTML 和参考站顺序；sync-docs 与 packed tarball byte parity 通过。",
+          "MCP tools/resources schema、structuredContent/text parity、read-only annotations、查询边界和错误路径全部有测试。",
+          "针对 6d9a637/be78477 的新增组件、token、foundation 和 HTML 规则建立 release-delta 清单与 freshness evidence。",
+          "最终报告分别标注 local source、packed artifact、npm registry 与 production MCP 状态；未发布/未部署不得声称远端已修复。",
+          "主集成面：package docs/source → sync-docs → swui initialize/resource/tool → Portal reference → packed/npm/production outside-in。首个闭环：Button 查询返回组件 import、绝对 demo URL、foundation/HTML refs，并在 Portal 可读。"
+        ],
+        "observableSuccess": "一个不了解仓库的 Agent 能从 initialize 开始，以有界步骤找到 Button，读取强制设计/HTML 契约和参考站，解析准确版本，并明确区分源码与已发布状态。",
+        "testabilityRisks": "npm publish/生产 deploy 是外部有状态操作，需显式授权；真实 Agent 遵从度需固定 prompt SpotCheck 与人工抽查，不能只用单元测试证明。"
+      }
+    },
+    "step-breakdown": {
+      "sectionStatus": "done",
+      "items": {
+        "steps": [
+          {
+            "stepId": "S-SWQT-0023",
+            "title": "Button 消费合同到 MCP 与 Portal 的首个纵向闭环",
+            "phase": "tracer",
+            "dependencies": "none；Feature execution-wave head",
+            "materialized": true,
+            "summary": "把字体、图标、颜色、控件、HTML-first 与参考站要求收敛为单一合同，并让 Button 查询从包文档、MCP 到 Portal 形成首个闭环。",
+            "status": "designed",
+            "notes": "完整 public-contract brief/readiness=Yes；保持 initialize 有界。",
+            "boundary": "canonical contract、Button 精确查询、绝对参考 URL 与 Portal 可读入口；不做全量发布。",
+            "purpose": "先证明一个不了解仓库的 Agent 能准确找到 Button 并同时取得所有强制约束。",
+            "href": "../steps/S-SWQT-0023-button-消费合同到-mcp-与-portal-的首个纵向闭环.json",
+            "acceptanceHooks": [
+              "consumer contract SSOT",
+              "Button end-to-end disclosure"
+            ],
+            "validationFocus": [
+              "MCP unit and smoke",
+              "Portal route and accessibility",
+              "design and HTML contracts"
+            ],
+            "intakeRefs": [],
+            "propagationTargets": [
+              "S-SWQT-0024",
+              "S-SWQT-0025"
+            ],
+            "propagationFiles": {},
+            "executionOwner": "swqt-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0024",
+            "title": "全量 Agent 文档、组件披露与 Icon 参考面强约束",
+            "phase": "contract-expansion",
+            "dependencies": "dependsOn S-SWQT-0023",
+            "materialized": true,
+            "summary": "把首个闭环推广到两个包的 AGENTS/llms/docs、全部组件查询和新的 /icons 参考页，并保持 sync-docs 与披露预算。",
+            "status": "designed",
+            "notes": "完整 public-contract brief/readiness=Yes；无新增图标库或自绘 SVG。",
+            "boundary": "Agent/LLM 文档、组件 payload、Portal icon/reference 导航；不建立产品 AppShell。",
+            "purpose": "让任何组件选择点都无法错过版本锁定合同与积极参考站指引。",
+            "href": "../steps/S-SWQT-0024-全量-agent-文档-组件披露与-icon-参考面强约束.json",
+            "acceptanceHooks": [
+              "all package and MCP disclosure layers",
+              "icon policy reference"
+            ],
+            "validationFocus": [
+              "bounded resources and tool payloads",
+              "docs sync byte parity",
+              "Portal browser matrix"
+            ],
+            "intakeRefs": [],
+            "propagationTargets": [
+              "S-SWQT-0025"
+            ],
+            "propagationFiles": {},
+            "executionOwner": "swqt-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0025",
+            "title": "发布新鲜度证据、完整门禁与远端状态收口",
+            "phase": "verification",
+            "dependencies": "dependsOn S-SWQT-0023,S-SWQT-0024",
+            "materialized": true,
+            "summary": "记录 1.0.0 发布后的源码差异，补齐 local/packed/npm/production 四面状态，并执行完整质量门。",
+            "status": "designed",
+            "notes": "完整 deploy-packaging brief/readiness=Yes；publish/deploy 未授权时准确标为 pending/stale。",
+            "boundary": "freshness evidence、测试与文档状态；不执行 npm publish 或生产 deploy。",
+            "purpose": "确保“最新”是可验证事实，而不是把本地通过误报为远端已对齐。",
+            "href": "../steps/S-SWQT-0025-发布新鲜度证据-完整门禁与远端状态收口.json",
+            "acceptanceHooks": [
+              "release delta since 1.0.0",
+              "four-surface freshness matrix"
+            ],
+            "validationFocus": [
+              "full repository quality gates",
+              "packed nested and hoisted consumers",
+              "npm and production outside-in read-only probes"
+            ],
+            "intakeRefs": [],
+            "propagationTargets": [
+              "F-SWQT-0008 lifecycle",
+              "project-swqt-companion"
+            ],
+            "propagationFiles": {},
+            "executionOwner": "swqt-maintainers"
+          }
+        ]
+      }
+    },
+    "open-questions": {
+      "sectionStatus": "done",
+      "items": {
+        "questions": [
+          {
+            "id": "Q-05",
+            "question": "是否确认方案 A，并在确认后自动推进 design→implement→review→promote？",
+            "status": "resolved",
+            "answer": "auto",
+            "resolution": "用户于 2026-07-24 明确选择 auto；按五步工作流推进源码、本地与 packed 验收，npm publish/生产 deploy 保持独立显式授权边界。",
+            "owner": "user"
+          }
+        ],
+        "risks": [
+          "生产 MCP 和 npm 包当前确定落后；未授权前只能达到 local-fixed/packed-verified。",
+          "组件工具附带约束不能替代任意消费仓库的强制 lint。",
+          "新增 icon 页面需保持设计基础和 Portal 导航响应式门禁。"
+        ],
+        "resolvedClarifications": [
+          {
+            "topic": "是否需要把所有规则放入 initialize",
+            "conclusion": "不需要；短摘要 + 精确 URI + 组件选择点 contract refs 更符合渐进披露。",
+            "evidence": [
+              "MCP resources/tools control model",
+              "现有 RESOURCE_MAP 与单组件 template"
+            ]
+          },
+          {
+            "topic": "Q-05 handoff",
+            "conclusion": "auto；完整推进五步工作流，外部发布与生产部署仍需独立授权。",
+            "evidence": [
+              "user-confirmed 2026-07-24"
+            ]
+          }
+        ]
+      }
+    },
+    "handoff-gate": {
+      "sectionStatus": "done",
+      "items": {
+        "confirmedInto": "auto",
+        "progress": "Research、TELOS、验收标准和 Q-05 已全部收口；方案 A 获用户确认。",
+        "validationGate": "Feature/Step workflow validation；实现后运行 MCP、设计、HTML、文档同步、Portal、packed consumer 与 outside-in 状态验证。",
+        "doNotClobber": "不改写历史 workflow 编号；不在未授权时 publish/deploy；不膨胀 initialize 为全文。",
+        "nextAction": "Q-AUTO-CLOSURE completed; proceed with design without workflow tail prompt.",
+        "informationComplete": "Yes",
+        "nextHandoff": "design",
+        "references": [
+          "docs/research/R-SWQT-0002-swui-mcp-disclosure-and-consumer-contract-audit.md",
+          "sws://reference/disclosure-reliability-contract.md",
+          ".cursor/skills/project-swqt-companion/SKILL.md"
+        ]
+      }
+    },
+    "questions": {
+      "sectionStatus": "done",
+      "items": {
+        "schemaVersion": 1,
+        "items": [],
+        "sessionStatus": "completed",
+        "qaSessionClosure": {
+          "businessComplete": "Yes",
+          "workflowPromptSuppressed": "Yes",
+          "closedAt": "2026-07-23T20:01:16.946Z",
+          "autoEligibleAtT0": "Yes",
+          "autoEligibleHandoff": "promote",
+          "autoWaveHeadStepId": "S-SWQT-0023",
+          "launchReceipt": "sw workflow close-discourse target=F-SWQT-0008; handoff=design; autoEligibleHandoff=promote"
+        }
+      }
+    }
+  },
+  "closingStepId": "S-SWQT-0025"
+}

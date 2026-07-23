@@ -43,8 +43,27 @@ export interface ComponentDetails {
   slug: string;
   notes: string;
   demoPath: string;
+  demoUrl: string;
   resourceUri: string;
   importHint: ComponentImportHint;
+}
+
+export const PORTAL_PUBLIC_URL = "https://ui.swqt.net";
+
+export const CONSUMER_CONTRACT_REFS = [
+  "swui://foundation/contract",
+  "swui://packages/ui/docs/HTML-STANDARDS.md",
+  "swui://packages/ui/AGENTS.md"
+] as const;
+
+export function portalReferenceUrls(demoPath?: string) {
+  return {
+    colors: `${PORTAL_PUBLIC_URL}/colors`,
+    typography: `${PORTAL_PUBLIC_URL}/typography`,
+    icons: `${PORTAL_PUBLIC_URL}/icons`,
+    components: `${PORTAL_PUBLIC_URL}/components`,
+    component: demoPath ? `${PORTAL_PUBLIC_URL}${demoPath}` : null
+  };
 }
 
 export function readCatalogIndex(portalDir = portalRoot): CatalogIndex {
@@ -126,6 +145,7 @@ export function componentImportHint(name: string): ComponentImportHint {
 }
 
 export function componentResourceBody(entry: FlatCatalogExport) {
+  const demoPath = demoUrlPath(entry.groupId, entry.slug);
   return JSON.stringify(
     {
       name: entry.name,
@@ -133,9 +153,12 @@ export function componentResourceBody(entry: FlatCatalogExport) {
       groupId: entry.groupId,
       slug: entry.slug,
       notes: entry.notes,
-      demoPath: demoUrlPath(entry.groupId, entry.slug),
+      demoPath,
+      demoUrl: `${PORTAL_PUBLIC_URL}${demoPath}`,
       resourceUri: componentResourceUri(entry.name),
-      importHint: componentImportHint(entry.name)
+      importHint: componentImportHint(entry.name),
+      contractRefs: CONSUMER_CONTRACT_REFS,
+      referenceSite: portalReferenceUrls(demoPath)
     },
     null,
     2
@@ -158,13 +181,15 @@ export function getComponentDetails(index: CatalogIndex, name: string): Componen
   if (!entry) {
     return null;
   }
+  const demoPath = demoUrlPath(entry.groupId, entry.slug);
   return {
     name: entry.name,
     group: entry.groupTitle,
     groupId: entry.groupId,
     slug: entry.slug,
     notes: entry.notes,
-    demoPath: demoUrlPath(entry.groupId, entry.slug),
+    demoPath,
+    demoUrl: `${PORTAL_PUBLIC_URL}${demoPath}`,
     resourceUri: componentResourceUri(entry.name),
     importHint: componentImportHint(entry.name)
   };

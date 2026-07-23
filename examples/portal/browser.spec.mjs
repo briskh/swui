@@ -33,6 +33,7 @@ test("overview and navigation links resolve", async ({ page }) => {
   for (const [href, label] of [
     ["/colors", "Colors"],
     ["/typography", "Typography"],
+    ["/icons", "Icons"],
     ["/components", "Components"],
     ["/packages", "Packages"],
     ["/agent", "Agent"]
@@ -51,7 +52,8 @@ test("overview and navigation links resolve", async ({ page }) => {
 
 for (const [path, heading] of [
   ["/colors", "Colors"],
-  ["/typography", "Typography"]
+  ["/typography", "Typography"],
+  ["/icons", "Icons"]
 ]) {
   test(`foundation page renders: ${heading}`, async ({ page }) => {
     await page.goto(path);
@@ -120,8 +122,20 @@ test("agent page exposes dual-slot MCP example", async ({ page }) => {
   await expect(page.getByTestId("mcp-config-example")).toContainText('"sw"');
   await expect(page.getByTestId("mcp-config-example")).toContainText("https://agent.swqt.net/mcp/swui");
   await expect(page.getByText("swui://packages/ui/llms.txt")).toBeVisible();
+  await expect(page.getByText("swui://foundation/contract")).toBeVisible();
+  await expect(page.getByText("swui://packages/ui/docs/HTML-STANDARDS.md")).toBeVisible();
   await expect(page.getByText(/default limit is 10 and the maximum is 25/)).toBeVisible();
   await expectNoWcagAaViolations(page);
+});
+
+test("icons page exposes the mandatory Lucide policy and accessible examples", async ({ page }) => {
+  await page.goto("/icons");
+  await expect(page.getByRole("heading", { name: "Icons", level: 2 })).toBeVisible();
+  await expect(page.getByText("lucide-react", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText(/Do not add another icon library/)).toBeVisible();
+  await expect(page.getByText("Search", { exact: true }).first()).toBeVisible();
+  await expectNoWcagAaViolations(page);
+  await expectConformingHtml(page, "icons.html");
 });
 
 test("registry API returns fixture metadata", async ({ request }) => {

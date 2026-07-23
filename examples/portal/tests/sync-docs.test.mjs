@@ -29,6 +29,12 @@ describe("sync-docs", () => {
     expect(readFileSync(join(portalDir, ".generated/tokens/AGENTS.md"), "utf8")).toContain(
       "@swqt/ui-tokens"
     );
+    expect(
+      JSON.parse(readFileSync(join(portalDir, ".generated/release-versions.json"), "utf8"))
+    ).toEqual({
+      "@swqt/ui": "1.1.0",
+      "@swqt/ui-tokens": "1.1.0"
+    });
   });
 
   test("--check detects drift without writing", () => {

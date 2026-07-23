@@ -17,6 +17,7 @@ const client = await import("@modelcontextprotocol/sdk/client/index.js").then(({
 await client.connect(clientTransport);
 if (
   client.getServerVersion()?.name !== "swui" ||
+  client.getServerVersion()?.version !== "1.1.0" ||
   !client.getInstructions()?.includes("swui://packages/ui/llms.txt")
 ) {
   throw new Error("initialize response is missing the swui identity or first-hop instructions");
@@ -31,6 +32,7 @@ for (const uri of [
   "swui://packages/ui/docs/DESIGN-SUMMARY.md",
   "swui://packages/ui/docs/COMPONENT-CATALOG.md",
   "swui://packages/ui/docs/DO-AND-DONT.md",
+  "swui://packages/ui/docs/HTML-STANDARDS.md",
   "swui://packages/ui-tokens/AGENTS.md",
   "swui://packages/ui-tokens/llms.txt",
   "swui://packages/ui-tokens/docs/ADOPTION.md",
@@ -74,7 +76,12 @@ const packageResult = await client.callTool({
   arguments: { name: "@swqt/ui", version: "1.0.0" }
 });
 const packageText = packageResult.content?.[0]?.type === "text" ? packageResult.content[0].text : "";
-if (!packageText.includes('"resolvedVersion": "1.0.0"') || !packageResult.structuredContent) {
+if (
+  !packageText.includes('"resolvedVersion": "1.0.0"') ||
+  !packageText.includes('"sourceVersion": "1.1.0"') ||
+  !packageText.includes('"releaseStatus": "source-ahead"') ||
+  !packageResult.structuredContent
+) {
   throw new Error("package.get did not resolve the expected exact version");
 }
 
@@ -88,6 +95,8 @@ const searchResult = await client.callTool({ name: "swui.catalog.search", argume
 const searchText = searchResult.content?.[0]?.type === "text" ? searchResult.content[0].text : "";
 if (
   !searchText.includes('"name": "Button"') ||
+  !searchText.includes('"contractRefs"') ||
+  !searchText.includes("https://ui.swqt.net/components/actions/button") ||
   !searchResult.structuredContent ||
   Buffer.byteLength(JSON.stringify(searchResult), "utf8") > 16 * 1024
 ) {
@@ -96,13 +105,20 @@ if (
 
 const componentResult = await client.callTool({ name: "swui.component.get", arguments: { name: "Button" } });
 const componentText = componentResult.content?.[0]?.type === "text" ? componentResult.content[0].text : "";
-if (!componentText.includes("/components/actions/button")) {
-  throw new Error("component.get missing demo path");
+if (
+  !componentText.includes("https://ui.swqt.net/components/actions/button") ||
+  !componentText.includes("swui://packages/ui/docs/HTML-STANDARDS.md")
+) {
+  throw new Error("component.get missing absolute demo URL or contract references");
 }
 
 const buttonResource = await client.readResource({ uri: "swui://components/Button" });
 const buttonText = buttonResource.contents?.[0]?.text ?? "";
-if (!buttonText.includes('"name": "Button"')) {
+if (
+  !buttonText.includes('"name": "Button"') ||
+  !buttonText.includes('"contractRefs"') ||
+  !buttonText.includes("https://ui.swqt.net/icons")
+) {
   throw new Error("component resource missing Button payload");
 }
 

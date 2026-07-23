@@ -44,7 +44,8 @@ After install, agents should read from `node_modules/@swqt/ui/`:
 
 - `AGENTS.md` (first hop)
 - `llms.txt`
-- `docs/*`
+- `docs/HTML-STANDARDS.md` before writing markup
+- the remaining `docs/*` as needed
 
 Same pattern for `@swqt/ui-tokens`.
 
@@ -73,12 +74,15 @@ MCP tools (read-only):
 Use progressive disclosure:
 
 1. Read `swui://packages/ui/llms.txt` and `swui://packages/ui/AGENTS.md`.
-2. Read the matching `swui://packages/ui/docs/*` resource only when needed.
-3. Call `swui.catalog.search` with a non-empty query (default limit 10, maximum 25).
-4. Read one exact `swui://components/{name}` resource or call `swui.component.get`.
-5. Call `swui.package.get` with an exact `version` before installing.
+2. Read the blocking `swui://foundation/contract` and `swui://packages/ui/docs/HTML-STANDARDS.md`.
+3. Actively inspect `https://ui.swqt.net/colors`, `/typography`, `/icons`, and the exact component demo.
+4. Call `swui.catalog.search` with a non-empty query (default limit 10, maximum 25).
+5. Read one exact `swui://components/{name}` resource or call `swui.component.get`; follow its `contractRefs` and absolute `referenceSite` URLs.
+6. Call `swui.package.get` with an exact `version` before installing, and compare `sourceVersion` with `releaseStatus`.
 
 `resources/list` contains only the stable package-document first hop; components are exposed through the single URI template. Tool results include both `structuredContent` and equivalent JSON text.
+
+The consumer contract is strict: exported `@swqt/ui` controls, semantic tokens, repository font stacks, Lucide named imports, and native HTML-first semantics only. Do not substitute copied controls, raw colors, external fonts, emoji, another icon library, or ad hoc SVG.
 
 Example `.cursor/mcp.json` fragment:
 

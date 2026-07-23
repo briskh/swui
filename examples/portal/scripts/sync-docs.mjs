@@ -1,5 +1,13 @@
 #!/usr/bin/env node
-import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync } from "node:fs";
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync
+} from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { generateCatalogIndex } from "./generate-catalog-index.mjs";
@@ -35,6 +43,19 @@ export function getCopyPlan(portalDir = portalRoot, root = repoRoot) {
   ];
 }
 
+function getReleaseVersions(root = repoRoot) {
+  return {
+    "@swqt/ui": JSON.parse(readFileSync(join(root, "packages/ui/package.json"), "utf8")).version,
+    "@swqt/ui-tokens": JSON.parse(
+      readFileSync(join(root, "packages/ui-tokens/package.json"), "utf8")
+    ).version
+  };
+}
+
+function serializeReleaseVersions(root = repoRoot) {
+  return `${JSON.stringify(getReleaseVersions(root), null, 2)}\n`;
+}
+
 export function syncDocs({ portalDir = portalRoot, repo = repoRoot, dryRun = false } = {}) {
   const out = join(portalDir, ".generated");
   if (!dryRun && existsSync(out)) {
@@ -64,6 +85,11 @@ export function syncDocs({ portalDir = portalRoot, repo = repoRoot, dryRun = fal
       catalogPath: join(repo, "packages/ui/docs/COMPONENT-CATALOG.md"),
       outPath: join(portalDir, ".generated/catalog-index.json")
     });
+    writeFileSync(
+      join(portalDir, ".generated/release-versions.json"),
+      serializeReleaseVersions(repo),
+      "utf8"
+    );
   }
   return copied;
 }
@@ -81,6 +107,12 @@ export function checkDocsSync({ portalDir = portalRoot, repo = repoRoot } = {}) 
     if (sourceText !== destText) {
       drift.push({ dest, reason: "content differs from SSOT" });
     }
+  }
+  const releaseVersionsPath = join(portalDir, ".generated/release-versions.json");
+  if (!existsSync(releaseVersionsPath)) {
+    drift.push({ dest: releaseVersionsPath, reason: "missing generated file" });
+  } else if (readFileSync(releaseVersionsPath, "utf8") !== serializeReleaseVersions(repo)) {
+    drift.push({ dest: releaseVersionsPath, reason: "content differs from package manifests" });
   }
   return drift;
 }

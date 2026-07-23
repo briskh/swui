@@ -15,8 +15,10 @@ import {
 import {
   componentResourceBody,
   componentResourceUri,
+  CONSUMER_CONTRACT_REFS,
   flattenCatalogExports,
   getComponentDetails,
+  portalReferenceUrls,
   readCatalogIndex,
   searchCatalog
 } from "./catalog";
@@ -33,14 +35,17 @@ Public URL: ${SWUI_MCP_PUBLIC_URL}
 Use this progressive-disclosure sequence:
 1. Read swui://packages/ui/llms.txt and swui://packages/ui/AGENTS.md for the UI first hop.
 2. Read swui://packages/ui-tokens/llms.txt and swui://packages/ui-tokens/AGENTS.md for token rules.
-3. Read swui://foundation/contract — mandatory color + typography allowlist (Portal /colors and /typography).
-4. Search with swui.catalog.search using a non-empty query; default limit is 10 and maximum limit is 25.
-5. Read one exact swui://components/{name} resource or call swui.component.get.
-6. Resolve an exact package version with swui.package.get before installing.
+3. Read swui://foundation/contract — blocking font, icon, color, control, HTML, and reference-site contract.
+4. Read swui://packages/ui/docs/HTML-STANDARDS.md — native HTML first; ARIA only for semantic gaps.
+5. Actively consult https://ui.swqt.net/colors, https://ui.swqt.net/typography, https://ui.swqt.net/icons, and the exact https://ui.swqt.net/components/... demo before creating UI.
+6. Search with swui.catalog.search using a non-empty query; default limit is 10 and maximum limit is 25.
+7. Read one exact swui://components/{name} resource or call swui.component.get.
+8. Resolve an exact package version with swui.package.get before installing; compare sourceVersion and releaseStatus.
 
 Before install, use these resources and tools for catalog, adoption, and registry metadata.
 After install, prefer node_modules/@swqt/ui/AGENTS.md and same-version package docs as version-locked truth.
 
+Treat contractRefs returned by catalog and component calls as mandatory reads. Use @swqt/ui controls, semantic tokens, repository font stacks, and lucide-react named imports; do not substitute local controls, raw colors, external fonts, emoji, or ad hoc SVG icons.
 Do not use swui MCP for SWS workflow/tools — those live on the separate "sw" MCP server.
 Do not request tarball mirrors or source mutations through MCP.`;
 
@@ -90,6 +95,13 @@ export const RESOURCE_MAP = [
     description: "Implementation constraints and usage examples"
   },
   {
+    uri: "swui://packages/ui/docs/HTML-STANDARDS.md",
+    file: "docs/HTML-STANDARDS.md",
+    name: "ui-html-standards",
+    title: "@swqt/ui HTML standards",
+    description: "Blocking native HTML-first and ARIA exception contract"
+  },
+  {
     uri: "swui://packages/ui-tokens/AGENTS.md",
     file: "tokens/AGENTS.md",
     name: "tokens-agent-first-hop",
@@ -121,8 +133,8 @@ export const RESOURCE_MAP = [
     uri: "swui://foundation/contract",
     file: "experience/foundation-contract.md",
     name: "foundation-contract",
-    title: "Foundation contract (colors + typography)",
-    description: "Mandatory allowlist aligned with Portal /colors and /typography; enforced by check:design-contract"
+    title: "Consumer foundation contract",
+    description: "Mandatory fonts, icons, colors, controls, HTML, and Portal reference contract"
   }
 ] as const;
 
@@ -149,8 +161,19 @@ const componentSchema = z.object({
   slug: z.string(),
   notes: z.string(),
   demoPath: z.string(),
+  demoUrl: z.string().url(),
   resourceUri: z.string(),
   importHint: importHintSchema
+});
+
+const contractRefsSchema = z.array(z.string());
+
+const referenceSiteSchema = z.object({
+  colors: z.string().url(),
+  typography: z.string().url(),
+  icons: z.string().url(),
+  components: z.string().url(),
+  component: z.string().url().nullable()
 });
 
 const registryFreshnessSchema = z.object({
@@ -172,6 +195,15 @@ const readOnlyAnnotations = (title: string, openWorldHint: boolean) => ({
 
 function readGenerated(relativePath: string) {
   return readFileSync(join(GENERATED_ROOT, relativePath), "utf8");
+}
+
+function readSourcePackageVersion(name: "@swqt/ui" | "@swqt/ui-tokens") {
+  const versions = JSON.parse(readGenerated("release-versions.json")) as Record<string, string>;
+  const version = versions[name];
+  if (!version) {
+    throw new Error(`Missing generated source version for ${name}`);
+  }
+  return version;
 }
 
 function jsonToolResult(payload: Record<string, unknown>, isError = false) {
@@ -196,7 +228,8 @@ export function createSwuiMcpServer() {
     {
       name: "swui",
       title: "Skywalker UI MCP",
-      version: "1.0.0"
+      version: "1.1.0",
+      websiteUrl: "https://ui.swqt.net"
     },
     {
       instructions: MCP_INSTRUCTIONS
@@ -281,6 +314,8 @@ export function createSwuiMcpServer() {
         count: z.number().int(),
         truncated: z.boolean(),
         results: z.array(componentSchema),
+        contractRefs: contractRefsSchema,
+        referenceSite: referenceSiteSchema,
         error: errorSchema
       },
       annotations: readOnlyAnnotations("Search the @swqt/ui catalog", false)
@@ -300,6 +335,8 @@ export function createSwuiMcpServer() {
         found: z.boolean(),
         name: z.string(),
         component: componentSchema.nullable(),
+        contractRefs: contractRefsSchema,
+        referenceSite: referenceSiteSchema,
         error: errorSchema
       },
       annotations: readOnlyAnnotations("Get one @swqt/ui component", false)
@@ -326,6 +363,9 @@ export function createSwuiMcpServer() {
         resolvedVersion: z.string().nullable(),
         latest: z.string().nullable(),
         availableVersions: z.array(z.string()),
+        sourceVersion: z.string(),
+        sourcePublished: z.boolean().nullable(),
+        releaseStatus: z.enum(["published", "source-ahead", "unknown"]),
         package: z
           .object({
             name: z.string(),
@@ -392,6 +432,8 @@ export function catalogSearchPayload(query: string, limit = DEFAULT_SEARCH_LIMIT
       count: 0,
       truncated: false,
       results: [],
+      contractRefs: CONSUMER_CONTRACT_REFS,
+      referenceSite: portalReferenceUrls(),
       error: {
         code: "INVALID_QUERY",
         message: "query must not be empty"
@@ -405,6 +447,7 @@ export function catalogSearchPayload(query: string, limit = DEFAULT_SEARCH_LIMIT
     slug: entry.slug,
     notes: entry.notes,
     demoPath: `/components/${entry.groupId}/${entry.slug}`,
+    demoUrl: `https://ui.swqt.net/components/${entry.groupId}/${entry.slug}`,
     resourceUri: componentResourceUri(entry.name),
     importHint: getComponentDetails(index, entry.name)!.importHint
   }));
@@ -419,6 +462,8 @@ export function catalogSearchPayload(query: string, limit = DEFAULT_SEARCH_LIMIT
       count: results.length + 1,
       truncated: matches.length > results.length + 1,
       results: [...results, result],
+      contractRefs: CONSUMER_CONTRACT_REFS,
+      referenceSite: portalReferenceUrls(),
       error: null
     };
     if (searchToolResultByteLength(candidate) > MAX_SEARCH_RESPONSE_BYTES) {
@@ -435,6 +480,8 @@ export function catalogSearchPayload(query: string, limit = DEFAULT_SEARCH_LIMIT
     count: results.length,
     truncated: matches.length > results.length,
     results,
+    contractRefs: CONSUMER_CONTRACT_REFS,
+    referenceSite: portalReferenceUrls(),
     error: null
   };
 }
@@ -447,13 +494,22 @@ export function componentGetPayload(name: string) {
       found: false,
       name,
       component: null,
+      contractRefs: CONSUMER_CONTRACT_REFS,
+      referenceSite: portalReferenceUrls(),
       error: {
         code: "COMPONENT_NOT_FOUND",
         message: `Component "${name}" was not found in the catalog index`
       }
     };
   }
-  return { found: true, name, component, error: null };
+  return {
+    found: true,
+    name,
+    component,
+    contractRefs: CONSUMER_CONTRACT_REFS,
+    referenceSite: portalReferenceUrls(component.demoPath),
+    error: null
+  };
 }
 
 function registryFreshness(response: Awaited<ReturnType<typeof getPackageMetadata>>) {
@@ -478,6 +534,10 @@ export async function packageGetPayload(
   const availableVersions = Object.keys(response.data?.versions ?? {}).sort((a, b) =>
     b.localeCompare(a, undefined, { numeric: true })
   );
+  const sourceVersion = readSourcePackageVersion(name);
+  const sourcePublished = response.data ? availableVersions.includes(sourceVersion) : null;
+  const releaseStatus =
+    sourcePublished === null ? "unknown" : sourcePublished ? "published" : "source-ahead";
   let error = null;
   if (!response.data) {
     error = {
@@ -502,6 +562,9 @@ export async function packageGetPayload(
     resolvedVersion: summary?.resolvedVersion ?? null,
     latest,
     availableVersions,
+    sourceVersion,
+    sourcePublished,
+    releaseStatus,
     package: summary,
     meta: registryFreshness(response),
     error

@@ -13,6 +13,16 @@
 - AGENTS.md
 - docs/TOKENS.md
 - docs/ADOPTION.md
+- MCP `swui://foundation/contract`
+- MCP `swui://packages/ui/docs/HTML-STANDARDS.md`
+
+## Blocking UI handoff
+
+- Semantic tokens only; no raw colors or parallel token files
+- Repository font stacks only; no external fonts
+- `lucide-react` named imports only; no emoji or ad hoc SVG icons
+- Controls come from `@swqt/ui`; native HTML first
+- Actively consult `https://ui.swqt.net/colors`, `/typography`, `/icons`, and the exact component demo
 
 ## Sibling packages
 

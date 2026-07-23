@@ -11,11 +11,21 @@
 ## Must read
 
 - AGENTS.md
+- MCP `swui://foundation/contract`
+- docs/HTML-STANDARDS.md
 - docs/DESIGN-SUMMARY.md
 - docs/COMPONENT-CATALOG.md
 - docs/DO-AND-DONT.md
 - docs/ADOPTION.md
-- docs/experience/foundation-contract.md (colors + typography allowlist; MCP `swui://foundation/contract`)
+
+## Blocking consumer contract
+
+- Fonts/glyphs: repository stacks and documented scale only; no external fonts or emoji-as-icons
+- Icons: `lucide-react` named imports only; no second library or ad hoc SVG
+- Colors: semantic `@swqt/ui-tokens` utilities only
+- Controls: exported `@swqt/ui` primitives; no source copy or local fork
+- HTML: native standards first; ARIA only for semantic gaps
+- Actively consult `https://ui.swqt.net/colors`, `/typography`, `/icons`, and the exact `/components/...` demo
 
 ## Theme
 

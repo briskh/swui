@@ -10,7 +10,8 @@
 - Use `ServerDataTable` for Runtime/server-backed lists; `DataTable` for in-memory tables.
 - Gate non-adaptable dense tables with `WideScreenGate`.
 - Bump package versions across apps after library changes.
-- Use only colors from Portal `/colors` and typography from `/typography` (see `docs/experience/foundation-contract.md`); run `bun run check:design-contract`.
+- Actively use Portal `/colors`, `/typography`, `/icons`, and the exact `/components/...` demo as implementation references.
+- Use only semantic colors and the documented font stacks/type scale; run `bun run check:design-contract`.
 - Prefer native HTML elements and attributes, rely on implicit roles, and run `bun run check:html-standards`.
 
 ## Don't

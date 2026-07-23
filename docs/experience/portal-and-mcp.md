@@ -1,6 +1,6 @@
 # Portal and MCP delivery experience
 
-Features: **F-SWQT-0004** (MVP) + **F-SWQT-0005** (Phase 2 catalog) + **F-SWQT-0006** (progressive-disclosure contract) — design-system portal + swui MCP.
+Features: **F-SWQT-0004** (MVP) + **F-SWQT-0005** (Phase 2 catalog) + **F-SWQT-0006** (progressive disclosure) + **F-SWQT-0008** (consumer contract and release freshness) — design-system portal + swui MCP.
 
 ## What shipped
 
@@ -30,6 +30,14 @@ Features: **F-SWQT-0004** (MVP) + **F-SWQT-0005** (Phase 2 catalog) + **F-SWQT-0
 - `swui.package.get` resolves exact versions and reports structured not-found plus registry source/freshness.
 - Project Host files keep stdio `sw mcp` free of URL/token env keys and register `swui` as an independent HTTP slot.
 - Installed tarball docs are byte-compared with `packages/*` SSOT by `verify:packed-consumer`.
+
+### F-SWQT-0008 consumer contract and release freshness
+
+- `resources/list`: 12 stable UI/token/contract entries, including `swui://foundation/contract` and `swui://packages/ui/docs/HTML-STANDARDS.md`; one component resource template remains the L2 disclosure path.
+- `catalog.search`, `component.get`, and exact component resources return compact mandatory `contractRefs` plus absolute `referenceSite` URLs.
+- `/icons` is the visible Lucide named-import and accessibility policy reference. `/agent` requires active consultation of `/colors`, `/typography`, `/icons`, and exact component demos.
+- `swui.package.get` distinguishes registry versions from deployed source via `sourceVersion`, `sourcePublished`, and `releaseStatus`.
+- The `1.1.0` candidate delta and four-surface evidence rules are recorded in [release-delta-1.1.0.md](release-delta-1.1.0.md).
 
 ## Commands
 
@@ -66,9 +74,9 @@ Prefer [local validation fast paths](local-validation-fast-paths.md) during feat
 ## Validation evidence
 
 - Unit: sync-docs, catalog-index parser, registry-client, MCP tool payloads (package + catalog search/get).
-- Browser: 26 Playwright cases across light/dark covering routes, theme toggle, packages UI, agent MCP docs, registry API, MCP initialize, and `/components` catalog demos.
+- Browser: 60/60 Playwright cases pass across light/dark routes, theme toggle, foundation and icon references, packages UI, agent MCP docs, registry API, MCP initialize, HTML conformance, and `/components` catalog demos.
 - CI: `.github/workflows/quality.yml` includes portal build, sync-docs check, catalog-export check, unit tests, and browser matrix.
-- Production identity and human Agent evidence: `blocked-with-reason(deployment/HITL evidence must be observed outside-in)`. On 2026-07-23, `ui.swqt.net` did not resolve and authenticated `/mcp/swui` still returned `sws` 0.1.144 (17 SWS tools, 0 `swui.*`, 0 templates); local/preview gates do not substitute for a post-deploy retest.
+- Production identity observed outside-in on 2026-07-24: anonymous `https://agent.swqt.net/mcp/swui` identifies `swui` `1.0.0` with 10 resources and old Button payloads; npm packages remain `1.0.0`. `https://ui.swqt.net` returns the deployed Portal, but `/icons` has no Icons heading and `/agent` has no foundation-contract entry. This remains intentionally distinct from the local `1.1.0` candidate until a separately authorized publish/deploy. Local/preview gates do not substitute for a post-deploy retest.
 
 ## Boundaries preserved
 
