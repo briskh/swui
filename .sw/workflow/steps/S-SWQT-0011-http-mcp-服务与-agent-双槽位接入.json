@@ -2,7 +2,7 @@
   "schemaVersion": 6,
   "kind": "step",
   "stepId": "S-SWQT-0011",
-  "status": "designed",
+  "status": "delivered",
   "overlay": {
     "state": "none"
   },
@@ -16,7 +16,7 @@
   "createdAt": "2026-07-23T05:05:00.000Z",
   "updatedAt": "2026-07-23T05:05:00.000Z",
   "supersedes": "N/A",
-  "nextHandoff": "implement",
+  "nextHandoff": "closed",
   "sections": {
     "goal": {
       "sectionStatus": "done",
@@ -52,9 +52,15 @@
     "dependencies": {
       "sectionStatus": "done",
       "items": {
-        "previousSteps": ["S-SWQT-0010"],
-        "externalDependencies": ["@modelcontextprotocol/sdk 或等价 MCP HTTP 实现"],
-        "projectResources": [".cursor/mcp.json（现有 sw 槽位）"]
+        "previousSteps": [
+          "S-SWQT-0010"
+        ],
+        "externalDependencies": [
+          "@modelcontextprotocol/sdk 或等价 MCP HTTP 实现"
+        ],
+        "projectResources": [
+          ".cursor/mcp.json（现有 sw 槽位）"
+        ]
       }
     },
     "implementation-ready-brief": {
@@ -62,7 +68,10 @@
       "items": {
         "problemDefinition": "Agent 安装前无法结构化查询 swui 版本与 adoption；与 sw mcp 职责未文档化。",
         "requirementsDefinition": "本地或 staging /mcp 响应 tools/list 与 resources/list；package.get 返回 registry 元数据或 stale。",
-        "nonGoals": ["不修改 sw mcp", "不在 @swui/ui 包内起 MCP server"],
+        "nonGoals": [
+          "不修改 sw mcp",
+          "不在 @swui/ui 包内起 MCP server"
+        ],
         "plainLanguage": "Cursor 里加第二个 MCP，装包前就能问版本和怎么接 Tailwind。",
         "firstSlice": "curl 或 MCP inspector 调用 swui.package.get name=@swui/ui。",
         "readiness": {
@@ -72,24 +81,123 @@
       }
     },
     "implementation-record": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "summary": "Exposed same-origin /mcp HTTP MCP with docs resources, package tools, Agent connection page, and ADOPTION dual-slot mcp.json guidance.",
+        "changeSurface": [
+          "examples/portal/server/handlers.ts",
+          "examples/portal/scripts/mcp-smoke.mjs",
+          "examples/portal/src/pages/AgentPage.tsx",
+          "packages/ui/docs/ADOPTION.md"
+        ],
+        "validation": [
+          "bun test examples/portal/tests/mcp-tools.test.mjs",
+          "bun run --filter '@swui/portal-example' mcp:smoke",
+          "REGISTRY_FIXTURE=1 bun run --filter '@swui/portal-example' test:browser (agent + MCP initialize)"
+        ],
+        "result": "MCP lists 3 doc resources and 2 package tools; swui vs sw division documented; mcp:smoke passes."
+      }
     },
     "use-case": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "cases": [
+          {
+            "name": "Agent queries package metadata before install",
+            "evidence": "swui.package.get and swui.package.installHint return structured registry data."
+          },
+          {
+            "name": "Host configures dual MCP slots",
+            "evidence": "ADOPTION.md shows sw + swui url in .cursor/mcp.json example."
+          }
+        ]
+      }
     },
     "review-report": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "gateOutcomes": [
+          {
+            "gate": "scope and layer boundary",
+            "result": "passed",
+            "evidence": "MCP lives in portal server only; no MCP inside @swui/ui; dual sw+swui slots documented.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "validation and test sufficiency",
+            "result": "passed",
+            "evidence": "mcp-tools unit tests and mcp:smoke cover tool payloads; Playwright covers /agent and MCP initialize.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "promotion readiness",
+            "result": "passed",
+            "evidence": "mcp:smoke encoded in package.json and quality.yml.",
+            "counterEvidenceChecked": "yes"
+          }
+        ],
+        "residualRisk": "Production MCP URL depends on ui.swqt.net deploy (blocked-with-reason(infra)).",
+        "followUp": "Deploy portal per examples/portal/DEPLOY.md when infra ready.",
+        "promotionDisposition": "ready"
+      }
     },
     "delivered-registry-entry": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-23",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0011-http-mcp-服务与-agent-双槽位接入.json",
+        "validationSummary": "MCP tool unit tests and mcp:smoke pass; Agent page Playwright cases pass",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "MCP tool unit tests and mcp:smoke pass; Agent page Playwright cases pass",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0011",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
     },
     "completion-audit": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "minimum-auto-filled-by-promote",
+        "minimumSetSatisfied": "Yes - workflow promote populated minimum registry/audit records before setting status=delivered.",
+        "upgradeToFullAuditReason": "not-recorded-by-delivery-minimum",
+        "requirementAudit": [
+          {
+            "requirement": "reviewed Step can be delivered only with closure records.",
+            "status": "implemented",
+            "evidence": "workflow promote populated delivered-registry-entry and completion-audit before status=delivered.",
+            "risk": "Minimum auto-fill is less descriptive than a hand-authored Completion Audit.",
+            "followUp": "Review owner may enrich the audit before delivery when richer evidence is required."
+          }
+        ],
+        "workflowRunAudit": "minimum auto-filled by workflow promote",
+        "intermediateDocumentStateAudit": "delivered-registry-entry and completion-audit populated before final status=delivered.",
+        "documentGovernanceAudit": "minimum auto-filled by workflow promote",
+        "frictionAndImprovementBacklog": "N/A",
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Closing triad minimum: reviewed precondition satisfied; validationSummary present; registry/audit records populated before status=delivered.",
+          "closingSelfAuditConsistency": "minimum auto-filled by workflow promote",
+          "landingChecklistOutcome": "not-applicable",
+          "pluginSkillFriction": "N/A",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "N/A",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "not-recorded-by-delivery-minimum"
+      }
     }
-  }
+  },
+  "validationSummary": "MCP tool unit tests and mcp:smoke pass; Agent page Playwright cases pass"
 }

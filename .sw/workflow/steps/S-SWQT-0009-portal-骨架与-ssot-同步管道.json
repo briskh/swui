@@ -2,7 +2,7 @@
   "schemaVersion": 6,
   "kind": "step",
   "stepId": "S-SWQT-0009",
-  "status": "designed",
+  "status": "delivered",
   "overlay": {
     "state": "none"
   },
@@ -16,7 +16,7 @@
   "createdAt": "2026-07-23T05:05:00.000Z",
   "updatedAt": "2026-07-23T05:05:00.000Z",
   "supersedes": "N/A",
-  "nextHandoff": "implement",
+  "nextHandoff": "closed",
   "sections": {
     "goal": {
       "sectionStatus": "done",
@@ -51,7 +51,11 @@
       "sectionStatus": "done",
       "items": {
         "previousSteps": [],
-        "externalDependencies": ["Bun 1.3.14", "Vite", "React 19"],
+        "externalDependencies": [
+          "Bun 1.3.14",
+          "Vite",
+          "React 19"
+        ],
         "projectResources": [
           "packages/ui/docs/",
           "packages/ui/AGENTS.md",
@@ -64,7 +68,10 @@
       "items": {
         "problemDefinition": "约定文档仅存在于 packages 内，无独立人类浏览入口，且缺少构建时同步机制。",
         "requirementsDefinition": "portal dev/build 成功；约定页内容与 SSOT 一致；sync-docs --check 在 drift 时 exit 非零。",
-        "nonGoals": ["不手改 .generated/", "不引入 AppShell/TopBar"],
+        "nonGoals": [
+          "不手改 .generated/",
+          "不引入 AppShell/TopBar"
+        ],
         "plainLanguage": "先有一个能打开的、内容与 npm 包 docs 同步的约定站骨架。",
         "firstSlice": "bun run sync-docs && cd examples/portal && bun run dev → 可见 ADOPTION 同步内容。",
         "readiness": {
@@ -74,24 +81,122 @@
       }
     },
     "implementation-record": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "summary": "Added examples/portal Vite/React app with sync-docs SSOT pipeline, convention markdown routes, ThemeControl toolbar, and root portal scripts.",
+        "changeSurface": [
+          "examples/portal/",
+          "examples/portal/scripts/sync-docs.mjs",
+          "package.json"
+        ],
+        "validation": [
+          "bun test examples/portal/tests/sync-docs.test.mjs",
+          "bun run portal:build",
+          "bun run --filter '@swui/portal-example' test:browser (convention routes)"
+        ],
+        "result": "Portal dev/build succeeds; SSOT docs sync to .generated/; Playwright convention routes pass in light/dark."
+      }
     },
     "use-case": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "cases": [
+          {
+            "name": "Maintainer browses synced convention docs",
+            "evidence": "bun run portal:dev serves /conventions/* from .generated/ after sync-docs."
+          },
+          {
+            "name": "CI detects SSOT drift",
+            "evidence": "sync-docs:check exits non-zero when .generated/ differs from SSOT."
+          }
+        ]
+      }
     },
     "review-report": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "gateOutcomes": [
+          {
+            "gate": "scope and SSOT",
+            "result": "passed",
+            "evidence": "Portal skeleton only; docs copied one-way from packages/ui SSOT; no @swui/ui API changes.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "validation and test sufficiency",
+            "result": "passed",
+            "evidence": "sync-docs unit tests pass; portal build succeeds; Playwright covers Overview and convention routes.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "promotion readiness",
+            "result": "passed",
+            "evidence": "sync-docs and sync-docs:check scripts encoded in package.json and CI.",
+            "counterEvidenceChecked": "yes"
+          }
+        ],
+        "residualRisk": "none",
+        "followUp": "none",
+        "promotionDisposition": "ready"
+      }
     },
     "delivered-registry-entry": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-23",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0009-portal-骨架与-ssot-同步管道.json",
+        "validationSummary": "Portal build, sync-docs unit tests, Playwright convention routes pass",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "Portal build, sync-docs unit tests, Playwright convention routes pass",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0009",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
     },
     "completion-audit": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "minimum-auto-filled-by-promote",
+        "minimumSetSatisfied": "Yes - workflow promote populated minimum registry/audit records before setting status=delivered.",
+        "upgradeToFullAuditReason": "not-recorded-by-delivery-minimum",
+        "requirementAudit": [
+          {
+            "requirement": "reviewed Step can be delivered only with closure records.",
+            "status": "implemented",
+            "evidence": "workflow promote populated delivered-registry-entry and completion-audit before status=delivered.",
+            "risk": "Minimum auto-fill is less descriptive than a hand-authored Completion Audit.",
+            "followUp": "Review owner may enrich the audit before delivery when richer evidence is required."
+          }
+        ],
+        "workflowRunAudit": "minimum auto-filled by workflow promote",
+        "intermediateDocumentStateAudit": "delivered-registry-entry and completion-audit populated before final status=delivered.",
+        "documentGovernanceAudit": "minimum auto-filled by workflow promote",
+        "frictionAndImprovementBacklog": "N/A",
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Closing triad minimum: reviewed precondition satisfied; validationSummary present; registry/audit records populated before status=delivered.",
+          "closingSelfAuditConsistency": "minimum auto-filled by workflow promote",
+          "landingChecklistOutcome": "not-applicable",
+          "pluginSkillFriction": "N/A",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "N/A",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "not-recorded-by-delivery-minimum"
+      }
     }
-  }
+  },
+  "validationSummary": "Portal build, sync-docs unit tests, Playwright convention routes pass"
 }

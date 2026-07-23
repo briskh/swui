@@ -64,9 +64,9 @@
     },
     "F-SWQT-0004": {
       "kind": "feature",
-      "status": "draft",
+      "status": "delivered",
       "path": ".sw/workflow/feature/F-SWQT-0004-设计系统门户与-agent-mcp.json",
-      "deliveryComplete": false,
+      "deliveryComplete": true,
       "title": "Feature F-SWQT-0004: 设计系统门户与 Agent MCP",
       "stepPlan": {
         "steps": [
@@ -214,31 +214,43 @@
     },
     "S-SWQT-0009": {
       "kind": "step",
-      "status": "designed",
+      "status": "delivered",
       "path": ".sw/workflow/steps/S-SWQT-0009-portal-骨架与-ssot-同步管道.json",
       "sourceFeatureId": "F-SWQT-0004",
-      "title": "Step S-SWQT-0009: Portal 骨架与 SSOT 同步管道"
+      "title": "Step S-SWQT-0009: Portal 骨架与 SSOT 同步管道",
+      "validationSummary": "Portal build, sync-docs unit tests, Playwright convention routes pass",
+      "deliveredAt": "2026-07-23T00:00:00.000Z",
+      "rootMount": false
     },
     "S-SWQT-0010": {
       "kind": "step",
-      "status": "designed",
+      "status": "delivered",
       "path": ".sw/workflow/steps/S-SWQT-0010-registry-集成与-packages-页.json",
       "sourceFeatureId": "F-SWQT-0004",
-      "title": "Step S-SWQT-0010: Registry 集成与 /packages 页"
+      "title": "Step S-SWQT-0010: Registry 集成与 /packages 页",
+      "validationSummary": "registry-client unit tests pass; /packages Playwright cases pass with REGISTRY_FIXTURE",
+      "deliveredAt": "2026-07-23T00:00:00.000Z",
+      "rootMount": false
     },
     "S-SWQT-0011": {
       "kind": "step",
-      "status": "designed",
+      "status": "delivered",
       "path": ".sw/workflow/steps/S-SWQT-0011-http-mcp-服务与-agent-双槽位接入.json",
       "sourceFeatureId": "F-SWQT-0004",
-      "title": "Step S-SWQT-0011: HTTP MCP 服务与 Agent 双槽位接入"
+      "title": "Step S-SWQT-0011: HTTP MCP 服务与 Agent 双槽位接入",
+      "validationSummary": "MCP tool unit tests and mcp:smoke pass; Agent page Playwright cases pass",
+      "deliveredAt": "2026-07-23T00:00:00.000Z",
+      "rootMount": false
     },
     "S-SWQT-0012": {
       "kind": "step",
-      "status": "designed",
+      "status": "delivered",
       "path": ".sw/workflow/steps/S-SWQT-0012-ci-部署-runbook-与-mvp-交付验收.json",
       "sourceFeatureId": "F-SWQT-0004",
-      "title": "Step S-SWQT-0012: CI、部署 runbook 与 MVP 交付验收"
+      "title": "Step S-SWQT-0012: CI、部署 runbook 与 MVP 交付验收",
+      "validationSummary": "Full CI gates pass; portal build/sync/browser/mcp-smoke; deploy runbook documented",
+      "deliveredAt": "2026-07-23T00:00:00.000Z",
+      "rootMount": false
     },
     "S-SWQT-0013": {
       "kind": "step",
@@ -450,6 +462,6 @@
       "rel": "sourceFeature"
     }
   ],
-  "generatedAt": "2026-07-23T05:32:23.708Z",
-  "contentHash": "sha256:5a9213f621192c437e7b6d1b5caa06a841a3bb52dc03c85ea956c05cb87186ce"
+  "generatedAt": "2026-07-23T05:38:36.104Z",
+  "contentHash": "sha256:54aade64dc15b561c4d6f8c70e21ff3654dd1896051d0a548978f7554a51fb4c"
 }

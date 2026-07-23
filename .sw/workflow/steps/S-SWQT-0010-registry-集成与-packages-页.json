@@ -2,7 +2,7 @@
   "schemaVersion": 6,
   "kind": "step",
   "stepId": "S-SWQT-0010",
-  "status": "designed",
+  "status": "delivered",
   "overlay": {
     "state": "none"
   },
@@ -16,7 +16,7 @@
   "createdAt": "2026-07-23T05:05:00.000Z",
   "updatedAt": "2026-07-23T05:05:00.000Z",
   "supersedes": "N/A",
-  "nextHandoff": "implement",
+  "nextHandoff": "closed",
   "sections": {
     "goal": {
       "sectionStatus": "done",
@@ -49,9 +49,16 @@
     "dependencies": {
       "sectionStatus": "done",
       "items": {
-        "previousSteps": ["S-SWQT-0009"],
-        "externalDependencies": ["npm.inet.swqt.net 网络可达（CI 可 skip-with-reason 若不可达）"],
-        "projectResources": ["scripts/publish.sh", "SWUI_NPM_REGISTRY 默认 URL"]
+        "previousSteps": [
+          "S-SWQT-0009"
+        ],
+        "externalDependencies": [
+          "npm.inet.swqt.net 网络可达（CI 可 skip-with-reason 若不可达）"
+        ],
+        "projectResources": [
+          "scripts/publish.sh",
+          "SWUI_NPM_REGISTRY 默认 URL"
+        ]
       }
     },
     "implementation-ready-brief": {
@@ -59,7 +66,10 @@
       "items": {
         "problemDefinition": "版本与 peer 信息仅在 registry，开发者需手动 npm view 或查 publish 记录。",
         "requirementsDefinition": "packages 页展示两包 latest 与 install 片段；registry 宕机时显示 stale 横幅。",
-        "nonGoals": ["不缓存 tarball", "不提供匿名 install"],
+        "nonGoals": [
+          "不缓存 tarball",
+          "不提供匿名 install"
+        ],
         "plainLanguage": "安装前在浏览器一眼看到装什么版本、怎么配 .npmrc。",
         "firstSlice": "registry-client 单元测试或脚本 smoke 返回 @swui/ui dist-tags。",
         "readiness": {
@@ -69,24 +79,118 @@
       }
     },
     "implementation-record": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "summary": "Implemented registry-client with TTL cache and stale fallback, /packages UI, registry API handlers, and REGISTRY_FIXTURE fixtures for CI.",
+        "changeSurface": [
+          "examples/portal/server/registry-client.ts",
+          "examples/portal/server/handlers.ts",
+          "examples/portal/src/pages/PackagesPage.tsx",
+          "examples/portal/fixtures/registry/"
+        ],
+        "validation": [
+          "bun test examples/portal/tests/registry-client.test.mjs",
+          "REGISTRY_FIXTURE=1 bun run --filter '@swui/portal-example' test:browser (packages)"
+        ],
+        "result": "Packages page shows @swui/ui and @swui/ui-tokens metadata; stale banner on fetch failure; no tarball URLs exposed."
+      }
     },
     "use-case": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "cases": [
+          {
+            "name": "Developer checks install guidance before npm install",
+            "evidence": "/packages shows latest dist-tags, peerDependencies, and .npmrc template."
+          }
+        ]
+      }
     },
     "review-report": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "gateOutcomes": [
+          {
+            "gate": "scope and registry scheme A",
+            "result": "passed",
+            "evidence": "Read-only metadata only; anonymous registry read; install hints without tarball mirror.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "validation and test sufficiency",
+            "result": "passed",
+            "evidence": "registry-client unit tests cover cache TTL, stale, fixtures; Playwright covers /packages UI.",
+            "counterEvidenceChecked": "yes"
+          },
+          {
+            "gate": "promotion readiness",
+            "result": "passed",
+            "evidence": "REGISTRY_FIXTURE=1 enables deterministic CI without live registry.",
+            "counterEvidenceChecked": "yes"
+          }
+        ],
+        "residualRisk": "Live registry unreachable in CI mitigated by fixtures; production requires npm.inet.swqt.net.",
+        "followUp": "none",
+        "promotionDisposition": "ready"
+      }
     },
     "delivered-registry-entry": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-23",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0010-registry-集成与-packages-页.json",
+        "validationSummary": "registry-client unit tests pass; /packages Playwright cases pass with REGISTRY_FIXTURE",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "registry-client unit tests pass; /packages Playwright cases pass with REGISTRY_FIXTURE",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0010",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
     },
     "completion-audit": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "minimum-auto-filled-by-promote",
+        "minimumSetSatisfied": "Yes - workflow promote populated minimum registry/audit records before setting status=delivered.",
+        "upgradeToFullAuditReason": "not-recorded-by-delivery-minimum",
+        "requirementAudit": [
+          {
+            "requirement": "reviewed Step can be delivered only with closure records.",
+            "status": "implemented",
+            "evidence": "workflow promote populated delivered-registry-entry and completion-audit before status=delivered.",
+            "risk": "Minimum auto-fill is less descriptive than a hand-authored Completion Audit.",
+            "followUp": "Review owner may enrich the audit before delivery when richer evidence is required."
+          }
+        ],
+        "workflowRunAudit": "minimum auto-filled by workflow promote",
+        "intermediateDocumentStateAudit": "delivered-registry-entry and completion-audit populated before final status=delivered.",
+        "documentGovernanceAudit": "minimum auto-filled by workflow promote",
+        "frictionAndImprovementBacklog": "N/A",
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Closing triad minimum: reviewed precondition satisfied; validationSummary present; registry/audit records populated before status=delivered.",
+          "closingSelfAuditConsistency": "minimum auto-filled by workflow promote",
+          "landingChecklistOutcome": "not-applicable",
+          "pluginSkillFriction": "N/A",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "N/A",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "not-recorded-by-delivery-minimum"
+      }
     }
-  }
+  },
+  "validationSummary": "registry-client unit tests pass; /packages Playwright cases pass with REGISTRY_FIXTURE"
 }
