@@ -10,6 +10,9 @@
 # Do NOT store NPM_TOKEN in repo secrets for this workflow — OIDC replaces it.
 # First publish may require a one-time manual `npm publish` from a maintainer account
 # if trusted publisher cannot be bound before the package name exists.
+#
+# Do NOT set setup-node `registry-url` here: it writes an empty NODE_AUTH_TOKEN
+# placeholder that can skip the OIDC exchange and surface as E404 on publish.
 name: Publish npm packages
 
 on:
@@ -43,7 +46,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          registry-url: https://registry.npmjs.org
 
       - name: Use npm with Trusted Publishing support
         run: npm install -g npm@latest
@@ -63,7 +65,13 @@ jobs:
       - name: Publish @swqt/ui-tokens
         if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false)
         working-directory: packages/ui-tokens
-        run: npm publish --provenance --access public
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          if npm view "@swqt/ui-tokens@${VERSION}" version >/dev/null 2>&1; then
+            echo "@swqt/ui-tokens@${VERSION} already published; skipping"
+          else
+            npm publish --provenance --access public
+          fi
 
       - name: Dry-run @swqt/ui-tokens
         if: github.event_name == 'workflow_dispatch' && inputs.dry_run == true
@@ -73,7 +81,13 @@ jobs:
       - name: Publish @swqt/ui
         if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false)
         working-directory: packages/ui
-        run: npm publish --provenance --access public
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          if npm view "@swqt/ui@${VERSION}" version >/dev/null 2>&1; then
+            echo "@swqt/ui@${VERSION} already published; skipping"
+          else
+            npm publish --provenance --access public
+          fi
 
       - name: Dry-run @swqt/ui
         if: github.event_name == 'workflow_dispatch' && inputs.dry_run == true
