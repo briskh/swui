@@ -25,7 +25,7 @@ Release candidate `1.1.0` contains the repository changes made after npm `1.0.0`
 |---|---|---|
 | Local source | `1.1.0`, all current gates pass | repository manifests and tests |
 | Packed artifact | `1.1.0`, nested and hoisted consumers pass, shipped docs byte-match SSOT | `verify:packed-consumer` |
-| npm registry | `1.0.0` until separately authorized publish | `registry.npmjs.org` / `swui.package.get` |
+| npm registry | **`1.1.0` published** (2026-07-24) | `registry.npmjs.org` / `swui.package.get` |
 | Production MCP | `1.0.0` contract until separately authorized deploy | outside-in initialize/resources/tools calls |
 
 Never infer npm or production freshness from a local test. After an authorized publish or deploy, repeat the exact outside-in checks and update the dated project companion fact.
@@ -37,6 +37,6 @@ Never infer npm or production freshness from a local test. After an authorized p
 - Source consumer browser: 34 passed, 6 declared non-applicable viewport skips.
 - Packed `1.1.0` nested and workspace-hoisted consumers: each 34 passed, 6 declared skips; package docs byte-match source SSOT.
 - `npm publish --dry-run`: passed for both packages; tarball audit found 0 blocking findings and 4 reviewed public service URL warnings.
-- npm outside-in: both packages remain `1.0.0`.
+- npm outside-in after authorized publish: both packages are `1.1.0` (`latest`).
 - Production MCP outside-in: `swui 1.0.0`, 10 resources, one template, four tools; old Button payload has no new contract fields.
 - Production Portal outside-in: HTTP 200, but `/icons` and the strengthened `/agent` content are not deployed.
