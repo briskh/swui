@@ -13,7 +13,8 @@ const buttonVariants = cva(
         outline: "border border-input bg-background hover:bg-muted hover:text-foreground",
         ghost: "hover:bg-muted hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        passkey: "bg-passkey text-passkey-foreground hover:bg-passkey/90"
       },
       size: {
         compact: "h-control-compact px-2",

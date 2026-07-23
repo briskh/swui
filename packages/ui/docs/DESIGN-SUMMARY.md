@@ -26,7 +26,7 @@ Consumer-facing design intent. Token **values** live in `@swui/ui-tokens`.
 
 | Need | Use |
 |------|-----|
-| Actions | `Button` (`default` / `secondary` / `outline` / `ghost` / `link` / `destructive`) |
+| Actions | `Button` (`default` / `secondary` / `outline` / `ghost` / `link` / `destructive` / `passkey`) |
 | Panels | `Card` (not nested page sections) |
 | Static table | `Table` + `ScrollArea` / `Pagination` |
 | Client sort/filter/select | `DataTable` |

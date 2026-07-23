@@ -6,7 +6,7 @@ Import from `@swui/ui` or `@swui/ui/<name>`.
 
 | Export | Notes |
 |--------|--------|
-| `Button` | Variants: default, secondary, outline, ghost, link, destructive. Sizes: compact, sm, default, lg, icon, icon-compact. |
+| `Button` | Variants: default, secondary, outline, ghost, link, destructive, passkey. Sizes: compact, sm, default, lg, icon, icon-compact. |
 
 ## Forms
 

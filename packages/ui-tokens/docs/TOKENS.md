@@ -1,6 +1,6 @@
 # Token set (`@swui/ui-tokens`)
 
-Calibrated 2026-07-16. Values match `src/tokens.css`.
+Calibrated 2026-07-16; **eauth chroma alignment** pass 2026-07-23 (`../eauth/ui/src/index.css` as reference for passkey + minor drift). Values match `src/tokens.css`.
 
 ## Theme contract
 
@@ -44,8 +44,21 @@ Light mode: warm olive/brown primary on warm paper. Dark (reserved): high-chroma
 | `--status-ready` | `oklch(0.48 0.125 150)` | `oklch(0.72 0.13 150)` | Healthy |
 | `--status-loading` | `oklch(0.24 0.05 65)` | `oklch(0.80 0.22 92)` | In-flight |
 | `--status-error` | `oklch(0.575 0.17 32)` | `oklch(0.72 0.15 32)` | Failed |
+| `--passkey` | `oklch(0.42 0.10 210)` | `oklch(0.72 0.12 210)` | WebAuthn / passkey primary CTA (teal; distinct from warm primary) |
+| `--passkey-foreground` | `oklch(0.99 0.01 210)` | `oklch(0.16 0.04 210)` | Text on passkey CTA |
 | `--metric-instrument` | `oklch(0.24 0.05 65)` | `oklch(0.80 0.22 92)` | Instrument emphasis |
 | `--metric-asset` | `oklch(0.50 0.03 70)` | `oklch(0.72 0.20 72)` | Asset emphasis |
+
+Use `@swui/ui` `Button variant="passkey"` for passkey step-up and WebAuthn CTAs; do not reuse `primary` for those flows.
+
+### eauth reference drift (intentional)
+
+| Token | eauth (`ui/src/index.css`) | swui | Reason |
+|-------|---------------------------|------|--------|
+| light `--destructive` / `--status-error` | `0.58` | `0.575` | Keeps `check:design-contract` WCAG AA on `--background` |
+| dark `--accent-foreground` | `0.58 0.20 90` | `0.50 0.03 70` | eauth value fails AA on `--accent` surface; swui keeps readable accent text |
+
+Passkey chroma and `Button variant="passkey"` match eauth exactly.
 
 ## Control scale
 

@@ -15,8 +15,8 @@ const forbidden = /(?<![\w-])(?:h|w|size)-(?:7|8|9|10|12)(?![\w-])|#[\da-fA-F]{3
 const tokenReference = /var\((--[\w-]+)\)/g;
 const themeBypass = /\bdark:[\w-]/g;
 const runtimeTokenPrefixes = ["--radix-"];
-const requiredSemanticTokens = ["background", "foreground", "card", "card-foreground", "popover", "popover-foreground", "primary", "primary-foreground", "secondary", "secondary-foreground", "muted", "muted-foreground", "accent", "accent-foreground", "destructive", "destructive-foreground", "border", "input", "ring", "status-ready", "status-loading", "status-error", "metric-instrument", "metric-asset"];
-const contrastPairs = [["background", "foreground"], ["background", "muted-foreground"], ["background", "destructive"], ["background", "status-ready"], ["background", "status-error"], ["card", "card-foreground"], ["popover", "popover-foreground"], ["primary", "primary-foreground"], ["secondary", "secondary-foreground"], ["accent", "accent-foreground"], ["destructive", "destructive-foreground"]];
+const requiredSemanticTokens = ["background", "foreground", "card", "card-foreground", "popover", "popover-foreground", "primary", "primary-foreground", "secondary", "secondary-foreground", "muted", "muted-foreground", "accent", "accent-foreground", "destructive", "destructive-foreground", "passkey", "passkey-foreground", "border", "input", "ring", "status-ready", "status-loading", "status-error", "metric-instrument", "metric-asset"];
+const contrastPairs = [["background", "foreground"], ["background", "muted-foreground"], ["background", "destructive"], ["background", "status-ready"], ["background", "status-error"], ["card", "card-foreground"], ["popover", "popover-foreground"], ["primary", "primary-foreground"], ["secondary", "secondary-foreground"], ["accent", "accent-foreground"], ["destructive", "destructive-foreground"], ["passkey", "passkey-foreground"]];
 
 async function filesAt(directory) {
   const entries = await readdir(directory, { withFileTypes: true });

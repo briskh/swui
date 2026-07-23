@@ -18,6 +18,8 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-passkey: var(--passkey);
+  --color-passkey-foreground: var(--passkey-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -75,6 +77,9 @@
   --muted-foreground: oklch(0.50 0.03 70);
   --destructive: oklch(0.575 0.17 32);
   --destructive-foreground: oklch(0.99 0.006 32);
+  /* Passkey / WebAuthn CTA — teal, distinct from warm primary (aligned with eauth) */
+  --passkey: oklch(0.42 0.10 210);
+  --passkey-foreground: oklch(0.99 0.01 210);
   --border: oklch(0.865 0.02 80);
   --input: oklch(0.865 0.02 80);
   --status-ready: oklch(0.48 0.125 150);
@@ -110,6 +115,8 @@
   --muted-foreground: oklch(0.72 0.012 260);
   --destructive: oklch(0.68 0.16 32);
   --destructive-foreground: oklch(0.14 0.02 32);
+  --passkey: oklch(0.72 0.12 210);
+  --passkey-foreground: oklch(0.16 0.04 210);
   --border: oklch(0.36 0.015 260);
   --input: oklch(0.38 0.018 260);
   --status-ready: oklch(0.72 0.13 150);
