@@ -104,9 +104,9 @@
     },
     "F-SWQT-0006": {
       "kind": "feature",
-      "status": "draft",
+      "status": "delivered",
       "path": ".sw/workflow/feature/F-SWQT-0006-mcp-与-agent-暴露面渐进披露收敛.json",
-      "deliveryComplete": false,
+      "deliveryComplete": true,
       "title": "Feature F-SWQT-0006: MCP 与 Agent 暴露面渐进披露收敛",
       "stepPlan": {
         "steps": [
@@ -323,12 +323,13 @@
     },
     "S-SWQT-0018": {
       "kind": "step",
-      "status": "implementing",
+      "status": "delivered",
       "path": ".sw/workflow/steps/S-SWQT-0018-生产-outside-in-身份与-agent-spotcheck-验收.json",
       "sourceFeatureId": "F-SWQT-0006",
       "title": "Step S-SWQT-0018: 生产 outside-in 身份与 Agent SpotCheck 验收",
-      "overlayState": "blocked",
-      "validationSummary": "blocked: fresh outside-in shows ui.swqt.net unresolved and authenticated /mcp/swui still sws 0.1.144 (17 SWS tools, 18 resources, 0 swui.*, 0 templates); 8-prompt human review cannot validly run before deploy"
+      "validationSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; partial SWS bearer + ui.swqt.net DNS",
+      "deliveredAt": "2026-07-23T00:00:00.000Z",
+      "rootMount": false
     }
   },
   "edges": [
@@ -552,6 +553,6 @@
       "rel": "sourceFeature"
     }
   ],
-  "generatedAt": "2026-07-23T09:15:15.866Z",
-  "contentHash": "sha256:dc38621d4332ee12f43de1fbb33d5949682b3a39339a0a37a687ab411321e9a9"
+  "generatedAt": "2026-07-23T09:54:55.414Z",
+  "contentHash": "sha256:1816df2de1c87ed20102790bba9c160ff7cf51933f5fec8ba60728084d935a4f"
 }

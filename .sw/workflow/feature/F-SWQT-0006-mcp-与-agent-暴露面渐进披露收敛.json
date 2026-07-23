@@ -2,7 +2,7 @@
   "schemaVersion": 6,
   "kind": "feature",
   "featureId": "F-SWQT-0006",
-  "status": "draft",
+  "status": "delivered",
   "overlay": {
     "state": "none"
   },
@@ -12,7 +12,7 @@
   "createdAt": "2026-07-23T07:58:30.046Z",
   "updatedAt": "2026-07-23T09:14:59.023Z",
   "supersedes": "N/A",
-  "nextHandoff": "design",
+  "nextHandoff": "closed",
   "sections": {
     "background": {
       "sectionStatus": "done",
@@ -640,5 +640,6 @@
         }
       }
     }
-  }
+  },
+  "closingStepId": "S-SWQT-0018"
 }

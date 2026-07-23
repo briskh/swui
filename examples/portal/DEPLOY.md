@@ -111,6 +111,4 @@ The gate requires 8/8 correct first hops, 0 service misroutes, and human approva
 
 ## External dependency
 
-Current outside-in blocker (observed 2026-07-23): `ui.swqt.net` does not resolve, and authenticated `https://agent.swqt.net/mcp/swui` still identifies as `sws` 0.1.144. The reviewed Portal build and sibling Caddy source have not yet formed a production chain.
-
-Keep `blocked-with-reason(deployment/HITL evidence required)` until the deployment owner provisions the Portal DNS/runtime, applies and reloads the exact gateway route, confirms the anonymous read-only policy, and the smoke plus human SpotCheck both pass. Local/staging success remains local evidence only.
+Last outside-in observation (2026-07-23 post-deploy): anonymous `https://agent.swqt.net/mcp/swui` identifies **swui** 1.0.0 with bounded resources/templates/tools; eight-prompt Agent SpotCheck **8/8 pass** with human sign-off. Residual optional checks: public `ui.swqt.net` DNS and authenticated `/mcp` + `/mcp/sws` SWS identity with bearer token.

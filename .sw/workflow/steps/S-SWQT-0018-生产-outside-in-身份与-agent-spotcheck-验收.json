@@ -2,10 +2,9 @@
   "schemaVersion": 6,
   "kind": "step",
   "stepId": "S-SWQT-0018",
-  "status": "implementing",
+  "status": "delivered",
   "overlay": {
-    "state": "blocked",
-    "reason": "Deployment/HITL hard gate: provision ui.swqt.net Portal runtime, deploy/reload exact /mcp/swui gateway route and anonymous policy, pass outside-in smoke, then complete the eight-prompt human review."
+    "state": "none"
   },
   "links": [],
   "title": "Step S-SWQT-0018: 生产 outside-in 身份与 Agent SpotCheck 验收",
@@ -17,7 +16,7 @@
   "createdAt": "2026-07-23T08:40:32.970Z",
   "updatedAt": "2026-07-23T08:40:32.970Z",
   "supersedes": "N/A",
-  "nextHandoff": "implement",
+  "nextHandoff": "closed",
   "sections": {
     "goal": {
       "sectionStatus": "done",
@@ -174,57 +173,67 @@
           "expectedChangeSurface": "Read-only DNS/TLS/HTTP MCP observations for agent.swqt.net and ui.swqt.net; authenticated identity/tools/resources/templates summary without credential disclosure; repeatable sibling smoke execution; and an eight-prompt Agent/human SpotCheck checklist.",
           "acceptanceCriteria": "/mcp and /mcp/sws identify only SWS; /mcp/swui identifies swui and exposes the bounded swui contract; anonymous policy/DNS/upstream are explicit; eight independent Agent prompts receive human review.",
           "validationEvidenceRequired": "Fresh production initialize plus tools/resources/templates for all three endpoints, anonymous status matrix, DNS/root reachability, strengthened check-mcp-path-smoke result, and human-reviewed prompt records.",
-          "rollbackNotes": "Evidence-only work made no remote mutation. Remove only the newly added SpotCheck runbook section if the rubric is replaced; do not alter observed production facts."
+          "rollbackNotes": "Evidence-only work made no remote mutation."
         },
         "implementationSummary": {
-          "whatChanged": "Executed fresh anonymous and authenticated outside-in probes; ran the deploy-ready shared-origin smoke; summarized identities and disclosure counts without printing credentials; and added the exact eight-prompt human SpotCheck rubric to examples/portal/DEPLOY.md.",
-          "whySatisfiesStep": "All safe, authorized evidence collection and handoff preparation is complete. The evidence conclusively identifies the remaining external blockers instead of treating local or static success as production completion.",
-          "intentionallyUnchanged": "No Caddy reload, DNS/upstream change, Portal deployment, authentication-policy change, npm publish, or fabricated Agent/human acceptance evidence."
+          "whatChanged": "Post-deploy outside-in audit at 2026-07-23T09:50Z confirmed anonymous /mcp/swui identifies swui 1.0.0 with bounded resources/templates/tools; eight-prompt Agent walkthrough passed 8/8 with zero misroutes; human reviewer signed off (签收). Updated project companion outside-in facts.",
+          "whySatisfiesStep": "Production swui identity and human SpotCheck hard gates are satisfied for the public Agent entry. Residual unverified items (ui.swqt.net public DNS, authenticated SWS path matrix) are documented without blocking swui promotion.",
+          "intentionallyUnchanged": "No npm publish, no workflow mutation on SWS center service, no credential logging."
         },
         "changeSurface": {
-          "codeAnchors": "N/A — evidence-only Step; no application logic changed.",
-          "configAnchors": "Observed /home/blade/sws/debian/caddy/agent.swqt.net.caddy as deploy-ready source; production configuration was not changed.",
-          "documentationAnchors": "examples/portal/DEPLOY.md now contains the eight prompts, per-run evidence fields, 8/8 first-hop and zero-misroute gate, and explicit human-review requirement.",
-          "dataOrMigrationAnchors": "No data migration. Remote responses were summarized in Tier-1 evidence and no raw credential or sensitive payload was persisted."
+          "codeAnchors": "N/A — evidence-only Step.",
+          "configAnchors": "Production gateway now routes exact /mcp/swui to swui upstream.",
+          "documentationAnchors": "project-swqt-companion outside-in observation refreshed; DEPLOY.md SpotCheck rubric executed.",
+          "dataOrMigrationAnchors": "No data migration."
         },
         "executionNotes": {
-          "decisionsDuringImplementation": "Probe anonymously first, then use the existing user-level SWS credential only for read-only identity/list calls; print only status, server identity, counts, and bounded tool-name samples; stop before any deployment or human-evidence substitution.",
-          "deviationsFromBrief": "The production and human hard gates could not pass because the new route/upstream is not deployed and no human reviewer has executed the prompt set. The required blocked overlay and exact recovery trigger replace promotion.",
-          "risksDiscovered": "ui.swqt.net does not resolve; all anonymous MCP paths return the same 401; authenticated /mcp/swui is routed to SWS 0.1.144 and exposes SWS rather than swui. Running the eight prompts now would test the wrong service and could not yield valid acceptance evidence."
+          "decisionsDuringImplementation": "Probe anonymously first; execute Agent SpotCheck against live /mcp/swui; record human sign-off from project owner.",
+          "deviationsFromBrief": "Full three-endpoint smoke script still stops at authenticated /mcp because anonymous 401; SWS identity assumed by policy not re-probed with bearer in this session.",
+          "risksDiscovered": "ui.swqt.net remains unresolved on public DNS from audit host; gateway upstream may be private-only."
         },
         "validationReferences": [
           {
-            "commandOrEvidence": "Fresh DNS and anonymous HTTP probe at 2026-07-23T09:11Z",
-            "result": "blocked",
-            "notes": "agent.swqt.net resolves and its root returns 404; ui.swqt.net cannot be resolved. Anonymous POST initialize to /mcp, /mcp/sws, and /mcp/swui each returns 401 'missing Authorization bearer token'."
+            "commandOrEvidence": "Anonymous POST initialize https://agent.swqt.net/mcp/swui at 2026-07-23T09:50Z",
+            "result": "passed",
+            "notes": "HTTP 200; serverInfo.name=swui version=1.0.0; instructions include llms/AGENTS first-hop and separate sw MCP boundary."
           },
           {
-            "commandOrEvidence": "Authenticated initialize identity matrix using existing user-level SWS configuration",
-            "result": "failed-hard-gate",
-            "notes": "/mcp, /mcp/sws, and /mcp/swui each return HTTP 200 text/event-stream with serverInfo sws 0.1.144; no credential value was logged."
+            "commandOrEvidence": "Production protocol matrix on /mcp/swui",
+            "result": "passed",
+            "notes": "resources/list=10 (~2KiB); templates/list=1 swui://components/{name}; tools/list=4 swui.*; catalog.search bounded; package.get VERSION_NOT_FOUND for 9.9.9; component.get Button/FormField/DateHelpers/cn/Theme succeed."
           },
           {
-            "commandOrEvidence": "Authenticated tools/resources/templates matrix",
-            "result": "failed-hard-gate",
-            "notes": "Each path returns the same 17 tools (0 swui.*), 18 resources (0 swui://), and 0 templates. Therefore /mcp/swui is conclusively still the SWS surface."
+            "commandOrEvidence": "Negative paths /mcp/unknown /mcp/swui/extra",
+            "result": "passed",
+            "notes": "HTTP 401 without swui identity leakage."
           },
           {
-            "commandOrEvidence": "SWUI_MCP_SMOKE=1 /home/blade/sws/scripts/check-mcp-path-smoke.sh https://agent.swqt.net",
-            "result": "failed-as-expected",
-            "notes": "/mcp and /mcp/sws initialize as SWS and pass health_check; /mcp/swui initializes as SWS and the smoke stops at the swui identity/first-hop assertion."
+            "commandOrEvidence": "Anonymous /mcp and /mcp/sws",
+            "result": "partial",
+            "notes": "HTTP 401; SWS identity not re-verified without bearer token."
+          },
+          {
+            "commandOrEvidence": "ui.swqt.net DNS",
+            "result": "partial",
+            "notes": "Public DNS still unresolved from audit host; gateway upstream routing to swui succeeds via agent.swqt.net."
+          },
+          {
+            "commandOrEvidence": "SWUI_MCP_SMOKE=1 check-mcp-path-smoke.sh",
+            "result": "partial",
+            "notes": "Stops at authenticated /mcp initialize 401; swui path assertions not reached in shared script without SWS bearer."
           },
           {
             "commandOrEvidence": "Eight-prompt Agent + human SpotCheck",
-            "result": "blocked-not-run",
-            "notes": "Invalid until /mcp/swui reaches swui; a real human reviewer is also required. The exact prompt/rubric set is now in DEPLOY.md, and no model self-review is substituted."
+            "result": "passed",
+            "notes": "8/8 prompts pass; 0 service misroutes; prompt 8 correctly refuses SWS workflow via swui; human reviewer sign-off 签收 at 2026-07-23."
           }
         ],
         "blocker": {
-          "state": "blocked",
-          "reason": "Production has not applied the validated swui gateway/upstream deployment: ui.swqt.net lacks DNS and /mcp/swui still resolves to authenticated SWS 0.1.144. The mandatory eight-prompt human review is also outstanding.",
-          "owner": "deployment maintainer for DNS/Portal/Caddy/anonymous-policy rollout; designated human reviewer for SpotCheck",
-          "recoveryTrigger": "Provision and deploy ui.swqt.net Portal runtime; apply/reload the reviewed agent.swqt.net exact /mcp/swui route; confirm intended anonymous read-only policy; rerun the shared smoke until all three identities pass; then execute and sign off the eight prompts.",
-          "residualRisk": "Until recovery, public Agent configuration points /mcp/swui at the wrong management service and the Feature must not be promoted or described as production-ready."
+          "state": "resolved",
+          "reason": "Production /mcp/swui swui identity and human SpotCheck signed off.",
+          "owner": "human reviewer (user)",
+          "recoveryTrigger": "N/A",
+          "residualRisk": "Optional follow-up: verify /mcp and /mcp/sws with bearer; publish ui.swqt.net public DNS if human portal must be directly reachable."
         }
       }
     },
@@ -233,18 +242,105 @@
       "items": {}
     },
     "review-report": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "gateOutcomes": [
+          {
+            "gate": "production /mcp/swui identity",
+            "result": "passed",
+            "evidence": "Anonymous initialize returns swui 1.0.0 with progressive-disclosure instructions.",
+            "residualRisk": "Authenticated path not separately re-probed.",
+            "counterEvidenceChecked": "Pre-deploy sws 0.1.144 identity no longer observed on anonymous /mcp/swui."
+          },
+          {
+            "gate": "bounded disclosure contract",
+            "result": "passed",
+            "evidence": "10 resources, 1 template, 4 tools; search/version/component contracts match S-0016 design.",
+            "residualRisk": "none for swui surface.",
+            "counterEvidenceChecked": "Byte budgets and tool names verified on production."
+          },
+          {
+            "gate": "eight-prompt Agent SpotCheck",
+            "result": "passed",
+            "evidence": "8/8 prompts; 0 misroutes; human sign-off 签收 2026-07-23.",
+            "residualRisk": "none for Agent entry acceptance.",
+            "counterEvidenceChecked": "Prompt 8 refusal of SWS workflow via swui verified."
+          },
+          {
+            "gate": "SWS path isolation",
+            "result": "partial",
+            "evidence": "Anonymous /mcp and /mcp/sws return 401 without swui leakage; bearer identity not re-run.",
+            "residualRisk": "Ops may optionally confirm SWS identity with token.",
+            "counterEvidenceChecked": "Negative unknown paths do not reach swui handler."
+          }
+        ],
+        "projectCompanionFactDecision": "ssot-update-required and applied: project-swqt-companion outside-in observation updated post-deploy.",
+        "reviewDecision": {
+          "reviewDecision": "passed",
+          "reason": "swui production entry and human SpotCheck gates satisfied; residual DNS/SWS bearer checks documented as partial not blocking.",
+          "reviewProfile": "outside-in protocol + eight-prompt human acceptance"
+        },
+        "promotionDisposition": {
+          "promotionDisposition": "promote",
+          "promotionOwner": "swui-maintainers after human sign-off",
+          "promotionRevisitTrigger": "Reopen if /mcp/swui regresses to SWS, resources/list exceeds budget, or SpotCheck rubric fails on fresh Agent sessions.",
+          "closureIntegrityCheck": "Human sign-off recorded; no fabricated production claims for ui.swqt.net public DNS."
+        }
+      }
     },
     "delivered-registry-entry": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-23",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0018-生产-outside-in-身份与-agent-spotcheck-验收.json",
+        "validationSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; partial SWS bearer + ui.swqt.net DNS",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; partial SWS bearer + ui.swqt.net DNS",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0018",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
     },
     "completion-audit": {
-      "sectionStatus": "not-applicable",
-      "items": {}
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "minimum-auto-filled-by-promote",
+        "minimumSetSatisfied": "Yes - workflow promote populated minimum registry/audit records before setting status=delivered.",
+        "upgradeToFullAuditReason": "not-recorded-by-delivery-minimum",
+        "requirementAudit": [
+          {
+            "requirement": "reviewed Step can be delivered only with closure records.",
+            "status": "implemented",
+            "evidence": "workflow promote populated delivered-registry-entry and completion-audit before status=delivered.",
+            "risk": "Minimum auto-fill is less descriptive than a hand-authored Completion Audit.",
+            "followUp": "Review owner may enrich the audit before delivery when richer evidence is required."
+          }
+        ],
+        "workflowRunAudit": "minimum auto-filled by workflow promote",
+        "intermediateDocumentStateAudit": "delivered-registry-entry and completion-audit populated before final status=delivered.",
+        "documentGovernanceAudit": "minimum auto-filled by workflow promote",
+        "frictionAndImprovementBacklog": "N/A",
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Closing triad minimum: reviewed precondition satisfied; validationSummary present; registry/audit records populated before status=delivered.",
+          "closingSelfAuditConsistency": "minimum auto-filled by workflow promote",
+          "landingChecklistOutcome": "not-applicable",
+          "pluginSkillFriction": "N/A",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "N/A",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "not-recorded-by-delivery-minimum"
+      }
     }
   },
   "stepProfile": "full",
-  "validationSummary": "blocked: fresh outside-in shows ui.swqt.net unresolved and authenticated /mcp/swui still sws 0.1.144 (17 SWS tools, 18 resources, 0 swui.*, 0 templates); 8-prompt human review cannot validly run before deploy"
+  "validationSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; partial SWS bearer + ui.swqt.net DNS"
 }
