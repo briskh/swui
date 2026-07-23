@@ -1,0 +1,336 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0020",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0020: 表单与选择控件原生语义迁移",
+  "sourceFeature": {
+    "id": "F-SWQT-0007",
+    "href": "../feature/F-SWQT-0007-html-living-standard-语义合规与原生元素迁移.json"
+  },
+  "owner": "swqt-maintainers",
+  "createdAt": "2026-07-23T19:07:03.422Z",
+  "updatedAt": "2026-07-23T19:07:03.422Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "把仅需单选语义的导出控件迁移到原生 fieldset/radio/select，同时保留 searchable Combobox 等无完整原生等价物的复合实现。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "DateRangePresetPicker -> fieldset/legend + radio inputs",
+          "PopoverSelect -> native select/options，保持 value/options/onValueChange/disabled/id/aria-label 主 API",
+          "Portal demos、catalog 文档与键盘/表单语义回归"
+        ],
+        "outOfScope": [
+          "searchable Combobox/Command 的 native 化",
+          "Radix Select 公共组件的替换",
+          "customizable select 实验特性或浏览器前缀方案"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "sourceFeature": "F-SWQT-0007",
+        "researchEvidence": "R-SWQT-0001；WHATWG select/option/fieldset/input radio authoring definitions。",
+        "optionsTelos": "Option A：仅在原生行为完整等价时迁移。",
+        "projectCompanionRefs": "project-swqt-companion；component catalog demos。"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": [
+          "S-SWQT-0019"
+        ],
+        "externalDependencies": [
+          "React 19 select/radio intrinsic props",
+          "supported browser native form controls"
+        ],
+        "userDecisions": [
+          "migrate-forward + auto"
+        ],
+        "projectResources": [
+          "packages/ui/src/components/date-picker.tsx",
+          "packages/ui/src/components/popover-select.tsx",
+          "examples/portal/src/demos/content.tsx"
+        ],
+        "axisPositioning": "required: public API + native form semantics + visual compatibility。",
+        "axisSplitSnapshot": "仅处理简单单选；searchable/multi-axis composite widgets 明确留在现有实现。",
+        "temporaryArtifactLifecycle": "not-applicable"
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "testDrivenDesign": {
+          "testCaseDesign": "radio group legend/name/checked/keyboard；native select value/change/disabled/label；Combobox 仍保留 role/expanded/search behavior。",
+          "acceptanceToTestMapping": "Feature AC6/AC8/AC9 -> Portal DOM + keyboard + form change assertions、typecheck、Axe。",
+          "riskToTestLevelMapping": "public form control -> integration/browser；prop compatibility -> TypeScript compile；visual -> existing screenshots/targeted screenshot。",
+          "regressionTestDesign": "验证 onValueChange 参数、selected value、disabled、id、aria-label 与样式 class 映射。",
+          "coverageAssessment": "touched-code",
+          "coverageMetric": "target-driven direct tests for both migrated exports",
+          "residualRisk": "原生 select/option 可样式化能力因浏览器不同；优先语义和可用性，记录视觉差异。",
+          "followUp": "S0022 全量 browser/Axe/conformance。"
+        },
+        "explanationSyncBrief": "Catalog 说明 PopoverSelect 保留历史名称但使用原生 select；说明 Combobox 保留 custom 的原因。",
+        "problemDefinition": "简单单选场景目前重建 listbox/button 或按钮组，却没有获得原生表单、键盘与选中状态语义。",
+        "requirementsDefinition": "用原生 form elements 表达单选；保持主 API；复杂可搜索选择不误迁移。",
+        "nonGoals": [
+          "不把所有选择控件强行合并为 select。",
+          "不承诺 option 高度自定义视觉在所有浏览器一致。"
+        ],
+        "plainLanguage": {
+          "unclear": "同样是“选择”，是否都应该用 select。",
+          "why": "可搜索 Combobox 与简单单选的交互契约不同。",
+          "outcome": "简单选择回归浏览器原生控件；需要搜索的控件继续保留完整复合交互。",
+          "prose": "让浏览器做它已经会做的单选和键盘工作。"
+        },
+        "options": [
+          {
+            "id": "A",
+            "name": "原地迁移现有组件实现",
+            "cuttingPoint": "保留组件名/主 props，DOM 改为 native。",
+            "impact": "现有消费者无需改主调用。",
+            "risk": "视觉与少数样式 props 语义变化。",
+            "validationCost": "中等。",
+            "rejectWhen": "发现依赖 popover-only 行为的公开契约。"
+          },
+          {
+            "id": "B",
+            "name": "新增 NativeSelect/RadioPreset 并弃用旧组件",
+            "cuttingPoint": "双 API 迁移。",
+            "impact": "兼容更显式但旧债务持续。",
+            "risk": "表面膨胀。",
+            "validationCost": "较高。",
+            "rejectWhen": "原地迁移可保持主 API。"
+          }
+        ],
+        "openDecisions": [],
+        "recommendedOption": {
+          "option": "A",
+          "rationale": "当前组件 props 足以映射到原生 select/radio，能直接改善现有导出。",
+          "assumptionsFromFeature": "migrate-forward；视觉差异可接受但交互不得退化。",
+          "assumptionChanges": "若 item/content styling 无法合理映射，文档说明兼容边界。"
+        },
+        "granularity": {
+          "granularityDecision": "fine-enough",
+          "whySmallEnough": "两个控件共享 native single-selection 不变量和同一测试策略。",
+          "whyNotSplitFurther": "分别拆分会重复表单/键盘/文档验证。",
+          "splitSignals": "发现 PopoverSelect 实际需要 searchable 或多选时拆回 design。",
+          "proposedChildSteps": "none"
+        },
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "控件边界、API 映射和测试已明确。",
+          "missingItems": "none",
+          "partiallySafeToProceed": "N/A"
+        },
+        "forwardImpact": [
+          {
+            "target": "S-SWQT-0022",
+            "impactType": "验收依赖变化",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0022",
+            "resolution": "纳入 rendered HTML、Axe、keyboard 和 screenshot gates。"
+          }
+        ],
+        "profileNote": "full public-contract Step。"
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "executionContract": {
+          "expectedChangeSurface": "DateRangePresetPicker、PopoverSelect、Portal demos/browser tests、HTML standards gate 和 catalog docs。",
+          "acceptanceCriteria": "日期预设使用 fieldset/legend/radio；简单枚举使用 select/option；保留组件名、受控 value/onValueChange、disabled/id/aria/name/form 等原生 props；Combobox 维持复合实现。",
+          "validationEvidenceRequired": "source invariant、native DOM/keyboard/Axe browser test、catalog parity、typecheck baseline comparison。",
+          "rollbackNotes": "组件实现可独立恢复；contentClassName/itemClassName 已保留为迁移映射。"
+        },
+        "implementationSummary": {
+          "whatChanged": "DateRangePresetPicker 改为原生 fieldset/legend/radio，并用 label/span 保持 Button 视觉；PopoverSelect 改为受控 native select/option，扩展原生 select props，保留历史样式 props 的可解释映射；Portal demo 变为可交互受控示例；source gate 与 catalog docs 同步。",
+          "whySatisfiesStep": "浏览器现在直接负责单选状态、表单语义和键盘行为，同时搜索型 Combobox 的必要复合语义未被误删。",
+          "intentionallyUnchanged": "PopoverSelect 名称暂不重命名；复杂 Combobox/Radix Select 不在此 Step；option 深度视觉定制不承诺跨浏览器一致。"
+        },
+        "changeSurface": {
+          "codeAnchors": "packages/ui/src/components/date-picker.tsx、popover-select.tsx；examples/portal/src/demos/content.tsx；examples/portal/browser.spec.mjs；scripts/check-html-standards.mjs。",
+          "configAnchors": "N/A（复用 S0019 的 root/CI gate）。",
+          "documentationAnchors": "packages/ui/docs/COMPONENT-CATALOG.md、DO-AND-DONT.md。",
+          "dataOrMigrationAnchors": "公共 DOM 从 button/popover/listbox 改为 select；DateRange 从 buttons 改为 radio。"
+        },
+        "executionNotes": {
+          "decisionsDuringImplementation": "PopoverSelectProps 扩展 native select props并排除 value/onChange 冲突；contentClassName 合并到 select，itemClassName 映射到 option；radio 使用 React.useId 生成组名。",
+          "deviationsFromBrief": "无；首次 radio `.check()` 因视觉 label 拦截 pointer 改为真实 label click；Axe 首次在 CSS transition 中采到中间色，稳定 250ms 后复跑通过。",
+          "risksDiscovered": "原生 option 的 CSS 支持因浏览器而异；PopoverSelect 的旧 popover-only DOM selectors 不再兼容，符合 migrate-forward。"
+        },
+        "validationReferences": [
+          {
+            "commandOrEvidence": "bun run check:html-standards",
+            "result": "passed",
+            "notes": "7 component contracts + 2 HTML documents。"
+          },
+          {
+            "commandOrEvidence": "bun run check:catalog-export",
+            "result": "passed",
+            "notes": "88 catalog exports / 309 package exports / 88 demos。"
+          },
+          {
+            "commandOrEvidence": "bun run --cwd examples/portal test:browser --grep 'simple selection controls'",
+            "result": "passed",
+            "notes": "light/dark 2/2；覆盖 native tag、option、controlled select、label click、radio ArrowLeft 与 Axe。"
+          },
+          {
+            "commandOrEvidence": "bun run --cwd examples/portal typecheck",
+            "result": "blocked",
+            "notes": "仅 9 个既有 source-highlight.tsx literal-type errors；本 Step touched files 无新增诊断。"
+          }
+        ],
+        "blocker": {
+          "state": "resolved",
+          "reason": "本 Step 直接行为、键盘和 Axe 证据通过；既有 type baseline 延续至 S0022。",
+          "owner": "swqt-maintainers",
+          "recoveryTrigger": "全量 browser/packed consumer 出现 native form 回归时回到 implement。",
+          "residualRisk": "浏览器原生 select/option 的视觉差异。"
+        },
+        "projectFactUpdateCandidates": "update-now: catalog and Do/Don't now identify PopoverSelect as native short-enum control and Combobox as searchable exception."
+      }
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "requirementsStatus": "implemented",
+        "gateOutcomes": [
+          {
+            "gate": "scope/state/research/brief",
+            "result": "passed",
+            "evidence": "Only the designed simple-selection exports, demos, tests, gate, and catalog docs changed; status=implemented; Feature standards research and full brief present.",
+            "counterEvidenceChecked": "yes: searched for PopoverSelect use and verified no searchable/multiselect contract; Combobox remains unchanged.",
+            "residualRisk": "Consumers targeting old popover DOM selectors must migrate."
+          },
+          {
+            "gate": "validation/test sufficiency",
+            "result": "passed",
+            "evidence": "HTML/catalog gates passed; native select, radio click/ArrowLeft, controlled state and Axe passed in light/dark; workflow/posture passed.",
+            "counterEvidenceChecked": "yes: pointer interception and transition-time contrast failures were reproduced, corrected at the test interaction/stability boundary, then rerun.",
+            "residualRisk": "No standalone coverage artifact; accepted skipped-with-reason(target-driven direct browser/static evidence covers both changed exports)."
+          },
+          {
+            "gate": "public contract/document/SSOT/promotion",
+            "result": "passed",
+            "evidence": "Main value/options/onValueChange/id/disabled/aria path retained; native select props expanded; legacy style props mapped and documented; package docs updated.",
+            "counterEvidenceChecked": "yes: option styling portability and native DOM/ref differences are explicitly recorded under migrate-forward.",
+            "residualRisk": "Native option styling varies by browser."
+          }
+        ],
+        "testSufficiency": "passed",
+        "conditionalGates": "not-applicable(no DDL; no repeated sibling skip yet)",
+        "projectCompanionFactDisposition": "update-now: catalog and Do/Don't updated; no project companion path/command change.",
+        "ssotImpactPrerequisite": "passed: shipped component catalog and authoring guidance updated.",
+        "promotionDisposition": "ready",
+        "residualRisk": "Old popover-specific selectors and pixel-identical option styling are not preserved.",
+        "followUp": "Full browser/build/packed-consumer rollup in S-SWQT-0022."
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-23",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0020-表单与选择控件原生语义迁移.json",
+        "validationSummary": "HTML/catalog passed；native form DOM/keyboard/Axe light+dark 2/2 passed；known unrelated type baseline carried to S0022.",
+        "testCaseSummary": "Native select/options, controlled update, radio group naming/checking and ArrowLeft behavior verified.",
+        "coverageSummary": "target-driven direct coverage for both migrated exports；no standalone coverage artifact.",
+        "rootMount": "Root README -> packages/ui/README.md -> COMPONENT-CATALOG/DO-AND-DONT；stable workflow Step path.",
+        "ssotImpact": "ssot-updated",
+        "ssotRefs": [
+          "packages/ui/docs/COMPONENT-CATALOG.md",
+          "packages/ui/docs/DO-AND-DONT.md",
+          "packages/ui/src/components/date-picker.tsx",
+          "packages/ui/src/components/popover-select.tsx"
+        ],
+        "sourceWorkflowRefs": [
+          "F-SWQT-0007",
+          "S-SWQT-0020"
+        ],
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented",
+        "archiveSynchronization": "implemented(stable Layout v3 path)"
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "full",
+        "requirementAudit": [
+          {
+            "requirement": "Simple selection uses native forms",
+            "status": "implemented",
+            "evidence": "fieldset/legend/radio and select/option source + browser proof.",
+            "risk": "DOM and option styling migrate-forward differences.",
+            "followUp": "Final packed consumer/browser rollup."
+          },
+          {
+            "requirement": "Complex searchable controls remain justified exceptions",
+            "status": "implemented",
+            "evidence": "Combobox unchanged and exception documented.",
+            "risk": "Future simple selectors could bypass PopoverSelect.",
+            "followUp": "HTML source gate and authoring docs remain enforcement surface."
+          }
+        ],
+        "workflowRunAudit": "Implement/review evidence complete; two meaningful test failures improved interaction and transition-stability assertions.",
+        "intermediateDocumentStateAudit": "Implementation, review, registry and completion sections written through controlled workflow tools; stable path retained.",
+        "documentGovernanceAudit": "Shipped catalog/Do-Don't remain reachable from package README/AGENTS.",
+        "ssotProjectionAudit": "ssot-updated: native form contract and exception boundary propagated to code/docs/tests/gate.",
+        "temporaryArtifactLifecycle": "This closure fixture is deleted after promote; unrelated files untouched.",
+        "acceptanceToAuthorityPropagation": "Selection-control acceptance propagated; table and full validation remain future-only S0021/S0022.",
+        "closingTriad": [
+          {
+            "question": "Any unimplemented or unregistered work in this Step?",
+            "answer": "No.",
+            "evidence": "Requirement audit and sibling boundaries."
+          },
+          {
+            "question": "Are docs, registry, ledger and stable path aligned?",
+            "answer": "Yes.",
+            "evidence": "finalDocumentEntry, ssotRefs and workflow controlled writes."
+          },
+          {
+            "question": "Is behavior sufficiently verified with residual risk handled?",
+            "answer": "Yes.",
+            "evidence": "Source/catalog + light/dark native DOM/keyboard/Axe tests; S0022 rollup."
+          }
+        ],
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "All Step-local requirements and authority surfaces are closed.",
+          "closingSelfAuditConsistency": "Consistent with review and future sibling boundaries.",
+          "landingChecklistOutcome": "no-capture-needed",
+          "pluginSkillFriction": "none requiring capture",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "native simple-control migration with complex-widget exception",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "Continue auto to S-SWQT-0021 and S-SWQT-0022."
+      }
+    }
+  },
+  "validationSummary": "HTML/catalog passed; native select/radio DOM keyboard Axe light+dark 2/2 passed; known type baseline carried to final scope"
+}

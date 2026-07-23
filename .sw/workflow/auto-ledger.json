@@ -556,6 +556,264 @@
         "advanceRequired": true
       },
       "chainTerminationReason": "blocked-hitl"
+    },
+    {
+      "runId": "auto-20260723T190635722Z",
+      "targetId": "F-SWQT-0007",
+      "targetKind": "feature",
+      "startedAt": "2026-07-23T19:06:35.722Z",
+      "endedAt": "2026-07-23T19:31:18.339Z",
+      "exitStatus": "completed",
+      "stopTriggered": true,
+      "triggeredBy": "auto-exit",
+      "notes": "F-SWQT-0007 and S-SWQT-0019..0022 delivered; standards, regression, documentation and workflow closure gates complete.",
+      "chainDepthPolicy": "feature-complete",
+      "scopeAnchor": "F-SWQT-0007",
+      "scopeFeatureId": "F-SWQT-0007",
+      "chainPlan": [],
+      "chainProgress": {
+        "completedSegments": [],
+        "currentSegment": null,
+        "lastCheckpointAt": "2026-07-23T19:30:33.511Z",
+        "auditMirror": [
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "F-SWQT-0007",
+              "kind": "step",
+              "nextHandoff": "design",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T19:11:07.063Z",
+            "tier1StatusAfter": {
+              "stepId": "F-SWQT-0007",
+              "stepStatus": "draft",
+              "featureId": null,
+              "featureStatus": null,
+              "tier1WriteRef": "F-SWQT-0007#step-breakdown:S-SWQT-0019..S-SWQT-0022",
+              "validationSummary": "four implementation-ready Steps materialized; readiness=Yes"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0019",
+              "kind": "step",
+              "nextHandoff": "implement",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T19:15:04.638Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0019",
+              "stepStatus": "implemented",
+              "featureId": "F-SWQT-0007",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0019#implementation-record+status:implemented",
+              "validationSummary": "html/design/catalog passed; targeted Portal browser 2/2 passed; known unrelated typecheck baseline recorded"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0019",
+              "kind": "step",
+              "nextHandoff": "review",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T19:16:04.034Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0019",
+              "stepStatus": "reviewed",
+              "featureId": "F-SWQT-0007",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0019#review-report+status:reviewed",
+              "validationSummary": "full review passed; counter-evidence checked; promotion ready"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0019",
+              "kind": "step",
+              "nextHandoff": "deliver",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T19:16:50.264Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0019",
+              "stepStatus": "delivered",
+              "featureId": "F-SWQT-0007",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0019#delivered-registry-entry+completion-audit+status:delivered",
+              "validationSummary": "promotion registry/path/audit closed; full completion audit recorded"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0020",
+              "kind": "step",
+              "nextHandoff": "implement",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T19:20:18.626Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0020",
+              "stepStatus": "implemented",
+              "featureId": "F-SWQT-0007",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0020#implementation-record+status:implemented",
+              "validationSummary": "native form source/catalog passed; light+dark DOM keyboard Axe 2/2 passed"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0020",
+              "kind": "step",
+              "nextHandoff": "review",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T19:20:56.284Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0020",
+              "stepStatus": "reviewed",
+              "featureId": "F-SWQT-0007",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0020#review-report+status:reviewed",
+              "validationSummary": "full review passed; native control counter-evidence and residuals recorded"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0020",
+              "kind": "step",
+              "nextHandoff": "deliver",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T19:21:09.146Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0020",
+              "stepStatus": "delivered",
+              "featureId": "F-SWQT-0007",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0020#delivered-registry-entry+completion-audit+status:delivered",
+              "validationSummary": "native selection Step registry/path/audit closed"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0021",
+              "kind": "step",
+              "nextHandoff": "implement",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T19:22:24.117Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0021",
+              "stepStatus": "implemented",
+              "featureId": "F-SWQT-0007",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0021#implementation-record+status:implemented",
+              "validationSummary": "single-table source and light/dark DOM/scope/sticky/sort/Axe passed"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0021",
+              "kind": "step",
+              "nextHandoff": "review",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T19:23:02.342Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0021",
+              "stepStatus": "reviewed",
+              "featureId": "F-SWQT-0007",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0021#review-report+status:reviewed",
+              "validationSummary": "guardrail-high-risk table review passed with counter-evidence"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0021",
+              "kind": "step",
+              "nextHandoff": "deliver",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T19:23:13.607Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0021",
+              "stepStatus": "delivered",
+              "featureId": "F-SWQT-0007",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0021#delivered-registry-entry+completion-audit+status:delivered",
+              "validationSummary": "guardrail-high-risk table Step registry/path/audit closed"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0022",
+              "kind": "step",
+              "nextHandoff": "implement",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T19:29:07.851Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0022",
+              "stepStatus": "implemented",
+              "featureId": "F-SWQT-0007",
+              "featureStatus": "draft",
+              "tier1WriteRef": ".sw/workflow/steps/S-SWQT-0022-渲染态-html-conformance-回归验证与文档收口.json#implementation-record",
+              "validationSummary": "S0022 implementation complete: offline conformance, full product/package regression and documentation gates passed."
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0022",
+              "kind": "step",
+              "nextHandoff": "review",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T19:29:43.657Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0022",
+              "stepStatus": "reviewed",
+              "featureId": "F-SWQT-0007",
+              "featureStatus": "draft",
+              "tier1WriteRef": ".sw/workflow/steps/S-SWQT-0022-渲染态-html-conformance-回归验证与文档收口.json#review-report",
+              "validationSummary": "S0022 guardrail-high-risk review passed with counter-evidence checks; no product regression or blocking governance finding."
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0022",
+              "kind": "step",
+              "nextHandoff": "deliver",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T19:30:33.511Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0022",
+              "stepStatus": "delivered",
+              "featureId": "F-SWQT-0007",
+              "featureStatus": "delivered",
+              "tier1WriteRef": ".sw/workflow/steps/S-SWQT-0022-渲染态-html-conformance-回归验证与文档收口.json#completion-audit",
+              "validationSummary": "S0022 delivered with full completion audit and registry evidence; all Feature acceptance criteria covered."
+            }
+          }
+        ],
+        "advanceRequired": null
+      },
+      "chainTerminationReason": "scope-terminal"
     }
   ]
 }

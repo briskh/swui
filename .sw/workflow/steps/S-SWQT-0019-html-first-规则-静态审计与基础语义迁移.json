@@ -1,0 +1,364 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0019",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0019: HTML-first 规则、静态审计与基础语义迁移",
+  "sourceFeature": {
+    "id": "F-SWQT-0007",
+    "href": "../feature/F-SWQT-0007-html-living-standard-语义合规与原生元素迁移.json"
+  },
+  "owner": "swqt-maintainers",
+  "createdAt": "2026-07-23T19:07:02.351Z",
+  "updatedAt": "2026-07-23T19:07:02.351Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "建立 HTML-first 项目规则和静态审计门禁，并迁移具有明确原生等价物的基础导出组件语义。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "packages/ui/AGENTS.md、设计摘要/Do-and-Don't 与研究索引中的 HTML-first 契约",
+          "Progress、Pagination、BreadcrumbPage/Ellipsis、Spinner、SearchInput、SkeletonStack、TableHead 的原生/标准语义",
+          "静态 source policy gate：冗余 role、fake neutral control、obsolete authoring attributes 与已知语义回归"
+        ],
+        "outOfScope": [
+          "复杂菜单、Combobox、Tabs、Tooltip、Dialog/Popover 的无等价重写",
+          "ServerDataTable 结构迁移（S-SWQT-0021）",
+          "表单选择控件迁移（S-SWQT-0020）"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "sourceFeature": "F-SWQT-0007",
+        "researchEvidence": "docs/research/R-SWQT-0001-html-living-standard-audit.md；WHATWG HTML Living Standard；W3C ARIA in HTML。",
+        "optionsTelos": "Option A：标准优先、兼容迁移。",
+        "projectCompanionRefs": "project-swqt-companion；package AGENTS；local validation fast paths。"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": [],
+        "externalDependencies": [
+          "WHATWG/W3C 当前 authoring contract",
+          "React 19 intrinsic element types"
+        ],
+        "userDecisions": [
+          "用户确认 migrate-forward + auto"
+        ],
+        "projectResources": [
+          "packages/ui/src",
+          "scripts/check-catalog-export.mjs",
+          "examples/portal/browser.spec.mjs"
+        ],
+        "axisPositioning": "required: public-contract + semantic-element + validation；每一处替换需 DOM/API/交互证据。",
+        "axisSplitSnapshot": "S0019 只拥有基础语义和治理；选择控件、数据表格、最终全量门禁分别由 S0020/S0021/S0022 承接。",
+        "temporaryArtifactLifecycle": "not-applicable；验证临时输出只在系统临时目录产生，不提交。"
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "testDrivenDesign": {
+          "testCaseDesign": "DOM 断言原生 progress/nav/search/th/scope/current-page；Spinner 有/无 aria-label；静态脚本用正负 fixture 验证禁用模式。",
+          "acceptanceToTestMapping": "Feature AC1-4、AC7-9 -> source gate + Portal/consumer DOM/browser/type tests；每条迁移至少一个正例，冗余 role/fake control 至少一个负例。",
+          "riskToTestLevelMapping": "public DOM contract -> typecheck + rendered DOM integration；ARIA/name behavior -> Playwright role/name assertions + Axe；source policy -> unit/static script。",
+          "regressionTestDesign": "保持组件名与常用 props；验证 Progress value/max、Pagination/Breadcrumb accessible names、Spinner 内联不重复播报。",
+          "coverageAssessment": "touched-code",
+          "coverageMetric": "target-driven: every changed exported primitive has direct DOM assertion or static invariant",
+          "residualRisk": "不同辅助技术对 progress/spinner announcement 仍可能存在差异；保留人工抽查说明。",
+          "followUp": "S0022 执行全量 rendered conformance 与 browser matrix。"
+        },
+        "explanationSyncBrief": "同步 package agent docs、Design Summary、Do-and-Don't 与 catalog notes，明确 native-first/ARIA-exception test。",
+        "problemDefinition": "当前基础组件中存在原生等价物未使用、冗余 role 和隐藏可访问文本，且无自动门禁阻止回归。",
+        "requirementsDefinition": "使用语义等价的 intrinsic HTML；移除与 implicit semantics 重复的 ARIA；保持公共调用主路径；加入可执行源代码规则。",
+        "nonGoals": [
+          "不追求删除所有 role/aria-*。",
+          "不更改无更强语义的布局 div/span。",
+          "不在本 Step 改写复杂复合 widget。"
+        ],
+        "plainLanguage": {
+          "unclear": "“标准优先”容易被误解成标签替换竞赛。",
+          "why": "HTML 原生元素还包含浏览器行为、键盘和表单语义；错误替换可能比现状更差。",
+          "outcome": "只替换有完整等价物的部分，并用测试证明 DOM 和交互更正确。",
+          "prose": "先把最确定的基础问题修正，再让静态门禁守住这些规则。"
+        },
+        "options": [
+          {
+            "id": "A",
+            "name": "直接迁移现有导出并加 gate",
+            "cuttingPoint": "组件实现 + 项目治理同时收敛。",
+            "impact": "当前消费者获得正确 DOM；后续提交不能重引入同类问题。",
+            "risk": "少量 ref/props 类型差异与 CSS 原生控件样式。",
+            "validationCost": "中等，需 DOM/type/browser 验证。",
+            "rejectWhen": "无法保持主调用 API。"
+          },
+          {
+            "id": "B",
+            "name": "只加新组件不迁移旧组件",
+            "cuttingPoint": "旧表面保持，新表面另建。",
+            "impact": "兼容最好但语义债务继续存在。",
+            "risk": "双表面长期分叉。",
+            "validationCost": "较低。",
+            "rejectWhen": "目标要求改进现有导出库。"
+          }
+        ],
+        "openDecisions": [],
+        "recommendedOption": {
+          "option": "A",
+          "rationale": "满足原始目标，且所列基础项均有明确原生/标准等价路径。",
+          "assumptionsFromFeature": "migrate-forward；允许 DOM 实现变化但不静默破坏常用调用。",
+          "assumptionChanges": "none"
+        },
+        "granularity": {
+          "granularityDecision": "fine-enough",
+          "whySmallEnough": "共享同一基础语义/静态 gate 不变量，可在一次实现中形成首个端到端闭环。",
+          "whyNotSplitFurther": "逐组件拆分会重复同一 source gate、docs 与 browser fixture，无独立 review 价值。",
+          "splitSignals": "若 Progress 类型迁移需要大版本 API，立即拆出兼容 Step。",
+          "proposedChildSteps": "none"
+        },
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "规则、目标组件、测试映射和兼容边界均已确定。",
+          "missingItems": "none",
+          "partiallySafeToProceed": "N/A"
+        },
+        "forwardImpact": [
+          {
+            "target": "S-SWQT-0022",
+            "impactType": "验收依赖变化",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0022",
+            "resolution": "最终 gate 消费本 Step 新增 source policy 与 DOM assertions。"
+          }
+        ],
+        "profileNote": "full public-contract Step；changePosture=migrate-forward。"
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "executionContract": {
+          "expectedChangeSurface": "基础导出组件、HTML-first package 文档、静态 standards gate、Portal 代表性 DOM 测试与 CI。",
+          "acceptanceCriteria": "原生 progress；移除 nav/search 的冗余 role 与 BreadcrumbPage 假 link；省略号文本可读；Spinner 默认装饰；TableHead 默认 scope=col；静态门禁可阻止回归。",
+          "validationEvidenceRequired": "source gate、design/catalog gate、Portal DOM/Axe browser test、类型基线记录。",
+          "rollbackNotes": "可逐组件恢复实现；删除静态门禁时需同时恢复 CI 和文档引用。"
+        },
+        "implementationSummary": {
+          "whatChanged": "Progress 改为原生 progress[value][max] 并保持组件名；清理 Pagination/SearchInput/Breadcrumb 冗余或伪语义；Spinner 默认 aria-hidden、显式 label 时可播报；SkeletonStack 隐藏纯视觉占位；TableHead 默认 scope=col；新增 HTML-first 文档、静态脚本、CI gate 与 Portal DOM/Axe 回归。",
+          "whySatisfiesStep": "基础导出组件现在依赖浏览器原生语义，项目规则和可执行门禁共同阻止已确认反模式回归。",
+          "intentionallyUnchanged": "保留复杂 Radix widget；不处理 PopoverSelect、DateRangePresetPicker 和 ServerDataTable，它们由后续 Step 承接。"
+        },
+        "changeSurface": {
+          "codeAnchors": "packages/ui/src/components/{progress,pagination,breadcrumb,spinner,typed-input,loading,table}.tsx；scripts/check-html-standards.mjs；examples/portal/browser.spec.mjs。",
+          "configAnchors": "package.json check:html-standards；.github/workflows/quality.yml。",
+          "documentationAnchors": "packages/ui/AGENTS.md、README.md、docs/HTML-STANDARDS.md、docs/DO-AND-DONT.md。",
+          "dataOrMigrationAnchors": "移除 @radix-ui/react-progress peer 声明；无需数据迁移。"
+        },
+        "executionNotes": {
+          "decisionsDuringImplementation": "Spinner 默认作为装饰图标，调用方可通过 aria-label 获得 status；SkeletonStack 作为纯视觉占位隐藏；原生 progress 通过浏览器伪元素保持视觉 token。",
+          "deviationsFromBrief": "无范围偏离；浏览器测试首次因 locator 过宽和 demo 未包含 ellipsis 失败，已收窄 locator 并补代表性 demo。",
+          "risksDiscovered": "原生 progress 的浏览器伪元素样式需要最终全量视觉回归；consumer typecheck 仍被既有 source-highlight 字面量类型错误阻塞。"
+        },
+        "validationReferences": [
+          {
+            "commandOrEvidence": "bun run check:html-standards",
+            "result": "passed",
+            "notes": "5 component contracts + 2 HTML documents。"
+          },
+          {
+            "commandOrEvidence": "bun run check:design-contract",
+            "result": "passed",
+            "notes": "foundation contract 无回归。"
+          },
+          {
+            "commandOrEvidence": "bun run check:catalog-export",
+            "result": "passed",
+            "notes": "88 catalog exports / 308 package exports / 88 demos。"
+          },
+          {
+            "commandOrEvidence": "bun run --cwd examples/portal test:browser --grep 'HTML-first primitives'",
+            "result": "passed",
+            "notes": "light/dark 2/2 passed；覆盖原生 DOM、implicit role、当前页和 Axe。"
+          },
+          {
+            "commandOrEvidence": "bun run --cwd examples/ui-consumer typecheck",
+            "result": "blocked",
+            "notes": "9 个既有 packages/ui/src/lib/source-highlight.tsx literal-type errors；与本 Step 修改无重叠。"
+          }
+        ],
+        "blocker": {
+          "state": "resolved",
+          "reason": "本 Step 范围的 source/browser/design/catalog 证据通过；已知 typecheck baseline 记录为后续全量验收残余。",
+          "owner": "swqt-maintainers",
+          "recoveryTrigger": "若最终 gate 发现本 Step touched-file 新错误，回到 implement。",
+          "residualRisk": "原生 progress 跨浏览器视觉差异由 S-SWQT-0022 全量 browser matrix 验证。"
+        },
+        "projectFactUpdateCandidates": "update-now: check:html-standards 已加入 root scripts、CI 与 package agent docs。"
+      }
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "requirementsStatus": "implemented",
+        "gateOutcomes": [
+          {
+            "gate": "scope/state",
+            "result": "passed",
+            "evidence": "Diff limited to the designed foundational components, policy/docs, source gate, CI, and representative Portal demo/test; Step status=implemented and workflow-json passed.",
+            "counterEvidenceChecked": "yes: inspected git diff/check and Step document for unrelated refactors or missing records; none found.",
+            "residualRisk": "Native Progress changes its ref target from div-like Radix Root to HTMLProgressElement under migrate-forward."
+          },
+          {
+            "gate": "research/brief",
+            "result": "passed",
+            "evidence": "Feature links WHATWG HTML Living Standard, HTML element/attribute/obsolete indexes, W3C ARIA in HTML, retrieval date and refresh triggers; full implementation-ready brief present.",
+            "counterEvidenceChecked": "yes: checked that the policy does not claim every neutral container or ARIA widget must be replaced.",
+            "residualRisk": "Living-standard changes require periodic refresh rather than a frozen version assertion."
+          },
+          {
+            "gate": "validation/test sufficiency",
+            "result": "passed",
+            "evidence": "check:html-standards, design contract and catalog gate passed; targeted Portal DOM/Axe test passed in light/dark; change-posture and workflow-json passed.",
+            "counterEvidenceChecked": "yes: first browser runs exposed an over-broad locator and missing ellipsis demo; both were corrected and rerun successfully.",
+            "residualRisk": "No standalone coverage artifact exists; accepted skipped-with-reason(project uses target-driven DOM/static evidence). Full browser matrix remains in S-SWQT-0022."
+          },
+          {
+            "gate": "project fact/document tree",
+            "result": "passed",
+            "evidence": "check:html-standards is mounted in root package scripts and CI; package AGENTS/README link shipped docs/HTML-STANDARDS.md.",
+            "counterEvidenceChecked": "yes: verified all linked files exist and package files include docs.",
+            "residualRisk": "Portal synchronized copies are generated and will be checked in final validation."
+          },
+          {
+            "gate": "provenance/graph/final-position",
+            "result": "passed",
+            "evidence": "Step sourceFeature points to F-SWQT-0007; research is linked from Feature and repository research index; stable package docs avoid temporary workflow paths.",
+            "counterEvidenceChecked": "yes: no stale future-only wording or temporary artifact references remain.",
+            "residualRisk": "none"
+          },
+          {
+            "gate": "promotion readiness",
+            "result": "passed",
+            "evidence": "Implementation and validation records are complete; no unresolved Step-local blocker; project fact update was applied now.",
+            "counterEvidenceChecked": "yes: consumer typecheck baseline has 9 pre-existing source-highlight errors outside touched code and is explicitly deferred to final scope review rather than hidden.",
+            "residualRisk": "Feature-wide typecheck cannot be declared passed until final review resolves or formally accepts that baseline."
+          }
+        ],
+        "testSufficiency": "passed",
+        "conditionalGates": {
+          "ddlAdaptation": "not-applicable(no persistence or schema migration)",
+          "siblingRepeatedSkipRollup": "not-applicable(first sibling; final Step owns shared full-suite rollup)"
+        },
+        "projectCompanionFactDisposition": "update-now: root command, CI entry, and package agent documentation already updated.",
+        "ssotImpactPrerequisite": "passed: package HTML-STANDARDS.md is the new public authoring contract; source workflow and standards references are recorded.",
+        "promotionDisposition": "ready",
+        "residualRisk": "Progress ref/DOM and cross-browser styling receive full browser/build/packed-consumer verification in S-SWQT-0022.",
+        "followUp": "Promote this Step, then execute native form controls in S-SWQT-0020."
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-23",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0019-html-first-规则-静态审计与基础语义迁移.json",
+        "validationSummary": "HTML standards/design/catalog passed；Portal targeted DOM/Axe browser 2/2 passed；consumer typecheck baseline is explicitly carried to S-SWQT-0022.",
+        "testCaseSummary": "原生 progress、implicit role、Breadcrumb current page、ellipsis 可访问文本在 light/dark Portal 浏览器测试通过。",
+        "coverageSummary": "target-driven touched components covered by static invariants plus representative DOM/Axe integration；standalone coverage artifact skipped-with-reason(project has no coverage target).",
+        "rootMount": "Root README -> packages/ui/README.md -> docs/HTML-STANDARDS.md；stable Step path retained in workflow ledger.",
+        "ssotImpact": "ssot-updated",
+        "ssotRefs": [
+          "packages/ui/docs/HTML-STANDARDS.md",
+          "packages/ui/AGENTS.md",
+          "package.json",
+          ".github/workflows/quality.yml"
+        ],
+        "sourceWorkflowRefs": [
+          "F-SWQT-0007",
+          "S-SWQT-0019"
+        ],
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented",
+        "archiveSynchronization": "implemented(stable Layout v3 Step path; ledger refreshed by controlled writes)"
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "full",
+        "requirementAudit": [
+          {
+            "requirement": "基础导出组件采用可用的标准元素和属性",
+            "status": "implemented",
+            "evidence": "原生 progress、implicit roles、current page、scope=col 与装饰 loading semantics 已落地并测试。",
+            "risk": "Progress ref/DOM migrate-forward 差异。",
+            "followUp": "S-SWQT-0022 执行全量 browser/packed-consumer。"
+          },
+          {
+            "requirement": "HTML-first 规则和持续门禁",
+            "status": "implemented",
+            "evidence": "package public docs、root script 和 CI gate 已挂载。",
+            "risk": "Living Standard 会持续演进。",
+            "followUp": "标准或浏览器支持策略变化时刷新研究与 gate。"
+          }
+        ],
+        "workflowRunAudit": "discourse/design/implement/review 已完成；两次 targeted browser 初跑暴露测试定位/fixture 缺口并已复跑通过；一次非法 lifecycle transition 通过 step.transition 合法路径恢复。",
+        "intermediateDocumentStateAudit": "Feature step-breakdown、Step implementation/review/promotion sections、stable path 与 ledger 由 workflow tools 同步。",
+        "documentGovernanceAudit": "Root/package README、package AGENTS 与 shipped HTML-STANDARDS.md 形成可达文档树；研究记录留在 repository research index。",
+        "ssotProjectionAudit": "ssot-updated: package authoring contract、root command 与 CI 已当前化并回指本 workflow。",
+        "temporaryArtifactLifecycle": "所有 .sw 中本 Step 临时 fixture 在 promotion 后删除；不触碰非本 Step 文件。",
+        "acceptanceToAuthorityPropagation": "基础语义验收已传播到 source、Portal test、package docs、CI、Feature/Step；选择控件/数据表/全量验证保持 future-only，由 S0020-S0022 持有。",
+        "closingTriad": [
+          {
+            "question": "确认范围内是否仍有未实现或未登记工作？",
+            "answer": "否（本 Step 范围）；S0020-S0022 是已登记的后续 sibling，不属于遗漏。",
+            "evidence": "Step scope + Feature step-breakdown + implementation/review records"
+          },
+          {
+            "question": "文档、registry、ledger 与 stable path 是否一致？",
+            "answer": "是。",
+            "evidence": "finalDocumentEntry + package doc tree + controlled workflow ledger"
+          },
+          {
+            "question": "声明的行为是否有足够验证及残余风险处置？",
+            "answer": "是。",
+            "evidence": "source/design/catalog gates + targeted light/dark DOM/Axe test；全量验证交给 S0022"
+          }
+        ],
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "本 Step requirements、文档树、registry/path 与验证证据均闭合。",
+          "closingSelfAuditConsistency": "与 review decision=reviewed 和 future sibling 边界一致。",
+          "landingChecklistOutcome": "no-capture-needed",
+          "pluginSkillFriction": "lifecycle 必须经过 implementing/reviewing 中间态，已由合法 intent 恢复；无需方法论捕获。",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "HTML source invariant + rendered DOM/Axe split gate",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "继续 auto 链执行 S-SWQT-0020、S-SWQT-0021、S-SWQT-0022。"
+      }
+    }
+  },
+  "validationSummary": "HTML standards/design/catalog passed; targeted Portal DOM/Axe browser 2/2 passed; typecheck baseline carried to final scope"
+}

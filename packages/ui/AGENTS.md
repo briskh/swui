@@ -20,8 +20,9 @@ Requires peer: `@swqt/ui-tokens` CSS in the app, plus React / Radix / lucide pee
 3. [`docs/DESIGN-SUMMARY.md`](./docs/DESIGN-SUMMARY.md) — patterns, a11y, states
 4. [`docs/COMPONENT-CATALOG.md`](./docs/COMPONENT-CATALOG.md) — what exists and when to use it
 5. [`docs/DO-AND-DONT.md`](./docs/DO-AND-DONT.md)
-6. [`docs/ADOPTION.md`](./docs/ADOPTION.md) — install, Tailwind scan, ThemeProvider
-7. Sibling: `@swqt/ui-tokens` AGENTS.md
+6. [`docs/HTML-STANDARDS.md`](./docs/HTML-STANDARDS.md) — native elements, attributes, and justified exceptions
+7. [`docs/ADOPTION.md`](./docs/ADOPTION.md) — install, Tailwind scan, ThemeProvider
+8. Sibling: `@swqt/ui-tokens` AGENTS.md
 
 ## Hard rules
 
@@ -34,6 +35,7 @@ Requires peer: `@swqt/ui-tokens` CSS in the app, plus React / Radix / lucide pee
 7. Do **not** expect product `AppShell` / `TopBar` / route IA in this package — those stay in each app.
 8. Do not copy component source into the app; bump the package version instead.
 9. There is **no** separate `@swqt/ui-shell` package; import gate helpers from `@swqt/ui`.
+10. HTML-first: use standard elements and attributes when they satisfy the full behavior contract; do not repeat implicit roles or simulate controls with neutral elements. See `docs/HTML-STANDARDS.md`.
 
 ## Import patterns
 

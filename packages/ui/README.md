@@ -11,6 +11,7 @@ Skywalker React UI primitives (shadcn/Radix based) plus global `ThemeProvider`, 
 | [docs/DESIGN-SUMMARY.md](./docs/DESIGN-SUMMARY.md) | Patterns, a11y, responsive |
 | [docs/COMPONENT-CATALOG.md](./docs/COMPONENT-CATALOG.md) | Component inventory |
 | [docs/DO-AND-DONT.md](./docs/DO-AND-DONT.md) | Hard do/don't |
+| [docs/HTML-STANDARDS.md](./docs/HTML-STANDARDS.md) | HTML-first elements, attributes, and exceptions |
 | [docs/ADOPTION.md](./docs/ADOPTION.md) | Install, Tailwind, ThemeProvider |
 
 These files ship inside the npm tarball (`node_modules/@swqt/ui/`).

@@ -1,6 +1,4 @@
 import * as React from "react";
-import { Check, ChevronDown } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { cn } from "../lib/utils";
 
 export type PopoverSelectOption = {
@@ -8,17 +6,19 @@ export type PopoverSelectOption = {
   label: string;
 };
 
-type PopoverSelectProps = {
+export type PopoverSelectProps = Omit<
+  React.ComponentPropsWithoutRef<"select">,
+  "children" | "defaultValue" | "onChange" | "value"
+> & {
   id?: string;
   value: string;
   options: PopoverSelectOption[];
   onValueChange: (value: string) => void;
   placeholder?: string;
-  disabled?: boolean;
-  className?: string;
+  /** @deprecated Applied to the native select for migrate-forward compatibility. */
   contentClassName?: string;
+  /** Applied to each native option. Browser styling support varies. */
   itemClassName?: string;
-  "aria-label"?: string;
 };
 
 export function PopoverSelect({
@@ -31,68 +31,34 @@ export function PopoverSelect({
   className,
   contentClassName,
   itemClassName,
-  "aria-label": ariaLabel
+  ...props
 }: PopoverSelectProps) {
-  const [open, setOpen] = React.useState(false);
-  const selected = options.find((option) => option.value === value);
-
-  const selectValue = (nextValue: string) => {
-    onValueChange(nextValue);
-    setOpen(false);
-  };
+  const hasSelectedOption = options.some((option) => option.value === value);
 
   return (
-    <Popover open={open} onOpenChange={setOpen} modal={false}>
-      <PopoverTrigger asChild>
-        <button
-          id={id}
-          type="button"
-          role="combobox"
-          aria-expanded={open}
-          aria-label={ariaLabel}
-          disabled={disabled}
-          className={cn(
-            "flex w-full items-center justify-between gap-2 rounded-md border border-transparent bg-transparent text-left shadow-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60",
-            className
-          )}
-        >
-          <span className="truncate">{selected?.label ?? placeholder}</span>
-          <ChevronDown className="size-4 shrink-0 opacity-70" aria-hidden="true" />
-        </button>
-      </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        className={cn("w-[var(--radix-popover-trigger-width)] p-1", contentClassName)}
-        onOpenAutoFocus={(event) => event.preventDefault()}
-      >
-        <div role="listbox" aria-label={ariaLabel} className="flex flex-col gap-0.5">
-          {options.map((option) => {
-            const isSelected = option.value === value;
-
-            return (
-              <button
-                key={option.value}
-                type="button"
-                role="option"
-                aria-selected={isSelected}
-                className={cn(
-                  "relative flex w-full cursor-default select-none items-center rounded py-1.5 pl-6 pr-2 text-left outline-none hover:bg-muted focus-visible:bg-muted focus-visible:text-foreground",
-                  itemClassName
-                )}
-                onPointerDown={(event) => {
-                  event.preventDefault();
-                  selectValue(option.value);
-                }}
-              >
-                <span className="absolute left-2 flex size-4 items-center justify-center">
-                  <Check className={cn("size-4", isSelected ? "opacity-100" : "opacity-0")} aria-hidden="true" />
-                </span>
-                {option.label}
-              </button>
-            );
-          })}
-        </div>
-      </PopoverContent>
-    </Popover>
+    <select
+      id={id}
+      value={hasSelectedOption ? value : ""}
+      className={cn(
+        "h-control-md w-full rounded-md border border-input bg-background px-3 text-sm text-foreground shadow-none",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "disabled:cursor-not-allowed disabled:opacity-60",
+        className,
+        contentClassName
+      )}
+      onChange={(event) => onValueChange(event.currentTarget.value)}
+      {...props}
+    >
+      {!hasSelectedOption ? (
+        <option value="" disabled>
+          {placeholder}
+        </option>
+      ) : null}
+      {options.map((option) => (
+        <option key={option.value} value={option.value} className={itemClassName}>
+          {option.label}
+        </option>
+      ))}
+    </select>
   );
 }

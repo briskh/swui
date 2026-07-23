@@ -56,6 +56,7 @@ import {
   ContextMenuTrigger,
   DataTable,
   DatePicker,
+  DateRangePresetPicker,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -90,6 +91,7 @@ import {
   NumberInput,
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -463,12 +465,16 @@ export const componentDemos: Record<string, React.ComponentType> = {
   Calendar: () => <Calendar mode="single" selected={new Date()} className="rounded-md border" />,
   DatePicker: () => {
     const [valueUtc, setValueUtc] = useState<string | undefined>(() => localCalendarDayToUtcIso(new Date()));
+    const [preset, setPreset] = useState<"today" | "7d" | "30d">("7d");
     return (
-      <DatePicker
-        valueUtc={valueUtc}
-        onValueUtcChange={(next) => setValueUtc(next)}
-        id="portal-date-picker"
-      />
+      <DemoStack>
+        <DatePicker
+          valueUtc={valueUtc}
+          onValueUtcChange={(next) => setValueUtc(next)}
+          id="portal-date-picker"
+        />
+        <DateRangePresetPicker value={preset} onValueChange={(next) => setPreset(next)} />
+      </DemoStack>
     );
   },
   Alert: () => (
@@ -639,30 +645,42 @@ export const componentDemos: Record<string, React.ComponentType> = {
       </WideScreenGate>
     );
   },
-  ServerDataTable: () => (
-    <WideScreenGate title="ServerDataTable" description="Widen the viewport to preview the server table demo.">
-      <ServerDataTable
-        columns={[
-          { id: "name", header: "Name", cell: (row) => row.name },
-          { id: "status", header: "Status", cell: (row) => row.status }
+  ServerDataTable: () => {
+    const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+    const rows = [...tableRows].sort((left, right) =>
+      sortDirection === "asc" ? left.name.localeCompare(right.name) : right.name.localeCompare(left.name)
+    );
+    return (
+      <WideScreenGate title="ServerDataTable" description="Widen the viewport to preview the server table demo.">
+        <ServerDataTable
+          columns={[
+            { id: "name", header: "Name", sortable: { key: "name", label: "Name" }, cell: (row) => row.name },
+            { id: "status", header: "Status", cell: (row) => row.status }
+          ]}
+          rows={rows}
+          getRowId={(row) => row.id}
+          sortKey="name"
+          sortDirection={sortDirection}
+          onSortChange={(_, nextDirection) => setSortDirection(nextDirection)}
+          emptyMessage="No rows"
+        />
+      </WideScreenGate>
+    );
+  },
+  PopoverSelect: () => {
+    const [status, setStatus] = useState("all");
+    return (
+      <PopoverSelect
+        aria-label="Status filter"
+        value={status}
+        onValueChange={setStatus}
+        options={[
+          { value: "all", label: "All" },
+          { value: "ready", label: "Ready" }
         ]}
-        rows={tableRows}
-        getRowId={(row) => row.id}
-        emptyMessage="No rows"
       />
-    </WideScreenGate>
-  ),
-  PopoverSelect: () => (
-    <PopoverSelect
-      aria-label="Status filter"
-      value="all"
-      onValueChange={() => undefined}
-      options={[
-        { value: "all", label: "All" },
-        { value: "ready", label: "Ready" }
-      ]}
-    />
-  ),
+    );
+  },
   Separator: () => (
     <div className="flex max-w-sm items-center gap-3 text-sm">
       <span>Left</span>
@@ -714,6 +732,9 @@ error: missing token DEPLOY_TOKEN`}
           <PaginationLink href="#" isActive>
             1
           </PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationEllipsis />
         </PaginationItem>
         <PaginationItem>
           <PaginationNext href="#" />

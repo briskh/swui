@@ -121,6 +121,27 @@
         ]
       }
     },
+    "F-SWQT-0007": {
+      "kind": "feature",
+      "status": "delivered",
+      "path": ".sw/workflow/feature/F-SWQT-0007-html-living-standard-语义合规与原生元素迁移.json",
+      "deliveryComplete": true,
+      "title": "Feature F-SWQT-0007: HTML Living Standard 语义合规与原生元素迁移",
+      "stepPlan": {
+        "steps": [
+          "S-SWQT-0019",
+          "S-SWQT-0020",
+          "S-SWQT-0021",
+          "S-SWQT-0022"
+        ],
+        "computedOrder": [
+          "S-SWQT-0019",
+          "S-SWQT-0020",
+          "S-SWQT-0021",
+          "S-SWQT-0022"
+        ]
+      }
+    },
     "S-SWQT-0001": {
       "kind": "step",
       "status": "delivered",
@@ -329,6 +350,46 @@
       "title": "Step S-SWQT-0018: 生产 outside-in 身份与 Agent SpotCheck 验收",
       "validationSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; ui.swqt.net on public DNS (Tailscale split-DNS gap on audit host); partial SWS bearer",
       "deliveredAt": "2026-07-23T00:00:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0019": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0019-html-first-规则-静态审计与基础语义迁移.json",
+      "sourceFeatureId": "F-SWQT-0007",
+      "title": "Step S-SWQT-0019: HTML-first 规则、静态审计与基础语义迁移",
+      "validationSummary": "HTML standards/design/catalog passed; targeted Portal DOM/Axe browser 2/2 passed; typecheck baseline carried to final scope",
+      "deliveredAt": "2026-07-23T00:00:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0020": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0020-表单与选择控件原生语义迁移.json",
+      "sourceFeatureId": "F-SWQT-0007",
+      "title": "Step S-SWQT-0020: 表单与选择控件原生语义迁移",
+      "validationSummary": "HTML/catalog passed; native select/radio DOM keyboard Axe light+dark 2/2 passed; known type baseline carried to final scope",
+      "deliveredAt": "2026-07-23T00:00:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0021": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0021-数据表格语义模型与表头关联修复.json",
+      "sourceFeatureId": "F-SWQT-0007",
+      "title": "Step S-SWQT-0021: 数据表格语义模型与表头关联修复",
+      "validationSummary": "single-table source and light/dark DOM scope sticky sort Axe 2/2 passed; full matrix owned by S0022",
+      "deliveredAt": "2026-07-23T00:00:00.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0022": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0022-渲染态-html-conformance-回归验证与文档收口.json",
+      "sourceFeatureId": "F-SWQT-0007",
+      "title": "Step S-SWQT-0022: 渲染态 HTML conformance、回归验证与文档收口",
+      "validationSummary": "Offline source/authored/rendered HTML conformance and all Portal, consumer, package, design, catalog, documentation and workflow closure gates passed.",
+      "deliveredAt": "2026-07-24T00:00:00.000Z",
       "rootMount": false
     }
   },
@@ -551,8 +612,64 @@
       "from": "S-SWQT-0018",
       "to": "F-SWQT-0006",
       "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0019",
+      "to": "F-SWQT-0007",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0020",
+      "to": "S-SWQT-0019",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0020",
+      "to": "F-SWQT-0007",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0021",
+      "to": "S-SWQT-0019",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0021",
+      "to": "S-SWQT-0020",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0021",
+      "to": "F-SWQT-0007",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0022",
+      "to": "S-SWQT-0019",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0022",
+      "to": "S-SWQT-0020",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0022",
+      "to": "S-SWQT-0021",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0022",
+      "to": "F-SWQT-0007",
+      "rel": "sourceFeature"
     }
   ],
-  "generatedAt": "2026-07-23T09:58:09.266Z",
-  "contentHash": "sha256:25108071d32f2b5e88abc0b8ffe4060ccd0cf139975fb63c1b58820609e5e185"
+  "generatedAt": "2026-07-23T19:30:29.146Z",
+  "contentHash": "sha256:0ff907f63d723581dbc9f2c4c13d5050a06a6cbbc6a143370f320867e5e4eab3"
 }

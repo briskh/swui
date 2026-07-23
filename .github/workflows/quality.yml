@@ -20,6 +20,7 @@ jobs:
       - run: bun run sync-docs
       - run: bun run sync-docs:check
       - run: bun run check:catalog-export
+      - run: bun run check:html-standards
       - run: bun run --filter '@swqt/ui-consumer-example' typecheck
       - run: bun run --filter '@swqt/portal-example' typecheck
       - run: bun run --filter '@swqt/portal-example' test

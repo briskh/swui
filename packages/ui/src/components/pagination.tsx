@@ -4,7 +4,7 @@ import { cn } from "../lib/utils";
 import { Button, type ButtonProps } from "./button";
 
 export const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
-  <nav role="navigation" aria-label="pagination" className={cn("mx-auto flex w-full justify-center", className)} {...props} />
+  <nav aria-label="Pagination" className={cn("mx-auto flex w-full justify-center", className)} {...props} />
 );
 
 export const PaginationContent = React.forwardRef<HTMLUListElement, React.ComponentProps<"ul">>(({ className, ...props }, ref) => (
@@ -50,8 +50,8 @@ export const PaginationNext = ({ className, ...props }: React.ComponentProps<typ
 );
 
 export const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
-  <span aria-hidden="true" className={cn("flex h-control-md items-center justify-center px-4", className)} {...props}>
-    <MoreHorizontal className="size-4" />
+  <span className={cn("flex h-control-md items-center justify-center px-4", className)} {...props}>
+    <MoreHorizontal className="size-4" aria-hidden="true" />
     <span className="sr-only">More pages</span>
   </span>
 );

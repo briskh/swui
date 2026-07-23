@@ -9,7 +9,7 @@ import {
   type UtcDateRange
 } from "../lib/date";
 import { cn } from "../lib/utils";
-import { Button } from "./button";
+import { Button, buttonVariants } from "./button";
 import { Calendar } from "./calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
@@ -73,20 +73,37 @@ export type DateRangePresetPickerProps = {
 
 export function DateRangePresetPicker({ value = "7d", onValueChange, className }: DateRangePresetPickerProps) {
   const presets: DateRangePreset[] = ["today", "7d", "30d"];
+  const groupName = React.useId();
 
   return (
-    <div className={cn("flex flex-wrap gap-2", className)} role="group" aria-label="Date range presets">
-      {presets.map((preset) => (
-        <Button
-          key={preset}
-          type="button"
-          variant={value === preset ? "default" : "outline"}
-          onClick={() => onValueChange?.(preset, getUtcRangeForPreset(preset))}
-        >
-          {DATE_RANGE_PRESET_LABELS[preset]}
-        </Button>
-      ))}
-    </div>
+    <fieldset className={cn("flex flex-wrap gap-2 border-0 p-0", className)}>
+      <legend className="sr-only">Date range presets</legend>
+      {presets.map((preset) => {
+        const selected = value === preset;
+
+        return (
+          <label key={preset} className="relative cursor-pointer">
+            <input
+              type="radio"
+              name={groupName}
+              value={preset}
+              checked={selected}
+              className="peer sr-only"
+              onChange={() => onValueChange?.(preset, getUtcRangeForPreset(preset))}
+            />
+            <span
+              className={buttonVariants({
+                variant: selected ? "default" : "outline",
+                className:
+                  "peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
+              })}
+            >
+              {DATE_RANGE_PRESET_LABELS[preset]}
+            </span>
+          </label>
+        );
+      })}
+    </fieldset>
   );
 }
 

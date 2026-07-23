@@ -212,7 +212,7 @@ function highlightJson(code: string, keyPrefix: string) {
       parts.push(span(code.slice(lastIndex, match.index), tone.plain, `${keyPrefix}-gap-${lastIndex}`));
     }
     const token = match[0];
-    let className = tone.plain;
+    let className: string = tone.plain;
     if (/^"/.test(token)) {
       className = code[match.index + token.length] === ":" || code.slice(match.index + token.length).match(/^\s*:/) ? tone.attr : tone.string;
     } else if (token === "true" || token === "false" || token === "null") {
@@ -244,7 +244,7 @@ function highlightCss(code: string, keyPrefix: string) {
       parts.push(span(code.slice(lastIndex, match.index), tone.plain, `${keyPrefix}-gap-${lastIndex}`));
     }
     const token = match[0];
-    let className = tone.plain;
+    let className: string = tone.plain;
     if (token.startsWith("/*") || token.startsWith("--")) {
       className = tone.comment;
     } else if (token.startsWith('"') || token.startsWith("'")) {

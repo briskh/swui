@@ -1,0 +1,374 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0022",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0022: 渲染态 HTML conformance、回归验证与文档收口",
+  "sourceFeature": {
+    "id": "F-SWQT-0007",
+    "href": "../feature/F-SWQT-0007-html-living-standard-语义合规与原生元素迁移.json"
+  },
+  "owner": "swqt-maintainers",
+  "createdAt": "2026-07-23T19:07:05.475Z",
+  "updatedAt": "2026-07-23T19:07:05.475Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "用离线可复现的 rendered HTML conformance、现有 Axe/浏览器矩阵、类型/构建/打包和文档同步证明整库 HTML-first 改进完整且可持续。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "代表性 Portal/consumer rendered HTML conformance gate",
+          "source policy、typecheck、build、unit、Axe/browser、design/catalog、packed-consumer、sw doctor",
+          "package docs、研究报告、质量矩阵和例外记录收口",
+          "全导出面最终审计与未替换复合 widget 理由表"
+        ],
+        "outOfScope": [
+          "npm publish 或生产 deploy",
+          "与本 Feature 无关的 workflow-numbering 历史迁移",
+          "无关 source-highlight 基线问题，除非它阻断本 Feature 变更验证且可安全局部修复"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "sourceFeature": "F-SWQT-0007",
+        "researchEvidence": "R-SWQT-0001 + S0019/S0020/S0021 implementation records。",
+        "optionsTelos": "三层 gate：source policy + rendered conformance + accessibility/interaction。",
+        "projectCompanionRefs": "project-swqt-companion Validation handoff；CI quality workflow。"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": [
+          "S-SWQT-0019",
+          "S-SWQT-0020",
+          "S-SWQT-0021"
+        ],
+        "externalDependencies": [
+          "本地 Bun/Playwright 浏览器",
+          "离线 HTML validator 或固定依赖"
+        ],
+        "userDecisions": [
+          "migrate-forward + auto"
+        ],
+        "projectResources": [
+          ".github/workflows/quality.yml",
+          "docs/experience/local-validation-fast-paths.md",
+          "scripts",
+          "examples/*/browser.spec.mjs"
+        ],
+        "axisPositioning": "required: validation completeness + public package + standards freshness。",
+        "axisSplitSnapshot": "最终独立 Step 只做证据/门禁/文档闭环，不夹带新的高风险组件迁移。",
+        "temporaryArtifactLifecycle": "允许系统临时目录中的 rendered HTML 与 validator report；owner=S0022；永久摘要写入 workflow review/completion；完成后清理；不得删除仓库无关文件。"
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "testDrivenDesign": {
+          "testCaseDesign": "源规则正负用例；多代表路由 rendered HTML；所有改动组件 DOM/keyboard；Axe；visual/browser matrix；pack consumer。",
+          "acceptanceToTestMapping": "Feature 全部 10 条 AC 建立 requirement-audit 行，并引用具体命令/DOM/文件证据。",
+          "riskToTestLevelMapping": "standards conformance -> offline validator；public API -> typecheck/packed consumer；interaction/layout -> browser；docs -> sync/tree；workflow -> validation/ledger/doctor。",
+          "regressionTestDesign": "以变更前 audit findings 为负例，证明每项被 gate 捕获；对保留 custom widget 运行现有交互断言。",
+          "coverageAssessment": "target-driven",
+          "coverageMetric": "100% Feature acceptance criteria mapped to direct evidence",
+          "residualRisk": "真实 AT/浏览器组合不可穷尽；记录人工抽查和未替换复合控件理由。",
+          "followUp": "未来 WHATWG/ARIA/support-matrix 变化触发重新 audit。"
+        },
+        "explanationSyncBrief": "最终文档给维护者一条可执行准则、例外判断和验证命令，不复制完整标准表。",
+        "problemDefinition": "单次改代码不能证明整个导出库已梳理，也不能防止后续重新引入 HTML/ARIA 反模式。",
+        "requirementsDefinition": "离线可重复 conformance；全验收映射；项目规定 gates；准确区分新增回归与既有 baseline；docs/Agent surface 同步。",
+        "nonGoals": [
+          "不把远端 validator.nu 作为唯一 CI 依赖。",
+          "不以 Axe 绿替代 HTML conformance。",
+          "不声称未运行的外部/人工验证已通过。"
+        ],
+        "plainLanguage": {
+          "unclear": "为什么 Axe 已经通过还要 HTML validator。",
+          "why": "Axe 关注可访问性规则，不覆盖全部 HTML content model、obsolete attributes 和 author conformance。",
+          "outcome": "三类检查各自证明标准结构、可访问性和真实交互。",
+          "prose": "不是多跑一个工具，而是补齐 Axe 没有证明的那部分。"
+        },
+        "options": [
+          {
+            "id": "A",
+            "name": "离线 validator + source/browser gates",
+            "cuttingPoint": "CI 自包含、可复现。",
+            "impact": "稳定阻止标准回归。",
+            "risk": "新增 dev dependency 与维护成本。",
+            "validationCost": "高但可自动化。",
+            "rejectWhen": "validator 无法处理渲染 HTML。"
+          },
+          {
+            "id": "B",
+            "name": "CI 调远端 validator.nu",
+            "cuttingPoint": "依赖公网服务。",
+            "impact": "接近官方 checker 行为。",
+            "risk": "网络、限流与服务变化导致 flake。",
+            "validationCost": "中等。",
+            "rejectWhen": "CI 必须可离线复现。"
+          }
+        ],
+        "openDecisions": [],
+        "recommendedOption": {
+          "option": "A",
+          "rationale": "门禁必须可重复、不能依赖远端；远端 validator 仅作补充 outside-in 证据。",
+          "assumptionsFromFeature": "允许新增小型 dev validation dependency 或等价本地工具。",
+          "assumptionChanges": "若依赖过重，使用仓库脚本 + 固定 validator artifact，但不得降低验收覆盖。"
+        },
+        "granularity": {
+          "granularityDecision": "fine-enough",
+          "whySmallEnough": "所有动作共享 completion evidence/CI integration 不变量。",
+          "whyNotSplitFurther": "文档、validator、browser 和 packed consumer 是同一最终证明链，拆开会产生虚假完成。",
+          "splitSignals": "若 validator 集成需要独立基础设施或外部部署，拆为后续 Feature。",
+          "proposedChildSteps": "none"
+        },
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "依赖、证据矩阵、baseline 分类和退出标准明确。",
+          "missingItems": "none",
+          "partiallySafeToProceed": "N/A"
+        },
+        "forwardImpact": [
+          {
+            "target": ".github/workflows/quality.yml",
+            "impactType": "验收依赖变化",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0022",
+            "resolution": "加入 HTML standards gate。"
+          },
+          {
+            "target": "packages/ui Agent/docs",
+            "impactType": "公共使用契约",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0022",
+            "resolution": "同步 HTML-first 规则、例外和命令。"
+          }
+        ],
+        "profileNote": "full validation/public-contract Step。"
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "executionContract": {
+          "expectedChangeSurface": "Offline HTML conformance gate, Portal rendered-document/browser coverage, package guidance, CI wiring, and final repository-wide regression evidence.",
+          "acceptanceCriteria": "Authored and representative rendered HTML conform; migrated public components retain behavior; documentation and CI enforce the HTML-first rule; full Portal, consumer, packed-consumer, type, build, unit, MCP, catalog and design gates pass.",
+          "validationEvidenceRequired": "Programmatic html-validate output, full browser/type/build/unit/package matrices, workflow integrity, and review of any skip or baseline finding.",
+          "rollbackNotes": "The standards gate and documentation can be reverted independently, but semantic component migrations must only be reverted with equivalent standards evidence."
+        },
+        "implementationSummary": {
+          "whatChanged": "Pinned html-validate 11.5.6; added an offline source/document gate and CI command; added rendered-page conformance and migrated-component browser assertions; standardized authored documents; published HTML-first package guidance; updated Portal demos; fixed two source-highlight variable annotations to restore the pre-existing consumer typecheck baseline.",
+          "whySatisfiesStep": "The repository now has executable prevention at source and rendered-document layers plus complete behavioral and packaging regression evidence for the public library.",
+          "intentionallyUnchanged": "Complex widgets without behaviorally equivalent native controls remain custom; the token/foundation contract, product routing, and component visual language are unchanged."
+        },
+        "changeSurface": {
+          "codeAnchors": "scripts/check-html-standards.mjs; scripts/html-validate-config.mjs; examples/portal/browser.spec.mjs; examples/portal/src/demos/content.tsx; packages/ui/src/lib/source-highlight.tsx.",
+          "configAnchors": "package.json; bun.lock; .github/workflows/quality.yml; authored index.html documents.",
+          "documentationAnchors": "packages/ui/docs/HTML-STANDARDS.md; packages/ui/AGENTS.md; README.md; DO-AND-DONT.md; COMPONENT-CATALOG.md; R-SWQT-0001.",
+          "dataOrMigrationAnchors": "No data migration; exported PopoverSelect prop surface gains native select attributes and Progress drops its Radix peer."
+        },
+        "executionNotes": {
+          "decisionsDuringImplementation": "Use html-validate's programmatic API because its v11 CLI calls fs.globSync unavailable in the repository Node runtime; suppress style/security/a11y heuristics that are not HTML conformance rules; validate representative complete rendered documents in both themes.",
+          "deviationsFromBrief": "The pre-existing source-highlight type failures were repaired with explicit string annotations so the full required consumer typecheck could produce usable evidence.",
+          "risksDiscovered": "An initial MCP smoke failure was caused by a parallel Portal build rewriting generated files; the serial rerun passed. Validator.nu CSS observations were non-structural and are not promoted to HTML failures."
+        },
+        "validationReferences": [
+          {
+            "commandOrEvidence": "bun run check:html-standards; representative rendered-document browser grep",
+            "result": "passed",
+            "notes": "8 component contracts, 2 authored documents, and light/dark rendered pages."
+          },
+          {
+            "commandOrEvidence": "design-contract; catalog-export; Portal/consumer typecheck, unit, build and MCP smoke",
+            "result": "passed",
+            "notes": "Catalog reports 88 catalog exports, 309 package exports and 88 demos; MCP smoke passed on the serial rerun."
+          },
+          {
+            "commandOrEvidence": "Portal full browser; consumer full browser; verify:packed-consumer",
+            "result": "passed",
+            "notes": "Portal 56 passed; consumer 34 passed with 6 declared skips; packed nested and workspace-hoisted layouts each 34 passed with the same 6 declared skips."
+          },
+          {
+            "commandOrEvidence": "sync-docs:check; npm publish audit; git diff --check; sw doctor; workflow layout/closure/lifecycle",
+            "result": "passed",
+            "notes": "Publish audit has 0 blocking findings and 4 reviewed URL warnings; workflow numbering retains legacy policy findings."
+          }
+        ],
+        "blocker": {
+          "state": "resolved",
+          "reason": "All product, conformance, packaging, documentation and workflow closure gates required by this Step pass.",
+          "owner": "swqt-maintainers",
+          "recoveryTrigger": "A supported browser, consumer package layout or future HTML/ARIA rule invalidates a native migration or checker configuration.",
+          "residualRisk": "Real assistive-technology navigation and very large ServerDataTable datasets remain appropriate manual/future performance checks."
+        },
+        "projectFactUpdateCandidates": "not-needed: new commands and rules are recorded in root scripts, CI, package guidance and the research record; no companion path/config fact changed."
+      }
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewProfile": "guardrail-high-risk",
+        "decision": "reviewed",
+        "guardedRiskDomain": "Public component semantics/API, full rendered documents, browser interaction/layout, package consumption, and durable CI governance.",
+        "requirementsStatus": "implemented",
+        "gateOutcomes": [
+          {
+            "gate": "scope/state/research/brief",
+            "result": "passed",
+            "evidence": "S0022 is implemented; R-SWQT-0001 uses current WHATWG/ARIA sources; implementation stays within HTML semantics, conformance, regression and documentation scope.",
+            "counterEvidenceChecked": "yes: inspected retained Radix/custom widgets and neutral containers for false-positive native migrations; their behavior or lack of stronger semantics justifies retention.",
+            "residualRisk": "Future platform additions may change the native-equivalence decision."
+          },
+          {
+            "gate": "HTML/API/behavior validation",
+            "result": "passed",
+            "evidence": "Offline source/document and rendered-document checks pass; full Portal/consumer/browser/type/build/unit/MCP/catalog/design/packed matrices pass.",
+            "counterEvidenceChecked": "yes: checked redundant roles, hidden accessible ellipsis text, fake links, split tables, missing th scope, custom simple selection, Progress API/ref behavior, sort and native radio/select keyboard behavior.",
+            "residualRisk": "Real AT combinations and very large data tables are not exhaustively automated."
+          },
+          {
+            "gate": "document/provenance/SSOT/promotion",
+            "result": "passed",
+            "evidence": "Package Agent/docs, research record, CI, scripts, Portal demos/tests and stable workflow records agree; sync-docs, publish audit, workflow layout/closure/lifecycle and sw doctor pass.",
+            "counterEvidenceChecked": "yes: html-validate style/security/a11y heuristics were separated from normative conformance; six browser skips are declared project-matrix skips; four publish warnings are reviewed public/internal documentation URLs with zero blockers.",
+            "residualRisk": "workflow-numbering remains a known repository policy baseline and is outside this Feature."
+          }
+        ],
+        "testSufficiency": "passed: all ten Feature acceptance directions map to direct source, rendered, interaction, package or governance evidence.",
+        "conditionalGates": "DDL not-applicable; no ignored product test failure; initial parallel MCP smoke contamination was reproduced as generated-file race and passed serially.",
+        "projectCompanionFactDisposition": "not-needed(no companion path/command/config fact changed; public rules live in package Agent/docs and root CI scripts).",
+        "ssotImpactPrerequisite": "passed: component sources are authoritative; docs and executable gates project the same HTML-first contract.",
+        "promotionDisposition": "ready",
+        "residualRisk": "Manual AT sampling and performance/load testing for very large ServerDataTable instances remain sensible release practices, not blockers.",
+        "followUp": "Re-audit when WHATWG/ARIA in HTML or the supported-browser policy changes."
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-24",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0022-渲染态-html-conformance-回归验证与文档收口.json",
+        "validationSummary": "Offline source/authored/rendered HTML conformance, all Portal/consumer/type/build/unit/browser/package/design/catalog/docs gates, sw doctor and workflow closure passed.",
+        "testCaseSummary": "Portal 56 passed; consumer 34 passed/6 declared skips; packed nested and hoisted layouts each 34 passed/6 declared skips; 8 source contracts, 2 documents and representative light/dark rendered pages conform.",
+        "coverageSummary": "target-driven: all ten Feature acceptance criteria mapped to direct source, DOM, keyboard, Axe, package or governance evidence.",
+        "rootMount": "Stable Layout v3 Step path plus @swqt/ui HTML-STANDARDS guidance and R-SWQT-0001.",
+        "ssotImpact": "implemented",
+        "ssotRefs": [
+          "packages/ui/src/components",
+          "packages/ui/docs/HTML-STANDARDS.md",
+          "scripts/check-html-standards.mjs",
+          ".github/workflows/quality.yml",
+          "docs/research/R-SWQT-0001-html-living-standard-audit.md"
+        ],
+        "sourceWorkflowRefs": [
+          "F-SWQT-0007",
+          "S-SWQT-0019",
+          "S-SWQT-0020",
+          "S-SWQT-0021",
+          "S-SWQT-0022"
+        ],
+        "evidenceInvalidationTrigger": "WHATWG/ARIA authoring-rule change, supported-browser policy change, public component API redesign, or standards gate configuration change.",
+        "documentTreeMount": "implemented",
+        "archiveSynchronization": "implemented(stable Layout v3 path; ledger/registry regenerated)"
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "guardrail-high-risk",
+        "requirementAudit": [
+          {
+            "requirement": "HTML-first policy and traceable exported-library audit",
+            "status": "implemented",
+            "evidence": "R-SWQT-0001, HTML-STANDARDS.md, package Agent/README/Do-and-Don't/catalog guidance, eight executable source contracts.",
+            "risk": "Living standards can evolve.",
+            "followUp": "Refresh on WHATWG/ARIA/support-matrix changes."
+          },
+          {
+            "requirement": "Native basic semantics for progress, navigation, breadcrumb, search, spinner/loading and table headers",
+            "status": "implemented",
+            "evidence": "S0019 source changes plus source and light/dark Portal browser assertions.",
+            "risk": "Consumer CSS targeting old internal DOM may need migration.",
+            "followUp": "Public native DOM contract is documented; no silent React prop break observed."
+          },
+          {
+            "requirement": "Native form selection and justified complex-widget boundary",
+            "status": "implemented",
+            "evidence": "S0020 fieldset/legend/radio and select/option migration; Combobox exception documented; keyboard/Axe/type/browser gates pass.",
+            "risk": "Native select styling varies by platform.",
+            "followUp": "Prefer native behavior unless product requirements establish non-equivalence."
+          },
+          {
+            "requirement": "Single semantic data table and header association",
+            "status": "implemented",
+            "evidence": "S0021 single table/thead/tbody, default scope=col, sticky/sort source and browser proof.",
+            "risk": "Very large datasets and real AT navigation are not exhaustively automated.",
+            "followUp": "Manual/performance sampling at release scale."
+          },
+          {
+            "requirement": "Offline conformance, full regression, packaging and durable CI governance",
+            "status": "implemented",
+            "evidence": "html-validate 11.5.6 programmatic gate, rendered-page tests, full Portal/consumer/packed matrices, CI, docs sync, publish audit and sw doctor.",
+            "risk": "html-validate CLI is incompatible with the current Node fs API surface.",
+            "followUp": "Keep the tested programmatic API path or revisit after runtime/tool upgrades."
+          }
+        ],
+        "workflowRunAudit": "S0019-S0022 each completed implementation, review and promotion; final incremental ledger and delivered registry are regenerated.",
+        "intermediateDocumentStateAudit": "Research, Feature, four stable Step documents, review records, registry and completion evidence are connected; temporary fixtures are removed after promotion.",
+        "documentGovernanceAudit": "Authoritative component source, package guidance, CI scripts, Portal examples/tests and research conclusion agree on the native-equivalence rule.",
+        "ssotProjectionAudit": "Runtime source is authoritative; documentation and executable source/rendered checks project the same contract with no shadow state.",
+        "temporaryArtifactLifecycle": "Repository-local workflow fixture files are deleted after controlled writes; system temporary reports are non-authoritative.",
+        "acceptanceToAuthorityPropagation": "All ten Feature criteria propagate from standards research to component source, Portal demo/rendered DOM, checks/CI, package docs and workflow records.",
+        "closingTriad": [
+          {
+            "question": "Any unimplemented or unregistered Feature work?",
+            "answer": "No.",
+            "evidence": "S0019-S0022 requirement audits and delivered records cover all acceptance criteria."
+          },
+          {
+            "question": "Are registry, ledger, Feature breakdown and stable paths aligned?",
+            "answer": "Yes after final lifecycle sync.",
+            "evidence": "Delivered registry emit, incremental ledger and Feature lifecycle synchronization are final handoff gates."
+          },
+          {
+            "question": "Is behavior verified and every exception/skip classified?",
+            "answer": "Yes.",
+            "evidence": "All product gates pass; 6 browser skips are declared non-applicable matrix cases; 4 publish warnings are reviewed URLs; workflow numbering is an explicit legacy policy baseline."
+          }
+        ],
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Standards, API, behavior, package, documentation and workflow evidence are all present.",
+          "closingSelfAuditConsistency": "No claimed test is unrun; the initial parallel MCP race is separately recorded with a passing serial rerun.",
+          "landingChecklistOutcome": "no-capture-needed",
+          "pluginSkillFriction": "html-validate CLI/runtime mismatch required the supported programmatic API; workflow-numbering policy does not model multi-Step Feature numbering.",
+          "terminologyCandidates": "native-equivalence exception test",
+          "reusableWorkflowPattern": "source contracts + representative rendered conformance + accessibility/interaction matrix",
+          "retrospectiveHandoff": "Consider improving workflow numbering for one Feature with multiple independently numbered Steps."
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "Re-audit when standards or supported browsers materially change; otherwise none."
+      }
+    }
+  },
+  "validationSummary": "Offline source/authored/rendered HTML conformance and all Portal, consumer, package, design, catalog, documentation and workflow closure gates passed."
+}

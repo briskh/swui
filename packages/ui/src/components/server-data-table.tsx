@@ -317,24 +317,6 @@ export function ServerDataTable<TData, TSortKey extends string = string>({
               {summary}
             </p>
           ) : null}
-          <div className="shrink-0 overflow-y-auto pr-4 scrollbar-gutter-stable">
-            <table className="w-full caption-bottom border-collapse text-sm table-fixed">
-              <ServerDataTableColGroup columns={columns} />
-              <TableHeader className="bg-card [&_th]:bg-card">
-                <TableRow>
-                  {columns.map((column) => (
-                    <ServerDataTableHeaderCell
-                      key={column.id}
-                      column={column}
-                      sortKey={sortKey}
-                      sortDirection={sortDirection}
-                      onSortChange={onSortChange}
-                    />
-                  ))}
-                </TableRow>
-              </TableHeader>
-            </table>
-          </div>
           <div className={cn("relative min-w-0", useViewportBodyHeight && "min-h-0 flex-1")}>
             <div
               ref={scrollRef}
@@ -346,6 +328,19 @@ export function ServerDataTable<TData, TSortKey extends string = string>({
               <div className="pr-4">
                 <table className="w-full caption-bottom border-collapse text-sm table-fixed">
                   <ServerDataTableColGroup columns={columns} />
+                  <TableHeader className="sticky top-0 z-10 bg-card [&_th]:bg-card">
+                    <TableRow>
+                      {columns.map((column) => (
+                        <ServerDataTableHeaderCell
+                          key={column.id}
+                          column={column}
+                          sortKey={sortKey}
+                          sortDirection={sortDirection}
+                          onSortChange={onSortChange}
+                        />
+                      ))}
+                    </TableRow>
+                  </TableHeader>
                   <TableBody>
                     {rows.length > 0 ? (
                       rows.map((row) => (

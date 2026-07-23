@@ -24,7 +24,14 @@ export const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttribut
 TableRow.displayName = "TableRow";
 
 export const TableHead = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLTableCellElement>>(
-  ({ className, ...props }, ref) => <th ref={ref} className={cn("h-11 px-4 text-left align-middle text-xs font-semibold uppercase text-muted-foreground", className)} {...props} />
+  ({ className, scope = "col", ...props }, ref) => (
+    <th
+      ref={ref}
+      scope={scope}
+      className={cn("h-11 px-4 text-left align-middle text-xs font-semibold uppercase text-muted-foreground", className)}
+      {...props}
+    />
+  )
 );
 TableHead.displayName = "TableHead";
 

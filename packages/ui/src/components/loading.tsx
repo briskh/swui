@@ -32,7 +32,7 @@ export function SkeletonStack({
   ...props
 }: React.ComponentProps<"div"> & { rows?: string[] }) {
   return (
-    <div className={cn("grid gap-2", className)} aria-label="Loading skeleton example" {...props}>
+    <div className={cn("grid gap-2", className)} aria-hidden="true" {...props}>
       {rows.map((row, index) => (
         <Skeleton key={`${row}-${index}`} className={row} />
       ))}

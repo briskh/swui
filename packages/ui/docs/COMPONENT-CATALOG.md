@@ -47,7 +47,7 @@ Import from `@swqt/ui` or `@swqt/ui/<name>`.
 | `Table` (+ parts) | Static markup. |
 | `DataTable` | Client TanStack table; wraps `WideScreenGate`. |
 | `ServerDataTable` | Server search/sort/cursor; viewport fill default on. |
-| `PopoverSelect` | Short enum header filters (with ServerDataTable). |
+| `PopoverSelect` | Native `select` for short enum filters (including ServerDataTable); use Combobox when search is required. |
 | `Separator` `ScrollArea` `Pagination` | Layout / scan. |
 | `Accordion` `Collapsible` | Progressive disclosure. |
 | `Avatar` | Fixture/entity display. |

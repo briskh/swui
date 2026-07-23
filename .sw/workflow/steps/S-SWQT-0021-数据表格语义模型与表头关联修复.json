@@ -1,0 +1,337 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0021",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0021: 数据表格语义模型与表头关联修复",
+  "sourceFeature": {
+    "id": "F-SWQT-0007",
+    "href": "../feature/F-SWQT-0007-html-living-standard-语义合规与原生元素迁移.json"
+  },
+  "owner": "swqt-maintainers",
+  "createdAt": "2026-07-23T19:07:04.427Z",
+  "updatedAt": "2026-07-23T19:07:04.427Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "恢复 DataTable/ServerDataTable 的单一原生 table model、列头 scope 与可验证的表头—数据单元格关联。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "TableHead 默认 scope=col 且允许 override",
+          "DataTable 列头语义回归",
+          "ServerDataTable 从 header/body 双 table 合并为单 table，保留滚动、固定布局、排序、筛选和 load-more"
+        ],
+        "outOfScope": [
+          "虚拟化框架替换",
+          "TanStack Table API 重写",
+          "视觉 token 或产品数据模型变更"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "sourceFeature": "F-SWQT-0007",
+        "researchEvidence": "R-SWQT-0001；WHATWG table content model；ARIA/HTML native semantics。",
+        "optionsTelos": "Option A + single-table semantic model。",
+        "projectCompanionRefs": "project-swqt-companion；wide-screen/data-dense browser gates。"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": [
+          "S-SWQT-0019",
+          "S-SWQT-0020"
+        ],
+        "externalDependencies": [
+          "CSS position: sticky on thead/th",
+          "existing scrollbar-gutter-stable utilities"
+        ],
+        "userDecisions": [
+          "migrate-forward + auto"
+        ],
+        "projectResources": [
+          "packages/ui/src/components/table.tsx",
+          "packages/ui/src/components/data-table.tsx",
+          "packages/ui/src/components/server-data-table.tsx"
+        ],
+        "axisPositioning": "required: HTML content model + accessibility association + dense-table layout/performance。",
+        "axisSplitSnapshot": "独立高风险 Step，因为表格结构、scroll/sticky 和 public DOM 共享不可拆验收，但与基础语义/表单迁移不同。",
+        "temporaryArtifactLifecycle": "not-applicable"
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "testDrivenDesign": {
+          "testCaseDesign": "单一 table/thead/tbody 数量；th scope；row/cell counts；sort button；filter/load-more；scroll/sticky layout；Axe。",
+          "acceptanceToTestMapping": "Feature AC5/AC8/AC9 -> component DOM assertions + ServerDataTable browser scenarios + typecheck/build。",
+          "riskToTestLevelMapping": "HTML table model -> DOM contract；sticky/scroll -> browser E2E；public props -> typecheck；accessibility -> Axe + role queries。",
+          "regressionTestDesign": "验证 columns widths、header filter、summary overlay、empty state、load-more sentinel、sorting direction 与 viewport body height。",
+          "coverageAssessment": "target-driven",
+          "coverageMetric": "all ServerDataTable branches already demonstrated plus new single-table invariant",
+          "residualRisk": "真实屏幕阅读器的复杂表格导航与超大数据性能需人工抽查。",
+          "followUp": "S0022 运行全矩阵并记录 residual risk。"
+        },
+        "explanationSyncBrief": "组件文档明确 table model 和 scope 规则；不把布局原因当作拆分语义表的理由。",
+        "problemDefinition": "ServerDataTable 将列头和数据放在两个独立 table，浏览器无法天然建立 th/td 关联；基础 TableHead 也不提供明确 scope。",
+        "requirementsDefinition": "单一 table 包含 colgroup/thead/tbody；通过 sticky header 保留体验；列头默认 scope=col；现有排序/筛选/滚动/加载行为不退化。",
+        "nonGoals": [
+          "不引入 grid role 模拟原生 table。",
+          "不重写数据获取或分页协议。"
+        ],
+        "plainLanguage": {
+          "unclear": "页面上看起来对齐的两个表是否等价于一个表。",
+          "why": "视觉对齐不建立语义关联，辅助技术把它们视为两个无关表格。",
+          "outcome": "同一个 table 同时拥有列头和数据，CSS 负责 sticky/scroll。",
+          "prose": "让表格在 DOM 中也确实是一张表。"
+        },
+        "options": [
+          {
+            "id": "A",
+            "name": "单一 table + sticky thead",
+            "cuttingPoint": "结构正确，布局交给 CSS。",
+            "impact": "原生表头关联恢复。",
+            "risk": "滚动条宽度和 sticky 背景需回归。",
+            "validationCost": "高。",
+            "rejectWhen": "浏览器矩阵证明 sticky 无法满足现有体验。"
+          },
+          {
+            "id": "B",
+            "name": "保留双 table，用 id/headers 手工关联",
+            "cuttingPoint": "布局不变，人工跨表引用。",
+            "impact": "部分 AT 可能关联，但文档仍是两个 table。",
+            "risk": "复杂、脆弱且不符合原生 content model 意图。",
+            "validationCost": "高。",
+            "rejectWhen": "单 table 可行。"
+          }
+        ],
+        "openDecisions": [],
+        "recommendedOption": {
+          "option": "A",
+          "rationale": "单一 table 是最直接、最强的 HTML 语义和浏览器关联证据。",
+          "assumptionsFromFeature": "现有 CSS 能用 sticky header 保持体验。",
+          "assumptionChanges": "若性能回归，先优化 CSS/contain，不退回语义分裂。"
+        },
+        "granularity": {
+          "granularityDecision": "kept-coarse-with-reason",
+          "whySmallEnough": "TableHead 默认与 ServerDataTable 合并共享表头关联不变量和同一 E2E 证据。",
+          "whyNotSplitFurther": "分开会出现基础 scope 已改但主数据表仍语义错误的不可验收中间态。",
+          "splitSignals": "若合并触发独立虚拟化/性能架构变更，则拆出后续 Feature。",
+          "coarseJustification": "需要原子地证明 semantic model + dense layout。",
+          "proposedChildSteps": "none"
+        },
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "结构目标、CSS 策略、行为分支与测试映射明确。",
+          "missingItems": "none",
+          "partiallySafeToProceed": "N/A"
+        },
+        "forwardImpact": [
+          {
+            "target": "S-SWQT-0022",
+            "impactType": "验收依赖变化",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0022",
+            "resolution": "全矩阵验证 table count/scope/sticky/scroll/Axe。"
+          }
+        ],
+        "profileNote": "full guardrail-high-risk public DOM/layout Step。"
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "executionContract": {
+          "expectedChangeSurface": "ServerDataTable semantic DOM/layout, TableHead default scope, Portal sortable demo/browser proof, HTML source gate.",
+          "acceptanceCriteria": "One table contains colgroup/thead/tbody; th defaults scope=col; sticky header, sort state and existing scroll/load-more hooks remain.",
+          "validationEvidenceRequired": "Source table-count invariant, rendered table count/scope/sticky/sort/Axe, catalog/design/type baseline.",
+          "rollbackNotes": "Single structural patch can be reverted, but split tables must not return without standards evidence."
+        },
+        "implementationSummary": {
+          "whatChanged": "Removed the separate header table and moved sticky TableHeader into the same scrollable table as TableBody; retained shared colgroup, scrollRef, sentinel/load-more and more-indicator; Portal demo now exercises controlled sorting; source gate rejects a second table.",
+          "whySatisfiesStep": "Browser and assistive technology now receive one native table tree with directly associated column headers and data cells.",
+          "intentionallyUnchanged": "Data fetching, row identity, infinite-scroll protocol, viewport sizing and visual token system are unchanged."
+        },
+        "changeSurface": {
+          "codeAnchors": "packages/ui/src/components/server-data-table.tsx、table.tsx；scripts/check-html-standards.mjs；examples/portal/src/demos/content.tsx；examples/portal/browser.spec.mjs。",
+          "configAnchors": "N/A。",
+          "documentationAnchors": "Existing Table/ServerDataTable catalog contract remains accurate.",
+          "dataOrMigrationAnchors": "Rendered DOM contracts change from two table elements to one."
+        },
+        "executionNotes": {
+          "decisionsDuringImplementation": "Use sticky thead inside the existing overflow container; preserve a single colgroup and all body/load-more descendants.",
+          "deviationsFromBrief": "None.",
+          "risksDiscovered": "Custom bodyMaxHeightClassName now constrains the combined header+body scroll box; full visual matrix must confirm acceptable row visibility."
+        },
+        "validationReferences": [
+          {
+            "commandOrEvidence": "bun run check:html-standards",
+            "result": "passed",
+            "notes": "8 component contracts + 2 documents; ServerDataTable single-table invariant included."
+          },
+          {
+            "commandOrEvidence": "bun run --cwd examples/portal test:browser --grep 'ServerDataTable keeps headers'",
+            "result": "passed",
+            "notes": "light/dark 2/2; one table, two scope=col headers, sticky thead, ascending->descending sorting, Axe."
+          },
+          {
+            "commandOrEvidence": "prior catalog/design gates + current Vite build from Playwright webServer",
+            "result": "passed",
+            "notes": "Catalog parity and Portal production build remain green."
+          },
+          {
+            "commandOrEvidence": "portal/consumer typecheck baseline",
+            "result": "blocked",
+            "notes": "Known source-highlight literal-type errors only; no diagnostic in touched table files."
+          }
+        ],
+        "blocker": {
+          "state": "resolved",
+          "reason": "Direct structural, sort and Axe proof passed.",
+          "owner": "swqt-maintainers",
+          "recoveryTrigger": "Full viewport/browser or packed consumer shows sticky/scroll regression.",
+          "residualRisk": "Row viewport height and sticky paint across all projects await S0022 full matrix."
+        },
+        "projectFactUpdateCandidates": "not-needed: no new command/path/config; public DOM fact is captured by component source, browser test, and HTML standards gate."
+      }
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewProfile": "guardrail-high-risk",
+        "decision": "reviewed",
+        "guardedRiskDomain": "Public table DOM semantics plus sticky/scroll/sort behavior.",
+        "requirementsStatus": "implemented",
+        "gateOutcomes": [
+          {
+            "gate": "scope/state/research/brief",
+            "result": "passed",
+            "evidence": "Change is limited to the single-table structure, source invariant and representative sortable demo/test; Step=implemented; standards evidence and full brief present.",
+            "counterEvidenceChecked": "yes: inspected data fetching, row identity, sentinel, scrollRef and viewport hooks; they remain wired and unchanged.",
+            "residualRisk": "Combined header/body scroll height can alter visible row count."
+          },
+          {
+            "gate": "semantic/layout validation",
+            "result": "passed",
+            "evidence": "Source gate rejects split tables; light/dark browser test proves one table, scope=col, sticky thead, sorting and zero Axe violations.",
+            "counterEvidenceChecked": "yes: checked for a second table, missing scope, detached header and sort-state regression; none observed.",
+            "residualRisk": "Full viewport/screenshot/infinite-scroll matrix deferred to S0022."
+          },
+          {
+            "gate": "document/provenance/SSOT/promotion",
+            "result": "passed",
+            "evidence": "Source Feature link, stable path and implementation evidence complete; no new project command/path fact; public behavior is guarded in source/test.",
+            "counterEvidenceChecked": "yes: known type baseline does not involve table files; no stale split-table documentation found.",
+            "residualRisk": "No standalone coverage artifact; accepted target-driven structural/browser coverage."
+          }
+        ],
+        "testSufficiency": "passed",
+        "conditionalGates": "DDL not-applicable；sibling repeated skip rollup deferred to final Step.",
+        "projectCompanionFactDisposition": "not-needed(no project command/path/config change).",
+        "ssotImpactPrerequisite": "passed: runtime source/test are the current table contract; no separate project SSOT requires update.",
+        "promotionDisposition": "ready",
+        "residualRisk": "Full visual/scroll/load-more rollup remains S0022.",
+        "followUp": "Run complete Portal/consumer browser matrix and packed consumer in S0022."
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-23",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0021-数据表格语义模型与表头关联修复.json",
+        "validationSummary": "Single-table source gate + light/dark DOM/scope/sticky/sort/Axe 2/2 passed；full matrix follows in S0022.",
+        "testCaseSummary": "One native table, two scoped headers, sticky thead and controlled sort transition verified.",
+        "coverageSummary": "target-driven structural and browser coverage；no standalone coverage artifact.",
+        "rootMount": "Stable workflow Step path plus package Table/ServerDataTable catalog entry.",
+        "ssotImpact": "no-ssot-impact",
+        "ssotRefs": [
+          "packages/ui/src/components/server-data-table.tsx",
+          "examples/portal/browser.spec.mjs"
+        ],
+        "sourceWorkflowRefs": [
+          "F-SWQT-0007",
+          "S-SWQT-0021"
+        ],
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented",
+        "archiveSynchronization": "implemented(stable Layout v3 path)"
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "guardrail-high-risk",
+        "requirementAudit": [
+          {
+            "requirement": "Headers and rows share one native table",
+            "status": "implemented",
+            "evidence": "Source invariant and rendered DOM count/scope proof.",
+            "risk": "Sticky/scroll paint across all viewports.",
+            "followUp": "S0022 full browser matrix."
+          },
+          {
+            "requirement": "Sort, scroll and load-more contract preserved",
+            "status": "implemented",
+            "evidence": "Sort browser proof; scrollRef/sentinel/load-more source wiring unchanged.",
+            "risk": "Infinite-load scenario not separately exercised in the small catalog demo.",
+            "followUp": "Existing full suites/packed consumer plus future dedicated fixture if regression appears."
+          }
+        ],
+        "workflowRunAudit": "Designed guardrail-high-risk path completed through direct structural and user-visible evidence.",
+        "intermediateDocumentStateAudit": "Implementation/review/registry/completion records and stable path synchronized by workflow tools.",
+        "documentGovernanceAudit": "No current-fact doc change required; source/test/Feature records are connected.",
+        "ssotProjectionAudit": "no-ssot-impact beyond runtime contract itself; authoritative source and regression test agree.",
+        "temporaryArtifactLifecycle": "Closure fixture deleted after promotion; unrelated files preserved.",
+        "acceptanceToAuthorityPropagation": "Table semantics acceptance propagated to component, source gate, Portal demo/test and workflow; full suite remains future-only S0022.",
+        "closingTriad": [
+          {
+            "question": "Any unimplemented or unregistered Step work?",
+            "answer": "No.",
+            "evidence": "Requirement audit; full-suite rollup is separately registered S0022."
+          },
+          {
+            "question": "Are registry, ledger and stable path aligned?",
+            "answer": "Yes.",
+            "evidence": "finalDocumentEntry and controlled workflow writes."
+          },
+          {
+            "question": "Is behavior verified and residual risk handled?",
+            "answer": "Yes.",
+            "evidence": "Source + light/dark browser/Axe proof and explicit S0022 rollup."
+          }
+        ],
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Step-local semantic/layout contract is implemented and reviewed.",
+          "closingSelfAuditConsistency": "Future full matrix is explicitly owned by S0022.",
+          "landingChecklistOutcome": "no-capture-needed",
+          "pluginSkillFriction": "none",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "single semantic table with CSS sticky layout",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "Execute S-SWQT-0022 final conformance and regression rollup."
+      }
+    }
+  },
+  "validationSummary": "single-table source and light/dark DOM scope sticky sort Axe 2/2 passed; full matrix owned by S0022"
+}

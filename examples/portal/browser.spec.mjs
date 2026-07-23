@@ -1,11 +1,23 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { HtmlValidate } from "html-validate";
+import { htmlConformanceConfig } from "../../scripts/html-validate-config.mjs";
+
+const htmlValidator = new HtmlValidate(htmlConformanceConfig);
 
 async function expectNoWcagAaViolations(page) {
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
     .analyze();
   expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
+}
+
+async function expectConformingHtml(page, filename) {
+  const report = await htmlValidator.validateString(await page.content(), filename);
+  const messages = report.results.flatMap((result) =>
+    result.messages.map((message) => `${message.ruleId} ${message.line}:${message.column} ${message.message}`)
+  );
+  expect(messages, messages.join("\n")).toEqual([]);
 }
 
 const conventionRoutes = [
@@ -212,4 +224,76 @@ test("form field demo renders labeled input", async ({ page }) => {
   await page.goto("/components/forms/formfield");
   await expect(page.getByText("Username")).toBeVisible();
   await expect(page.getByRole("textbox")).toBeVisible();
+});
+
+test("HTML-first primitives expose native semantics without redundant roles", async ({ page }) => {
+  await page.goto("/components/feedback/progress");
+  const progress = page.getByRole("progressbar", { name: "Upload progress" });
+  await expect(progress).toHaveJSProperty("tagName", "PROGRESS");
+  await expect(progress).toHaveAttribute("value", "45");
+  await expect(progress).toHaveAttribute("max", "100");
+
+  await page.goto("/components/forms/searchinput");
+  const search = page.getByRole("searchbox", { name: "Search" });
+  await expect(search).toHaveAttribute("type", "search");
+  await expect(search).not.toHaveAttribute("role");
+
+  await page.goto("/components/navigation-primitives/breadcrumb");
+  const currentPage = page.getByLabel("Breadcrumb demo").locator('[aria-current="page"]');
+  await expect(currentPage).toHaveJSProperty("tagName", "SPAN");
+  await expect(currentPage).not.toHaveAttribute("role");
+  await expect(currentPage).not.toHaveAttribute("aria-disabled");
+
+  await page.goto("/components/data-display/pagination");
+  await expect(page.getByRole("navigation", { name: "Pagination" })).not.toHaveAttribute("role");
+  await expect(page.getByText("More pages")).toHaveCount(1);
+  await expectNoWcagAaViolations(page);
+});
+
+test("simple selection controls use native form elements", async ({ page }) => {
+  await page.goto("/components/data-display/popoverselect");
+  const select = page.getByRole("combobox", { name: "Status filter" });
+  await expect(select).toHaveJSProperty("tagName", "SELECT");
+  await expect(select.getByRole("option")).toHaveCount(2);
+  await select.selectOption("ready");
+  await expect(select).toHaveValue("ready");
+
+  await page.goto("/components/forms/datepicker");
+  const presets = page.getByRole("group", { name: "Date range presets" });
+  const sevenDays = presets.getByRole("radio", { name: "Last 7 days" });
+  await expect(sevenDays).toBeChecked();
+  await presets.getByText("Last 30 days", { exact: true }).click();
+  await expect(presets.getByRole("radio", { name: "Last 30 days" })).toBeChecked();
+  await presets.getByRole("radio", { name: "Last 30 days" }).press("ArrowLeft");
+  await expect(sevenDays).toBeChecked();
+  await page.waitForTimeout(250);
+  await expectNoWcagAaViolations(page);
+});
+
+test("ServerDataTable keeps headers and rows in one native table", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/components/data-display/serverdatatable");
+  const demo = page.getByLabel("ServerDataTable demo");
+  await expect(demo.getByRole("table")).toHaveCount(1);
+  const table = demo.getByRole("table");
+  await expect(table.getByRole("columnheader")).toHaveCount(2);
+  await expect(table.locator('th[scope="col"]')).toHaveCount(2);
+  await expect(table.locator("thead")).toHaveClass(/sticky/);
+
+  const sort = table.getByRole("button", { name: "Sort by Name, ascending" });
+  await sort.click();
+  await expect(table.getByRole("button", { name: "Sort by Name, descending" })).toBeVisible();
+  await expectNoWcagAaViolations(page);
+});
+
+test("representative rendered documents pass offline HTML conformance", async ({ page }) => {
+  for (const route of [
+    "/",
+    "/components/feedback/progress",
+    "/components/forms/datepicker",
+    "/components/data-display/serverdatatable"
+  ]) {
+    await page.goto(route);
+    await expectConformingHtml(page, `${route.replaceAll("/", "-") || "home"}.html`);
+  }
 });

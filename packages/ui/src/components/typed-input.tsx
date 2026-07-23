@@ -48,7 +48,6 @@ export const SearchInput = assignDisplayName(
         ref={ref}
         type="search"
         enterKeyHint="search"
-        role="searchbox"
         className="pr-10"
         {...props}
       />

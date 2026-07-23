@@ -1,0 +1,335 @@
+{
+  "schemaVersion": 6,
+  "kind": "feature",
+  "featureId": "F-SWQT-0007",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Feature F-SWQT-0007: HTML Living Standard 语义合规与原生元素迁移",
+  "owner": "swqt-maintainers",
+  "createdAt": "2026-07-23T19:01:05.111Z",
+  "updatedAt": "2026-07-23T19:01:05.111Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "background": {
+      "sectionStatus": "done",
+      "items": {
+        "trigger": "团队提出 HTML-first 准则：凡标准 HTML element/attribute 能完整表达行为时必须使用标准能力，并要求先查最新标准，再梳理和改进全项目，重点覆盖导出的 @swqt/ui。",
+        "affectedParties": "@swqt/ui 消费者、组件维护者、Portal/fixture 使用者、依赖 DOM/无障碍语义的浏览器与辅助技术。",
+        "whyNow": "当前已有 Axe 与设计契约门禁，但没有 HTML conformance/semantic source gate；公开组件中已确认存在冗余 ARIA、可替换的 role 模拟和分裂 table model。",
+        "bullets": [
+          "以 WHATWG HTML Living Standard 作为持续更新的 HTML 真源，而不是固定 HTML 版本号。",
+          "以 ARIA in HTML 约束 role/aria-* 与原生语义的关系。",
+          "研究与只读审计见 docs/research/R-SWQT-0001-html-living-standard-audit.md。"
+        ]
+      }
+    },
+    "problem-statement": {
+      "sectionStatus": "done",
+      "items": {
+        "coreProblem": "组件库没有把“标准 HTML 优先”变成可执行契约；现有导出面混合了正确原生元素、必要的复合 ARIA widget，以及本可由原生元素/属性表达的模拟或冗余语义，且 Axe 不能证明 HTML 内容模型和 author conformance。",
+        "nonGoals": [
+          "不机械地把所有 div/span 替换成 section/article；中性容器在没有更强语义时仍正确。",
+          "不在缺乏行为等价证据时一次性移除所有 Radix 复合组件。",
+          "不自动 npm publish 或生产部署。",
+          "不借本 Feature 修复既有 workflow numbering 与 source-highlight 类型基线问题。"
+        ]
+      }
+    },
+    "context-constraints": {
+      "sectionStatus": "done",
+      "items": {
+        "projectConstraints": "仓库是共享 UI 库而非产品 shell；重点是 packages/ui 公共导出，同时同步 Portal、consumer fixture、Agent docs 和质量门禁。",
+        "technicalConstraints": "React 19 + TypeScript；必须保留复杂控件的键盘、焦点、命名和受控状态行为。原生替换必须满足语义与交互，而非只改变标签名。",
+        "runtimeConstraints": "以当前支持浏览器能可靠实现的标准能力为准；新颖但尚不能满足组件契约的 dialog/popover/customizable-select 能力不强制替换成熟实现。",
+        "compatibilityConstraints": "changePosture=migrate-forward；优先保持组件名、常见 props 和调用方式。无法避免的 ref/prop 类型变化必须显式做版本化 API 决策。",
+        "documentationConstraints": "规范结论必须链接 WHATWG/W3C 真源；禁止把易过时的完整元素表复制为项目 SSOT。",
+        "projectCompanionRefs": "project-swqt-companion；验证包含 design/catalog contract、package/Portal/consumer typecheck/build/test/browser、packed consumer 与 sw doctor。",
+        "notes": "Axis positioning required: stage=discourse; application=frontend-library; contract=public-HTML-API; evidence=standards+rendered-DOM+interaction. axisSplitSignals=semantic correctness, public compatibility, validation coverage；保留单 Feature，因为目标、推荐方案和验收口径单一，设计阶段再拆高内聚 Steps。"
+      }
+    },
+    "research-evidence": {
+      "sectionStatus": "done",
+      "items": {
+        "summary": "2026-07-24 检索 WHATWG HTML Living Standard 与 W3C ARIA in HTML，并扫描 54 个导出组件模块、两个 HTML 入口和示例。入口文档具备 doctype/lang/charset/viewport，未发现 obsolete authoring attributes；但已确认 Progress role 模拟、nav/searchbox 冗余 role、BreadcrumbPage 假 link、分页隐藏可访问文本、Spinner 重复播报、th 缺省 scope、ServerDataTable 分裂表头/表体、DateRangePresetPicker 非原生单选组、PopoverSelect 简单选择仍自建 listbox，以及缺少 HTML conformance gate。",
+        "sources": [
+          "https://html.spec.whatwg.org/multipage/ — WHATWG HTML Living Standard；retrievedAt=2026-07-24；living standard；refreshTrigger=相关 authoring 规则或支持浏览器政策变化。",
+          "https://html.spec.whatwg.org/multipage/indices.html#elements-3 与 #attributes-3；元素、属性、内容模型索引；retrievedAt=2026-07-24。",
+          "https://html.spec.whatwg.org/multipage/obsolete.html；obsolete/non-conforming features；retrievedAt=2026-07-24。",
+          "https://www.w3.org/TR/html-aria/；ARIA in HTML author conformance；retrievedAt=2026-07-24；refreshTrigger=新 Recommendation/errata。",
+          "https://html.spec.whatwg.org/multipage/form-elements.html#the-progress-element；原生 progress 语义与 value/max。",
+          "docs/research/R-SWQT-0001-html-living-standard-audit.md；源代码审计矩阵、候选方案、TELOS 与已知基线。",
+          "bun run check:catalog-export：passed，88 catalog exports / 308 package exports；retrievedAt=2026-07-24。",
+          "consumer typecheck baseline：blocked by 9 个既有 packages/ui/src/lib/source-highlight.tsx literal-type errors；retrievedAt=2026-07-24。"
+        ]
+      }
+    },
+    "options-telos": {
+      "sectionStatus": "done",
+      "items": {
+        "options": [
+          {
+            "id": "A",
+            "name": "标准优先、兼容迁移",
+            "fitWhen": "目标是系统性提升当前库的 HTML 合规性，同时不牺牲复杂控件行为和公共 API 可迁移性。",
+            "benefits": "替换确切原生等价物、移除冗余/冲突 ARIA、修复 table model，并用 source/rendered/interaction 三层门禁防回归。",
+            "costs": "需要逐组件审查、补 DOM/键盘测试、维护有限例外表。",
+            "risks": "Progress、PopoverSelect、DateRangePresetPicker 与 ServerDataTable 的 DOM/ref/样式可能出现兼容回归。",
+            "notWhen": "明确要求不顾兼容性全面重写所有复合 widget。",
+            "telos": {
+              "technical": "原生语义优先且保留无原生等价物的成熟复合行为。",
+              "economic": "中等一次性成本，长期通过自动门禁降低审计与回归成本。",
+              "legal": "依据公开标准改进 author conformance 与无障碍风险，不复制受限内容。",
+              "operational": "可拆成可回归的组件/表格/治理 Steps，现有 Axe 与浏览器矩阵可复用。",
+              "strategic": "形成团队可持续的 HTML-first 组件准则。"
+            }
+          },
+          {
+            "id": "B",
+            "name": "全面采用最新原生平台控件",
+            "fitWhen": "允许大版本破坏和重新定义浏览器支持矩阵，并愿意重写 dialog/popover/select/checkbox 等复合控件。",
+            "benefits": "最大化原生元素与浏览器行为。",
+            "costs": "高重写、兼容、视觉和交互回归成本。",
+            "risks": "部分最新原生能力尚不能完整覆盖现有 API、焦点与组合行为；可能为了标签纯度损失可用性。",
+            "notWhen": "要求 migrate-forward 或当前周期需控制公共 API 风险。",
+            "telos": {
+              "technical": "原生比例最高，但行为等价性最弱。",
+              "economic": "成本最高，且可能重复成熟组件库已解决的问题。",
+              "legal": "标准方向正确，但兼容退化会产生新的可访问性风险。",
+              "operational": "需要新的浏览器/辅助技术矩阵与大版本发布。",
+              "strategic": "适合作为未来单独的大版本议题，不适合本次整库维护。"
+            }
+          },
+          {
+            "id": "C",
+            "name": "只加文档和静态规则",
+            "fitWhen": "当前只允许治理改动，禁止触及公开组件 DOM。",
+            "benefits": "风险和成本最低，可阻止部分新增债务。",
+            "costs": "当前已确认的语义问题保持不变。",
+            "risks": "不能满足用户提出的“梳理和改进整个项目”。",
+            "notWhen": "要求真实改善导出库。",
+            "telos": {
+              "technical": "只有前向约束，没有当前状态修复。",
+              "economic": "短期便宜、长期保留债务。",
+              "legal": "既有 author conformance 风险未收敛。",
+              "operational": "易落地但证据不完整。",
+              "strategic": "不足以成为本 Feature 的最终方案。"
+            }
+          }
+        ],
+        "recommendedOption": "A",
+        "recommendationRationale": "A 最符合“能用标准就必须用”的原始目标，也符合共享库对交互正确性和 migrate-forward 的责任；B 把“最新”误解成无条件替换，C 则没有完成改进。",
+        "discussionTopic": "确认以兼容迁移方式实施 HTML-first 全项目改进，并选择后续自动推进方式。",
+        "clarification": "用户已明确目标和重点范围；当前无阻塞性业务问题。需用户完成首次 discourse -> design handoff 确认。"
+      }
+    },
+    "decision-summary": {
+      "sectionStatus": "done",
+      "items": {
+        "decision": "用户确认 Option A：标准优先、兼容迁移，并选择 auto 完成五阶段交付。",
+        "rationale": "标准原生元素优先，但“能使用”必须包含语义、交互、浏览器与公共契约等价性。",
+        "userConfirmation": "confirmedOption=A; q05HandoffSelection=auto; workflowMode=auto",
+        "changePosture": "migrate-forward",
+        "changePostureSource": "user-confirmed",
+        "postureChoiceMechanism": "markdown-fallback",
+        "postureChoiceAt": "2026-07-23T19:06:11.000Z",
+        "recommendedPostureId": "migrate-forward",
+        "userPostureSelection": "migrate-forward"
+      }
+    },
+    "acceptance-criteria": {
+      "sectionStatus": "done",
+      "items": {
+        "criteria": [
+          "建立并文档化 HTML-first 规则：标准元素/属性优先；中性容器与复合 widget 例外必须基于语义/行为等价性，而不是偏好。",
+          "对 packages/ui 全部导出组件与 Portal/consumer fixture 完成可追溯审计；每个已确认 P0 项被修复，或有链接标准和行为差异的明确例外。",
+          "Progress 使用原生 progress[value][max] 或经设计证明确无兼容迁移路径；Pagination/SearchInput 不再声明冗余 implicit role；BreadcrumbPage 不再用 span 模拟 disabled link；分页 ellipsis 的可访问文本可被读取。",
+          "Spinner 在已有可见 loading 文本旁不重复播报，独立使用仍可获得明确可访问名称。",
+          "TableHead 默认提供 scope=col 且可覆写；ServerDataTable 的 header/body 位于同一语义 table，或以等价可验证的 headers/id 关联证明拆分模型符合标准。",
+          "DateRangePresetPicker 使用原生 fieldset/legend + radio，或提供选择状态与完整键盘行为的标准依据；简单非搜索 PopoverSelect 优先迁移为 native select，复杂 Combobox 等保留并记录无原生等价理由。",
+          "两个 HTML 文档及代表性渲染页面无 obsolete/non-conforming authoring features，并通过 HTML conformance checker。",
+          "新增 source policy gate 覆盖冗余 role、neutral-element fake control、obsolete attrs 和 table association 回归；保留并通过 Axe、键盘/交互、类型、构建、browser、packed-consumer、design/catalog contract 验证。",
+          "公共组件 DOM/ref/props 兼容差异有测试与迁移说明；未明确接受的破坏性变化不得静默落地。",
+          "主集成面：@swqt/ui source -> Portal catalog demo -> rendered DOM -> conformance/Axe/interaction gates。首个可演示闭环：Progress/Breadcrumb/Search/Pagination 的原生语义改进在 Portal 渲染并通过 source + browser gate。tracerScan: T-hit=T1,T4; N-hit=none; weak>=2=Yes。"
+        ],
+        "observableSuccess": "消费者继续使用现有主路径组件 API，在浏览器 DOM/无障碍树中看到正确原生元素和状态；仓库门禁能拒绝重新引入已定义的 HTML/ARIA 反模式，复杂控件行为不退化。",
+        "testabilityRisks": "HTML conformance checker可能依赖网络或 Java runtime；部分辅助技术差异不能由 Axe 完全证明。对这些路径需固定 checker 版本/离线策略、Playwright DOM/键盘断言和必要人工残余风险记录。"
+      }
+    },
+    "step-breakdown": {
+      "sectionStatus": "done",
+      "items": {
+        "steps": [
+          {
+            "stepId": "S-SWQT-0019",
+            "title": "HTML-first 规则、静态审计与基础语义迁移",
+            "phase": "foundation",
+            "dependencies": "none；Feature execution-wave head",
+            "materialized": true,
+            "summary": "建立 HTML-first 规则与静态门禁，并迁移 Progress、Pagination、Breadcrumb、Spinner、SearchInput、SkeletonStack、TableHead 的基础语义。",
+            "status": "delivered",
+            "notes": "完整 brief/readiness=Yes；以 WHATWG HTML Living Standard 与 ARIA in HTML 为规范依据。",
+            "boundary": "导出组件的基础语义、静态审计脚本与项目文档；不处理复合选择器和 ServerDataTable 结构。",
+            "purpose": "先固化可持续执行的标准，再消除高置信度的冗余或伪语义。",
+            "href": "../steps/S-SWQT-0019-html-first-规则-静态审计与基础语义迁移.json",
+            "acceptanceHooks": [
+              "Feature HTML-first policy",
+              "Feature native element and attribute audit"
+            ],
+            "validationFocus": [
+              "source standards gate",
+              "component typecheck",
+              "browser accessibility assertions"
+            ],
+            "intakeRefs": [],
+            "propagationTargets": [
+              "S-SWQT-0020",
+              "S-SWQT-0021",
+              "S-SWQT-0022"
+            ],
+            "propagationFiles": {},
+            "executionOwner": "swqt-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0020",
+            "title": "表单与选择控件原生语义迁移",
+            "phase": "native-forms",
+            "dependencies": "dependsOn S-SWQT-0019",
+            "materialized": true,
+            "summary": "将日期范围预设迁移为原生 radio/fieldset，将简单 PopoverSelect 迁移为原生 select/option，并保留确有必要的 Combobox 复合模式。",
+            "status": "delivered",
+            "notes": "完整 brief/readiness=Yes；migrate-forward，不为旧 DOM 结构保留兼容层。",
+            "boundary": "日期范围预设和简单枚举选择控件；不把搜索型 Combobox 强行降级为 select。",
+            "purpose": "让浏览器直接承担选择状态、键盘行为和表单语义。",
+            "href": "../steps/S-SWQT-0020-表单与选择控件原生语义迁移.json",
+            "acceptanceHooks": [
+              "Feature native form controls",
+              "Feature justified exception boundary"
+            ],
+            "validationFocus": [
+              "radio group keyboard behavior",
+              "native select behavior",
+              "public export compatibility"
+            ],
+            "intakeRefs": [],
+            "propagationTargets": [
+              "S-SWQT-0022"
+            ],
+            "propagationFiles": {},
+            "executionOwner": "swqt-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0021",
+            "title": "数据表格语义模型与表头关联修复",
+            "phase": "table-semantics",
+            "dependencies": "dependsOn S-SWQT-0019",
+            "materialized": true,
+            "summary": "为 TableHead 提供默认列作用域，并把 ServerDataTable 的分裂表头/表体合并为单一原生 table 语义树。",
+            "status": "delivered",
+            "notes": "完整 brief/readiness=Yes；保持排序、筛选、滚动加载和粘性表头行为。",
+            "boundary": "Table 与 ServerDataTable 的语义结构；不重写数据获取、排序或虚拟化策略。",
+            "purpose": "恢复表头与数据单元格的浏览器原生关联。",
+            "href": "../steps/S-SWQT-0021-数据表格语义模型与表头关联修复.json",
+            "acceptanceHooks": [
+              "Feature table header association",
+              "Feature single semantic table"
+            ],
+            "validationFocus": [
+              "single table DOM",
+              "column header scope",
+              "sorting and infinite-scroll regression"
+            ],
+            "intakeRefs": [],
+            "propagationTargets": [
+              "S-SWQT-0022"
+            ],
+            "propagationFiles": {},
+            "executionOwner": "swqt-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0022",
+            "title": "渲染态 HTML conformance、回归验证与文档收口",
+            "phase": "verification",
+            "dependencies": "dependsOn S-SWQT-0019,S-SWQT-0020,S-SWQT-0021",
+            "materialized": true,
+            "summary": "增加离线、可重复的渲染态 HTML conformance 验证，执行全量质量门并把规范、例外与审计结论写入文档。",
+            "status": "delivered",
+            "notes": "完整 brief/readiness=Yes；远端 validator.nu 仅作研究证据，CI 使用离线门禁。",
+            "boundary": "HTML 标准验证、回归证据和文档；不引入依赖网络服务的 CI。",
+            "purpose": "把一次性审计转化为持续可执行的工程约束。",
+            "href": "../steps/S-SWQT-0022-渲染态-html-conformance-回归验证与文档收口.json",
+            "acceptanceHooks": [
+              "Feature rendered HTML conformance",
+              "Feature validation and documentation closure"
+            ],
+            "validationFocus": [
+              "offline rendered HTML validation",
+              "design contract",
+              "typecheck and test suites",
+              "catalog export parity",
+              "sw doctor"
+            ],
+            "intakeRefs": [],
+            "propagationTargets": [
+              "F-SWQT-0007 lifecycle",
+              "project-swqt-companion"
+            ],
+            "propagationFiles": {},
+            "executionOwner": "swqt-maintainers"
+          }
+        ]
+      }
+    },
+    "open-questions": {
+      "sectionStatus": "done",
+      "items": {
+        "questions": [],
+        "risks": [
+          "原生 progress/select/radio 的跨浏览器样式需要专门视觉与交互回归。",
+          "ServerDataTable 从双 table 合并为单 table 可能影响 sticky header、滚动条对齐与性能。",
+          "现有 workflow-numbering 33 个 findings 与 source-highlight 类型错误会污染全量验收，必须记录 baseline 而不能误报为本 Feature 回归。"
+        ],
+        "resolvedClarifications": [
+          {
+            "topic": "HTML 最新规范指什么",
+            "conclusion": "使用 WHATWG HTML Living Standard 当前面，而不是寻找固定 HTML 6 版本。",
+            "evidence": [
+              "https://html.spec.whatwg.org/multipage/",
+              "https://www.w3.org/TR/html-aria/"
+            ]
+          },
+          {
+            "topic": "是否替换全部 Radix",
+            "conclusion": "否；只有原生元素能完整满足语义与行为时才替换，复合 widget 必须保留或证明迁移等价。",
+            "evidence": [
+              "docs/research/R-SWQT-0001-html-living-standard-audit.md"
+            ]
+          }
+        ]
+      }
+    },
+    "handoff-gate": {
+      "sectionStatus": "done",
+      "items": {
+        "confirmedInto": "auto",
+        "progress": "用户已确认 Option A、migrate-forward 与 auto；标准调研、导出面只读审计、候选方案、TELOS、验收口径和 baseline 风险完整，阻塞性业务开放问题为零。",
+        "validationGate": "Research evidence present；catalog export passed；workflow numbering baseline failed with 33 legacy findings；consumer typecheck baseline failed in source-highlight.tsx。",
+        "doNotClobber": "保留用户/既有工作树改动；不要把 numbering/source-highlight baseline 当作本 Feature 自动修复授权。",
+        "nextAction": "进入 design，物化高内聚 Steps；随后 implement -> review -> promote 自动推进。",
+        "informationComplete": "Yes",
+        "nextHandoff": "design",
+        "references": [
+          "docs/research/R-SWQT-0001-html-living-standard-audit.md",
+          "sws://skills/discourse",
+          "sws://skills/workflow-auto",
+          "sws://skills/design",
+          "projectCompanionAnchor: project-swqt-companion"
+        ]
+      }
+    }
+  },
+  "closingStepId": "S-SWQT-0022"
+}

@@ -15,8 +15,12 @@
     "portal:dev": "bun run --filter '@swqt/portal-example' dev",
     "portal:build": "bun run --filter '@swqt/portal-example' build",
     "check:design-contract": "node scripts/check-design-contract.mjs",
+    "check:html-standards": "node scripts/check-html-standards.mjs",
     "check:catalog-export": "node scripts/check-catalog-export.mjs",
     "check:npm-publish-audit": "node scripts/audit-npm-publish.mjs",
     "verify:packed-consumer": "node scripts/verify-packed-consumer.mjs"
+  },
+  "devDependencies": {
+    "html-validate": "11.5.6"
   }
 }

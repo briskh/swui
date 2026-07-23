@@ -22,7 +22,7 @@ export const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, React.Componen
 BreadcrumbLink.displayName = "BreadcrumbLink";
 
 export const BreadcrumbPage = React.forwardRef<HTMLSpanElement, React.ComponentProps<"span">>(({ className, ...props }, ref) => (
-  <span ref={ref} role="link" aria-disabled="true" aria-current="page" className={cn("font-normal text-foreground", className)} {...props} />
+  <span ref={ref} aria-current="page" className={cn("font-normal text-foreground", className)} {...props} />
 ));
 BreadcrumbPage.displayName = "BreadcrumbPage";
 
@@ -34,7 +34,7 @@ export const BreadcrumbSeparator = ({ children, className, ...props }: React.Com
 BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
 
 export const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
-  <span role="presentation" aria-hidden="true" className={cn("flex size-control-sm items-center justify-center", className)} {...props}>
+  <span className={cn("flex size-control-sm items-center justify-center", className)} {...props}>
     <MoreHorizontal className="size-4" aria-hidden="true" />
     <span className="sr-only">More</span>
   </span>
