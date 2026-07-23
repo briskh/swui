@@ -126,7 +126,7 @@ export function DataTable<TData, TValue>({
             className="max-w-sm"
           />
         ) : null}
-        <div className="w-full overflow-hidden rounded-md border">
+        <div className="w-full overflow-hidden rounded-md border border-border">
           <Table className="table-fixed">
             <colgroup>
               {leafColumns.map((column) => {
@@ -191,7 +191,7 @@ export function DataTableColumnHeader<TData, TValue>({ column, title }: { column
     <Button
       type="button"
       variant="ghost"
-      className="-ml-3 h-control-compact px-2 text-xs font-semibold uppercase tracking-wide"
+      className="-ml-3 font-semibold uppercase tracking-wide"
       onClick={() => column.toggleSorting(sorted === "asc")}
     >
       {title}

@@ -17,7 +17,7 @@ export const ContextMenuContent = React.forwardRef<
   <ContextMenuPrimitive.Portal>
     <ContextMenuPrimitive.Content
       ref={ref}
-      className={cn("z-50 min-w-44 overflow-hidden rounded-md border bg-card p-1 text-card-foreground shadow-md", className)}
+      className={cn("z-50 min-w-44 overflow-hidden rounded-md border border-border bg-card p-1 text-card-foreground shadow-md", className)}
       {...props}
     />
   </ContextMenuPrimitive.Portal>
@@ -126,7 +126,7 @@ export const ContextMenuSubContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ContextMenuPrimitive.SubContent
     ref={ref}
-    className={cn("z-50 min-w-44 overflow-hidden rounded-md border bg-card p-1 text-card-foreground shadow-md", className)}
+    className={cn("z-50 min-w-44 overflow-hidden rounded-md border border-border bg-card p-1 text-card-foreground shadow-md", className)}
     {...props}
   />
 ));

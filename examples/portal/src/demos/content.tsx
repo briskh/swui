@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import {
@@ -32,6 +32,7 @@ import {
   Calendar,
   Card,
   CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
   ChartContainer,
@@ -65,6 +66,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  EmailInput,
   Empty,
   EmptyDescription,
   EmptyHeader,
@@ -85,12 +87,15 @@ import {
   Label,
   LoadingButtonContent,
   LoadingState,
+  NumberInput,
   Pagination,
   PaginationContent,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  PasskeyDialog,
+  PasswordInput,
   Popover,
   PopoverContent,
   PopoverSelect,
@@ -100,6 +105,7 @@ import {
   RadioGroup,
   RadioGroupItem,
   ScrollArea,
+  SearchInput,
   Select,
   SelectContent,
   SelectItem,
@@ -124,6 +130,7 @@ import {
   Skeleton,
   SkeletonStack,
   Slider,
+  SourceCode,
   Spinner,
   StaleDataRefresh,
   Switch,
@@ -134,9 +141,12 @@ import {
   TableHeader,
   TableRow,
   Tabs,
+  TableOfContents,
+  useScrollSpy,
   TabsContent,
   TabsList,
   TabsTrigger,
+  TelInput,
   Textarea,
   ThemeControl,
   Toaster,
@@ -146,6 +156,9 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  Tty,
+  TtyLine,
+  UrlInput,
   WideScreenGate,
   WideScreenPlaceholder,
   cn,
@@ -169,6 +182,45 @@ const chartData = [
   { month: "Jan", value: 12 },
   { month: "Feb", value: 18 }
 ];
+
+function CardCompositionExample({
+  label,
+  title,
+  subtitle,
+  actions = false,
+  children = "Card body content."
+}: {
+  label: string;
+  title?: string;
+  subtitle?: string;
+  actions?: boolean;
+  children?: ReactNode;
+}) {
+  const showHeader = Boolean(title);
+
+  return (
+    <div className="grid gap-2">
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <Card>
+        {showHeader ? (
+          <CardHeader>
+            <CardTitle>{title}</CardTitle>
+            {subtitle ? <p className="text-sm text-muted-foreground">{subtitle}</p> : null}
+          </CardHeader>
+        ) : null}
+        <CardContent>{children}</CardContent>
+        {actions ? (
+          <CardFooter>
+            <Button variant="outline" size="sm">
+              Cancel
+            </Button>
+            <Button size="sm">Confirm</Button>
+          </CardFooter>
+        ) : null}
+      </Card>
+    </div>
+  );
+}
 
 function OverlayDemo({
   title,
@@ -195,6 +247,41 @@ function OverlayDemo({
   );
 }
 
+function PasskeyDialogDemo() {
+  const [open, setOpen] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  return (
+    <>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Open passkey dialog
+      </Button>
+      <PasskeyDialog
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setError(null);
+          setPending(false);
+        }}
+        title="Passkey verification required"
+        description="Delete credential"
+        guidance="Confirm with your passkey to continue this sensitive action."
+        error={error}
+        pending={pending}
+        onVerify={() => {
+          setPending(true);
+          setError(null);
+          window.setTimeout(() => {
+            setPending(false);
+            setOpen(false);
+          }, 1200);
+        }}
+      />
+    </>
+  );
+}
+
 export const componentDemos: Record<string, React.ComponentType> = {
   Button: () => (
     <DemoStack>
@@ -209,6 +296,7 @@ export const componentDemos: Record<string, React.ComponentType> = {
       <DemoSection title="Sizes">
         <Button size="compact">Compact</Button>
         <Button size="sm">Small</Button>
+        <Button>Default</Button>
         <Button size="lg">Large</Button>
         <Button size="icon" aria-label="Add">
           +
@@ -219,10 +307,50 @@ export const componentDemos: Record<string, React.ComponentType> = {
   Label: () => (
     <div className="grid max-w-sm gap-2">
       <Label htmlFor="portal-label">Email</Label>
-      <Input id="portal-label" placeholder="you@example.com" />
+      <EmailInput id="portal-label" placeholder="you@example.com" />
     </div>
   ),
-  Input: () => <Input aria-label="Sample input" placeholder="Search components" className="max-w-sm" />,
+  Input: () => (
+    <DemoStack>
+      <DemoSection title="Text">
+        <Input aria-label="Sample input" placeholder="Plain text" className="max-w-sm" />
+      </DemoSection>
+      <DemoSection title="Typed inputs">
+        <div className="grid w-full max-w-sm gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="demo-email">Email</Label>
+            <EmailInput id="demo-email" placeholder="you@example.com" />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="demo-password">Password</Label>
+            <PasswordInput id="demo-password" placeholder="Enter password" />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="demo-search">Search</Label>
+            <SearchInput id="demo-search" className="max-w-sm" placeholder="Search components" />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="demo-url">URL</Label>
+            <UrlInput id="demo-url" placeholder="https://ui.swqt.net" />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="demo-tel">Phone</Label>
+            <TelInput id="demo-tel" placeholder="+1 555 0100" />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="demo-number">Amount</Label>
+            <NumberInput id="demo-number" placeholder="0.00" step="0.01" />
+          </div>
+        </div>
+      </DemoSection>
+    </DemoStack>
+  ),
+  EmailInput: () => <EmailInput aria-label="Email" placeholder="you@example.com" className="max-w-sm" />,
+  PasswordInput: () => <PasswordInput aria-label="Password" placeholder="Enter password" className="max-w-sm" />,
+  SearchInput: () => <SearchInput aria-label="Search" className="max-w-sm" placeholder="Search..." />,
+  UrlInput: () => <UrlInput aria-label="URL" placeholder="https://ui.swqt.net" className="max-w-sm" />,
+  TelInput: () => <TelInput aria-label="Phone" placeholder="+1 555 0100" className="max-w-sm" />,
+  NumberInput: () => <NumberInput aria-label="Amount" placeholder="0.00" step="0.01" className="max-w-sm" />,
   Textarea: () => <Textarea aria-label="Sample textarea" placeholder="Notes" className="max-w-md" />,
   FormField: () => (
     <FormField label="Username" hint="Visible to maintainers only.">
@@ -384,7 +512,7 @@ export const componentDemos: Record<string, React.ComponentType> = {
   InlineNotice: () => <InlineNotice>Synced from SSOT</InlineNotice>,
   EmptyState: () => <EmptyState>No packages matched your filter.</EmptyState>,
   LoadingState: () => <LoadingState label="Loading catalog" />,
-  Skeleton: () => <Skeleton className="h-10 w-48" />,
+  Skeleton: () => <Skeleton className="h-control-md w-48" />,
   Spinner: () => <Spinner aria-label="Loading demo" />,
   Progress: () => <Progress value={45} aria-label="Upload progress" className="max-w-sm" />,
   Empty: () => (
@@ -456,17 +584,28 @@ export const componentDemos: Record<string, React.ComponentType> = {
   StaleDataRefresh: () => <StaleDataRefresh label="Registry cache is stale." detail="Showing last synced metadata." />,
   ProgressBlock: () => <ProgressBlock value={60} label="Publishing packages" status="In progress" />,
   Card: () => (
-    <Card className="max-w-md">
-      <CardHeader>
-        <CardTitle>Card title</CardTitle>
-        <p className="text-sm text-muted-foreground">Supporting copy for the panel.</p>
-      </CardHeader>
-      <CardContent>Card body content.</CardContent>
-      <div className="flex justify-end gap-2 border-t px-4 py-3">
-        <Button variant="outline">Cancel</Button>
-        <Button>Confirm</Button>
-      </div>
-    </Card>
+    <DemoStack>
+      <section className="grid gap-3">
+        <h3 className="text-sm font-medium text-foreground">Composition</h3>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <CardCompositionExample
+            label="Title · subtitle · actions"
+            title="Deploy staging"
+            subtitle="Review changes before promoting the build."
+            actions
+          />
+          <CardCompositionExample
+            label="Title · subtitle"
+            title="Package summary"
+            subtitle="Registry metadata and install guidance."
+          />
+          <CardCompositionExample label="Title · actions" title="Delete workspace" actions />
+          <CardCompositionExample label="Title only" title="Recent activity" />
+          <CardCompositionExample label="Actions only" actions />
+          <CardCompositionExample label="Body only" />
+        </div>
+      </section>
+    </DemoStack>
   ),
   Table: () => (
     <Table>
@@ -540,6 +679,31 @@ export const componentDemos: Record<string, React.ComponentType> = {
       </div>
     </ScrollArea>
   ),
+  SourceCode: () => (
+    <SourceCode
+      className="max-w-xl"
+      language="tsx"
+      value={`import { Button } from "@swqt/ui";
+
+export function Example() {
+  return <Button variant="passkey">Verify</Button>;
+}`}
+    />
+  ),
+  TtyLine: () => <TtyLine className="max-w-xl" value="$ sw doctor --project . --fix" />,
+  Tty: () => (
+    <Tty
+      className="max-w-xl"
+      value={`$ bun run check:design-contract
+Design-contract check passed.
+
+$ sw doctor --project . --fix
+All checks passed.
+
+$ deploy --env staging --dry-run
+error: missing token DEPLOY_TOKEN`}
+    />
+  ),
   Pagination: () => (
     <Pagination>
       <PaginationContent>
@@ -583,6 +747,7 @@ export const componentDemos: Record<string, React.ComponentType> = {
       <p className="text-sm text-muted-foreground">Dialog body content.</p>
     </OverlayDemo>
   ),
+  PasskeyDialog: () => <PasskeyDialogDemo />,
   AlertDialog: () => (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -659,6 +824,51 @@ export const componentDemos: Record<string, React.ComponentType> = {
       <HoverCardContent className="text-sm">Design system package overview.</HoverCardContent>
     </HoverCard>
   ),
+  TableOfContents: () => {
+    const [scrollRoot, setScrollRoot] = useState<HTMLDivElement | null>(null);
+    const items = [
+      { id: "toc-demo-overview", title: "Overview", level: 2 as const },
+      { id: "toc-demo-setup", title: "Setup", level: 2 as const },
+      { id: "toc-demo-details", title: "Details", level: 2 as const },
+      { id: "toc-demo-nested", title: "Nested item", level: 3 as const }
+    ];
+    const activeId = useScrollSpy({
+      ids: items.map((item) => item.id),
+      root: scrollRoot,
+      offset: 12
+    });
+
+    return (
+      <div className="grid max-w-2xl gap-4 lg:grid-cols-[9rem_minmax(0,1fr)]">
+        <TableOfContents
+          items={items}
+          activeId={activeId}
+          heading="Sections"
+          scrollRoot={scrollRoot}
+          scrollOffset={12}
+        />
+        <div ref={setScrollRoot} className="h-64 overflow-y-auto rounded-md border border-border bg-card">
+          <div className="space-y-16 p-4 text-sm">
+            <section id="toc-demo-overview" className="scroll-mt-3 space-y-2">
+              <h4 className="font-medium">Overview</h4>
+              <p className="text-muted-foreground">Sticky directory tracks the active section while you scroll.</p>
+            </section>
+            <section id="toc-demo-setup" className="scroll-mt-3 space-y-2">
+              <h4 className="font-medium">Setup</h4>
+              <p className="text-muted-foreground">Assign stable ids to headings, then pass them as TOC items.</p>
+            </section>
+            <section id="toc-demo-details" className="scroll-mt-3 space-y-2">
+              <h4 className="font-medium">Details</h4>
+              <p className="text-muted-foreground">Click a TOC entry to scroll the nearest container or page.</p>
+              <p id="toc-demo-nested" className="scroll-mt-3 text-muted-foreground">
+                Nested item supports level-3 indentation in the nav.
+              </p>
+            </section>
+          </div>
+        </div>
+      </div>
+    );
+  },
   Tabs: () => (
     <Tabs defaultValue="docs" className="max-w-md">
       <TabsList>
@@ -736,18 +946,26 @@ export const componentDemos: Record<string, React.ComponentType> = {
         <XAxis dataKey="month" />
         <YAxis />
         <ChartTooltip content={<ChartTooltipContent />} />
-        <Line type="monotone" dataKey="value" stroke="var(--color-instrument)" strokeWidth={2} isAnimationActive={false} />
+        <Line type="monotone" dataKey="value" stroke="var(--metric-instrument)" strokeWidth={2} isAnimationActive={false} />
       </LineChart>
     </ChartContainer>
   ),
   ChartTooltipContent: () => (
     <DocumentedException>
-      Use inside <code>ChartContainer</code> via <code>ChartTooltip content=&#123;&lt;ChartTooltipContent /&gt;&#125;</code>.
+      Use inside <code>ChartContainer</code> via{" "}
+      <code>
+        ChartTooltip content={'{'}&lt;ChartTooltipContent /&gt;{'}'}
+      </code>
+      .
     </DocumentedException>
   ),
   ChartLegendContent: () => (
     <DocumentedException>
-      Render with <code>ChartLegend content=&#123;&lt;ChartLegendContent /&gt;&#125;</code> inside a chart container.
+      Render with{" "}
+      <code>
+        ChartLegend content={'{'}&lt;ChartLegendContent /&gt;{'}'}
+      </code>{" "}
+      inside a chart container.
     </DocumentedException>
   ),
   ThemeProvider: () => (

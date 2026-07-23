@@ -87,8 +87,8 @@ export function useTheme(): ThemeContextValue {
   return value;
 }
 
-export function ThemeControl({ compact = false }: { compact?: boolean }) {
+export function ThemeControl() {
   const { preference, setTheme } = useTheme();
   const Icon = preference === "system" ? Monitor : preference === "dark" ? Moon : Sun;
-  return <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" size={compact ? "icon-compact" : "icon"} aria-label="选择主题"><Icon aria-hidden="true" /></Button></DropdownMenuTrigger><DropdownMenuContent align="end" className="min-w-36"><DropdownMenuRadioGroup value={preference} onValueChange={(value) => setTheme(value as ThemePreference)}><DropdownMenuRadioItem value="system"><Monitor className="mr-2 size-4" aria-hidden="true" />跟随系统</DropdownMenuRadioItem><DropdownMenuRadioItem value="light"><Sun className="mr-2 size-4" aria-hidden="true" />浅色</DropdownMenuRadioItem><DropdownMenuRadioItem value="dark"><Moon className="mr-2 size-4" aria-hidden="true" />深色</DropdownMenuRadioItem></DropdownMenuRadioGroup></DropdownMenuContent></DropdownMenu>;
+  return <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" aria-label="选择主题"><Icon aria-hidden="true" /></Button></DropdownMenuTrigger><DropdownMenuContent align="end" className="min-w-36"><DropdownMenuRadioGroup value={preference} onValueChange={(value) => setTheme(value as ThemePreference)}><DropdownMenuRadioItem value="system"><Monitor className="mr-2 size-4" aria-hidden="true" />跟随系统</DropdownMenuRadioItem><DropdownMenuRadioItem value="light"><Sun className="mr-2 size-4" aria-hidden="true" />浅色</DropdownMenuRadioItem><DropdownMenuRadioItem value="dark"><Moon className="mr-2 size-4" aria-hidden="true" />深色</DropdownMenuRadioItem></DropdownMenuRadioGroup></DropdownMenuContent></DropdownMenu>;
 }

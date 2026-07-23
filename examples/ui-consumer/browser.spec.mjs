@@ -58,6 +58,7 @@ test("core state matrix exposes named interactive, validation, and empty states"
   await expect(page.getByTestId("button-selected")).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByTestId("button-icon")).toHaveAccessibleName("Add component");
   await expect(page.getByLabel("Invalid field")).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByText("Enter a valid value.")).toBeVisible();
   await expect(page.getByLabel("Disabled field")).toBeDisabled();
   await expect(page.getByLabel("Selected option")).toContainText("Selected option");
   await expect(page.getByLabel("Disabled option")).toBeDisabled();
@@ -75,6 +76,11 @@ test("core state matrix exposes named interactive, validation, and empty states"
   await expect.poll(() => focusedField.evaluate((element) => element.matches(":focus-visible"))).toBe(true);
   await page.mouse.move(0, 0);
   await expect(page.getByTestId("empty-state")).toHaveText("No matching components.");
+  await expect(page.getByTestId("feedback-section")).toBeVisible();
+  await expect(page.getByTestId("forms-section")).toBeVisible();
+  await expect(page.getByTestId("overlay-section")).toBeVisible();
+  await expect(page.getByTestId("navigation-section")).toBeVisible();
+  await expect(page.getByTestId("display-section")).toBeVisible();
   await expect(page.getByTestId("state-matrix")).toHaveScreenshot("core-state-matrix.png");
   await expectNoWcagAaViolations(page);
 });

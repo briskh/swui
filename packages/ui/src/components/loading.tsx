@@ -47,7 +47,7 @@ export function StaleDataRefresh({
   ...props
 }: React.ComponentProps<"div"> & { label: string; detail: string }) {
   return (
-    <div className={cn("flex items-start gap-3 rounded-md border bg-muted/30 p-3 text-sm", className)} {...props}>
+    <div className={cn("flex items-start gap-3 rounded-md border border-border bg-muted/30 p-3 text-sm", className)} {...props}>
       <Spinner className="mt-0.5 size-4" />
       <div className="grid gap-1">
         <span className="font-medium text-foreground">{label}</span>

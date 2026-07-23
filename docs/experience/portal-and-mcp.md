@@ -59,6 +59,10 @@ REGISTRY_FIXTURE=1 NODE_ENV=production bun run start
 
 Deploy runbook: [examples/portal/DEPLOY.md](../examples/portal/DEPLOY.md).
 
+## Local iteration
+
+Prefer [local validation fast paths](local-validation-fast-paths.md) during feature work: contract checks and `--grep` Playwright subsets before the full light/dark browser matrix. Full `test:browser` matches CI but includes a production build, axe scans, and ~2× project execution.
+
 ## Validation evidence
 
 - Unit: sync-docs, catalog-index parser, registry-client, MCP tool payloads (package + catalog search/get).

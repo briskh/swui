@@ -1,5 +1,22 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@swqt/ui";
+import {
+  Alert,
+  AlertDescription,
+  Badge,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  LoadingState,
+  SourceCode,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@swqt/ui";
+import { PortalPageHeader } from "../components/PortalPageHeader";
 import { buildNpmrcTemplate, DEFAULT_NPM_REGISTRY, isPublicNpmRegistry } from "../../shared/registry-install";
 
 interface RegistryPayload {
@@ -56,21 +73,28 @@ export function PackagesPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <section>
-        <h2 className="text-3xl font-semibold">Packages</h2>
-        <p className="mt-2 text-muted-foreground">
-          Read-only registry metadata from <code>{registry}</code>.
-          {requiresAuth
-            ? " Install requires registry authentication; this page does not mirror tarballs."
-            : " Public packages install from npmjs.org with no registry auth; this page does not mirror tarballs."}
-        </p>
-        {stale ? (
-          <p className="mt-3 rounded-md border border-border bg-muted px-3 py-2 text-sm" data-testid="registry-stale-banner">
-            Registry metadata is stale or unavailable. Showing last cached values when available.
+      <PortalPageHeader
+        title="Packages"
+        description={
+          <p>
+            Read-only registry metadata from <code>{registry}</code>.
+            {requiresAuth
+              ? " Install requires registry authentication; this page does not mirror tarballs."
+              : " Public packages install from npmjs.org with no registry auth; this page does not mirror tarballs."}
           </p>
+        }
+      >
+        {stale ? (
+          <Alert variant="warning" className="mt-3" data-testid="registry-stale-banner">
+            <AlertDescription>
+              Registry metadata is stale or unavailable. Showing last cached values when available.
+            </AlertDescription>
+          </Alert>
         ) : null}
-      </section>
-      {loading ? <p>Loading registry metadata…</p> : null}
+      </PortalPageHeader>
+
+      {loading ? <LoadingState label="Loading registry metadata…" /> : null}
+
       <div className="grid gap-4 md:grid-cols-2">
         {entries.map((entry) => {
           const latest = entry.data?.["dist-tags"]?.latest;
@@ -81,19 +105,35 @@ export function PackagesPage() {
                 <CardTitle>{entry.data?.name ?? "Unavailable"}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
-                <p>
-                  Latest: <strong>{latest ?? "unknown"}</strong>
+                <p className="flex flex-wrap items-center gap-2">
+                  Latest:{" "}
+                  {latest ? (
+                    <Badge variant="ready">{latest}</Badge>
+                  ) : (
+                    <Badge variant="outline">unknown</Badge>
+                  )}
                 </p>
                 {latestMeta?.peerDependencies ? (
                   <div>
-                    <p className="font-medium">Peer dependencies</p>
-                    <ul className="list-disc pl-5">
-                      {Object.entries(latestMeta.peerDependencies).map(([name, range]) => (
-                        <li key={name}>
-                          <code>{name}</code>: {range}
-                        </li>
-                      ))}
-                    </ul>
+                    <p className="mb-2 font-medium">Peer dependencies</p>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Package</TableHead>
+                          <TableHead>Range</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {Object.entries(latestMeta.peerDependencies).map(([name, range]) => (
+                          <TableRow key={name}>
+                            <TableCell>
+                              <code>{name}</code>
+                            </TableCell>
+                            <TableCell>{range}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </div>
                 ) : null}
                 {entry.data ? (
@@ -102,35 +142,38 @@ export function PackagesPage() {
                     <p className="text-muted-foreground">{Object.keys(entry.data.versions).join(", ")}</p>
                   </div>
                 ) : (
-                  <p className="text-destructive">{entry.error ?? "No metadata available"}</p>
+                  <Alert variant="destructive">
+                    <AlertDescription>{entry.error ?? "No metadata available"}</AlertDescription>
+                  </Alert>
                 )}
               </CardContent>
             </Card>
           );
         })}
       </div>
+
       <Card>
         <CardHeader>
           <CardTitle>Install commands</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 text-sm">
           <div>
-            <p className="font-medium">Bun</p>
-            <pre data-testid="install-command-bun">
-              <code>bun add @swqt/ui @swqt/ui-tokens</code>
-            </pre>
+            <p className="mb-2 font-medium">Bun</p>
+            <div data-testid="install-command-bun">
+              <SourceCode language="shell" value="bun add @swqt/ui @swqt/ui-tokens" />
+            </div>
           </div>
           <div>
-            <p className="font-medium">npm</p>
-            <pre data-testid="install-command-npm">
-              <code>npm install @swqt/ui @swqt/ui-tokens</code>
-            </pre>
+            <p className="mb-2 font-medium">npm</p>
+            <div data-testid="install-command-npm">
+              <SourceCode language="shell" value="npm install @swqt/ui @swqt/ui-tokens" />
+            </div>
           </div>
           <div>
-            <p className="font-medium">{requiresAuth ? ".npmrc template" : ".npmrc (optional)"}</p>
-            <pre data-testid="npmrc-template">
-              <code>{npmrc}</code>
-            </pre>
+            <p className="mb-2 font-medium">{requiresAuth ? ".npmrc template" : ".npmrc (optional)"}</p>
+            <div data-testid="npmrc-template">
+              <SourceCode language="ini" value={npmrc} />
+            </div>
           </div>
         </CardContent>
       </Card>

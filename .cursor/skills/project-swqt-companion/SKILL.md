@@ -7,6 +7,7 @@ description: Project facts and validation handoff for this repository.
 
 ## Validation handoff
 
+- **Fast paths (local iteration):** [docs/experience/local-validation-fast-paths.md](../../docs/experience/local-validation-fast-paths.md) — contract/typecheck/targeted Playwright `--grep` before full browser matrix.
 - Project E2E: `bun run --filter '@swqt/ui-consumer-example' test:browser` and `REGISTRY_FIXTURE=1 bun run --filter '@swqt/portal-example' test:browser`.
 - CI: `.github/workflows/quality.yml` runs frozen install, docs sync/check, catalog/design contracts, package and Portal typechecks/builds/tests/browser gates, MCP smoke, and packed-consumer verification.
 - MCP contract: `bun run --filter '@swqt/portal-example' test` plus `bun run --filter '@swqt/portal-example' mcp:smoke`.

@@ -15,6 +15,7 @@
 - docs/COMPONENT-CATALOG.md
 - docs/DO-AND-DONT.md
 - docs/ADOPTION.md
+- docs/experience/foundation-contract.md (colors + typography allowlist; MCP `swui://foundation/contract`)
 
 ## Theme
 

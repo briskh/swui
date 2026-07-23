@@ -1,6 +1,6 @@
 # Design Contract Exceptions
 
-`bun run check:design-contract` rejects raw control-size utilities and hexadecimal colors in `packages/ui/src`. The following narrow allowlist is intentional and must be reviewed when touched.
+`bun run check:design-contract` rejects raw control-size utilities, hexadecimal colors, and foundation-contract violations (colors + typography outside Portal `/colors` and `/typography`). See [foundation-contract.md](../experience/foundation-contract.md). The following narrow allowlist is intentional and must be reviewed when touched.
 
 | Location | Value | Reason | Theme review |
 | --- | --- | --- | --- |

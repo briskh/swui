@@ -42,8 +42,8 @@ export function AvatarGroup({ className, ...props }: React.ComponentProps<"div">
 const avatarStatusVariants = cva("absolute bottom-0 right-0 block size-3 rounded-full border-2 border-background", {
   variants: {
     status: {
-      ready: "bg-success",
-      loading: "bg-warning",
+      ready: "bg-status-ready",
+      loading: "bg-status-loading",
       error: "bg-destructive",
       inactive: "bg-muted-foreground"
     }

@@ -1,5 +1,8 @@
 # Portal deploy runbook
 
+Infra / edge SSOT (gw · CF · Caddy · Tailnet): op repo  
+`docs/research/swui-portal-gw-operating-notes.md` (2026-07-23 as-built).
+
 ## Public URLs
 
 | Surface | URL |
@@ -8,37 +11,36 @@
 | **swui MCP (canonical)** | **`https://agent.swqt.net/mcp/swui`** |
 | Registry API (portal origin) | `https://ui.swqt.net/api/registry/*` |
 
-Agents should configure **`swui`** → `https://agent.swqt.net/mcp/swui` (same host family as SWS `sw` MCP).
+Agents configure a **second** MCP slot: `swui` → `https://agent.swqt.net/mcp/swui`  
+(alongside stdio `sw` / SWS). Do not merge into `SW_MCP_URL`.
 
-## Topology
+## Topology (as-built · gw)
 
 ```
 Cursor / Agent
     │  swui.url = https://agent.swqt.net/mcp/swui
     ▼
-agent.swqt.net (Caddy gateway)
-    │  /mcp/swui → reverse proxy (path preserved)
+agent.swqt.net
+    │  public CF → gw Caddy → 127.0.0.1:4176
+    │  Tailnet MagicDNS → dev Caddy → 100.64.0.1:4176
     ▼
-ui.swqt.net portal Bun server
+swui-portal.service on gw (/opt/swui-portal)
     │  /mcp/swui → handleMcpHttpRequest()
-    ▼
-examples/portal/server/handlers.ts (swui MCP)
+    │  / → SPA dist · /api/registry/* → registry client
 ```
 
-Gateway config reference: `sws/debian/caddy/agent.swqt.net.caddy` (upstream `https://ui.swqt.net`, `Host: ui.swqt.net`).
+Human site: CF `ui.swqt.net` → gw Caddy → same `:4176`.
 
-Local dev exposes the same exact mount path: `http://127.0.0.1:4176/mcp/swui`. The Portal must not handle `/mcp`, `/mcp/sws`, unknown `/mcp/*`, or `/mcp/swui/*`.
+Gateway sources (sws): `debian/caddy/agent.swqt.net.caddy` (local upstream `127.0.0.1:4176`),  
+`debian/caddy/ui.swqt.net.caddy`, `debian/caddy/agent.swqt.net.local.caddy` (Tailnet → gw `:4176`).
 
-## Release sequence
+Local/dev mount path is identical: `http://127.0.0.1:4176/mcp/swui`.  
+Portal must not handle `/mcp`, `/mcp/sws`, unknown `/mcp/*`, or `/mcp/swui/*`.
 
-1. Merge portal changes to the release branch.
-2. Tag and publish npm packages when needed:
+## Release sequence (production on gw)
 
-   ```bash
-   ./scripts/publish.sh --apply
-   ```
-
-3. Build the portal artifact:
+1. Merge portal changes; publish npm packages when needed (`./scripts/publish.sh --apply`).
+2. On **dev** (build host), with `~/.bun/bin` on `PATH`:
 
    ```bash
    bun install --frozen-lockfile
@@ -46,21 +48,31 @@ Local dev exposes the same exact mount path: `http://127.0.0.1:4176/mcp/swui`. T
    bun run --filter '@swqt/portal-example' build
    ```
 
-4. Deploy `examples/portal/dist` as static assets and run `examples/portal/server/index.ts` (Bun) behind ingress:
-   - `/` → static SPA
-   - `/mcp/swui` → MCP handler (canonical)
-   - `/api/registry/*` → registry metadata API
+3. Stage a **slim** runtime tree (not the whole monorepo):
+   - `dist/`, `server/`, `shared/`, `.generated/`, `fixtures/`
+   - `package.json` with only `@modelcontextprotocol/sdk` + `zod`
+   - `bun install --production` inside the stage (~25–30Mi)
 
-5. Smoke after deploy:
+4. Sync stage → `gw:/opt/swui-portal` (if `dev` cannot SSH to `gw`, tar via operator laptop), then:
 
    ```bash
-   REGISTRY_FIXTURE=0 curl -fsS https://ui.swqt.net/api/registry/@swqt%2fui
+   sudo systemctl restart swui-portal
+   ```
+
+5. Smoke:
+
+   ```bash
+   curl -fsS -o /dev/null -w '%{http_code}\n' https://ui.swqt.net/
+   curl -fsS https://ui.swqt.net/api/registry/@swqt%2fui
    curl -fsS -X POST https://agent.swqt.net/mcp/swui \
      -H 'content-type: application/json' \
      -H 'accept: application/json, text/event-stream' \
      -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"smoke","version":"0"}}}'
-   bun run --filter '@swqt/portal-example' mcp:smoke
+   # expect serverInfo.name == "swui"
    ```
+
+   Optional (from sws): `SWUI_MCP_SMOKE=1 ./scripts/check-mcp-path-smoke.sh https://agent.swqt.net`  
+   Note: script hits `/mcp` first; SWS may return **401** without a token — that is not a swui failure.
 
 ## Local verification
 
@@ -77,38 +89,11 @@ bun run verify:packed-consumer
 sw doctor --project .
 ```
 
-Before a production reload, validate the sibling gateway source without deploying it:
-
-```bash
-caddy validate --adapter caddyfile --config ../sws/debian/caddy/agent.swqt.net.caddy
-```
-
-After an authorized deploy, run `SWUI_MCP_SMOKE=1 ../sws/scripts/check-mcp-path-smoke.sh https://agent.swqt.net` and confirm that `/mcp` and `/mcp/sws` identify SWS while `/mcp/swui` identifies swui.
-
 ## Agent + human SpotCheck
 
-After the outside-in smoke passes, start a fresh Agent session for each prompt. The human reviewer records the resources/tools read in order, whether the Agent over-read, whether it entered the wrong MCP service, any correction, and the final answer:
+After outside-in smoke, run a fresh Agent session per prompt (human reviewer records first-hop / misroute).  
+Prompt about SWS workflow must refuse to treat `swui` as the SWS management surface.
 
-1. “What is this MCP, and what should I read first before installing `@swqt/ui`?”
-2. “Find `Button`; give me its exact import, demo path, resolved package version, and install command.”
-3. “How do I import the catalog item `FormField`?”
-4. “How do I import and use the `DateHelpers` catalog namespace?”
-5. “Where is the `cn` utility exported from?”
-6. “How do I import the `Theme` type, and which component owns global theme selection?”
-7. “Adopt `@swqt/ui-tokens` in a Tailwind v4 app without creating a competing dark-theme selector.”
-8. “Use this connection to inspect or mutate an SWS workflow.”
+## Status
 
-For each run, capture:
-
-- first hop (`llms.txt` / `AGENTS.md`) correct or incorrect;
-- search query and exact resource/tool used;
-- resources read that were not needed;
-- `swui` ↔ `sw` misroute, if any;
-- correction count and final-answer correctness;
-- reviewer name and UTC timestamp.
-
-The gate requires 8/8 correct first hops, 0 service misroutes, and human approval of all final answers. Prompt 8 must refuse to treat `swui` as the SWS management surface and direct the task to the separate `sw` MCP. Machine protocol tests do not replace this evidence.
-
-## External dependency
-
-Last outside-in observation (2026-07-23 post-deploy): anonymous `https://agent.swqt.net/mcp/swui` identifies **swui** 1.0.0 with bounded resources/templates/tools; eight-prompt Agent SpotCheck **8/8 pass** with human sign-off. `https://ui.swqt.net` serves **HTTP 200 on public DNS** (Cloudflare). Hosts using **Tailscale split DNS** may not resolve `ui.swqt.net` locally even when the site is live — verify with `dig +short ui.swqt.net @8.8.8.8` or `curl --resolve ui.swqt.net:443:104.21.6.152 https://ui.swqt.net/`. Residual optional checks: authenticated `/mcp` + `/mcp/sws` SWS identity with bearer token.
+**Deployed 2026-07-23** on `gw`: CF `ui`, LE SAN, `swui-portal.service`, public + Tailnet `/mcp/swui` path split verified (`serverInfo.name=swui`, registry live).

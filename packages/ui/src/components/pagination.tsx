@@ -22,7 +22,7 @@ type PaginationLinkProps = {
 } & Pick<ButtonProps, "size"> &
   React.ComponentProps<"a">;
 
-export const PaginationLink = ({ className, isActive, size = "icon", ...props }: PaginationLinkProps) => (
+export const PaginationLink = ({ className, isActive, size = "default", ...props }: PaginationLinkProps) => (
   <a
     aria-current={isActive ? "page" : undefined}
     className={cn(
@@ -36,24 +36,24 @@ export const PaginationLink = ({ className, isActive, size = "icon", ...props }:
 );
 
 export const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink aria-label="Go to previous page" size="default" className={cn("gap-1 pl-2.5", className)} {...props}>
+  <PaginationLink aria-label="Go to previous page" className={cn("gap-1 pl-2.5", className)} {...props}>
     <ChevronLeft className="size-4" aria-hidden="true" />
     Previous
   </PaginationLink>
 );
 
 export const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink aria-label="Go to next page" size="default" className={cn("gap-1 pr-2.5", className)} {...props}>
+  <PaginationLink aria-label="Go to next page" className={cn("gap-1 pr-2.5", className)} {...props}>
     Next
     <ChevronRight className="size-4" aria-hidden="true" />
   </PaginationLink>
 );
 
 export const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
-  <span aria-hidden="true" className={cn("flex size-control-md items-center justify-center", className)} {...props}>
+  <span aria-hidden="true" className={cn("flex h-control-md items-center justify-center px-4", className)} {...props}>
     <MoreHorizontal className="size-4" />
     <span className="sr-only">More pages</span>
   </span>
 );
 
-export const PaginationButton = ({ className, ...props }: ButtonProps) => <Button variant="ghost" size="icon" className={cn("size-control-md", className)} {...props} />;
+export const PaginationButton = ({ className, ...props }: ButtonProps) => <Button variant="ghost" className={className} {...props} />;

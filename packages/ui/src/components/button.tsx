@@ -17,12 +17,12 @@ const buttonVariants = cva(
         passkey: "bg-passkey text-passkey-foreground hover:bg-passkey/90"
       },
       size: {
-        compact: "h-control-compact px-2",
-        sm: "h-control-sm px-3",
-        default: "h-control-md px-4",
-        lg: "h-control-lg px-5",
+        compact: "h-control-compact px-2 text-xs [&_svg]:size-3.5",
+        sm: "h-control-sm px-3 text-sm",
+        default: "h-control-md px-4 text-sm",
+        lg: "h-control-lg px-5 text-base [&_svg]:size-5",
         icon: "h-control-md w-control-md px-0",
-        "icon-compact": "h-control-compact w-control-compact px-0"
+        "icon-compact": "h-control-compact w-control-compact px-0 [&_svg]:size-3.5"
       }
     },
     defaultVariants: {

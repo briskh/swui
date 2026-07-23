@@ -154,6 +154,7 @@ The installed SWS plugin layer owns methodology. The project layer companion own
 ## Validation
 
 Run `sw doctor --project .` and the declared validation handoff before completion, or honor its explicit `skipped-with-reason(...)` / `blocked-with-reason(...)` value.
+**Foundation contract**: colors and typography MUST match Portal `/colors` and `/typography` only (`docs/experience/foundation-contract.md`, MCP `swui://foundation/contract`); gate with `bun run check:design-contract`.
 
 ## JSON Schema
 

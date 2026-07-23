@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Alert, AlertDescription, Separator } from "@swqt/ui";
 
 export function DemoSection({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -11,10 +12,16 @@ export function DemoSection({ title, children }: { title: string; children: Reac
 
 export function DocumentedException({ children }: { children: ReactNode }) {
   return (
-    <div className="rounded-md border border-border bg-muted/40 p-4 text-sm text-muted-foreground">{children}</div>
+    <Alert>
+      <AlertDescription>{children}</AlertDescription>
+    </Alert>
   );
 }
 
 export function DemoStack({ children }: { children: ReactNode }) {
   return <div className="grid gap-6">{children}</div>;
+}
+
+export function DemoDivider() {
+  return <Separator />;
 }

@@ -12,9 +12,9 @@ Consumer-facing design intent. Token **values** live in `@swqt/ui-tokens`.
 
 ## Typography & rhythm
 
-- Font: Inter stack (see tokens).
+- Font: `font-sans` (Inter + system UI stack); `font-serif` for reading/editorial; `font-mono` for code/IDs (system-local stacks — see tokens).
 - Base rhythm 4px; common gaps 8 / 12 / 16 / 24 / 32px.
-- Default control height is 40px (`h-control-md`); panel radius max 8px (`--radius`).
+- Default control height is 32px (`h-control-md`); panel radius max 8px (`--radius`).
 
 ## Responsive (library-relevant)
 
@@ -34,10 +34,11 @@ Consumer-facing design intent. Token **values** live in `@swqt/ui-tokens`.
 | Failures | `Alert` (default / destructive / success / warning) |
 | Status labels | `Badge` (incl. success / warning / destructive / outline) · `Chip` · `InlineNotice` |
 | Empty | `Empty` (`zero-data` / …) · `EmptyState` (simple card wrapper) |
+| Code / logs | `SourceCode` · `TtyLine` · `Tty` (monospace panels; TTY copy strips `$` / `#` prompts) |
 | Loading | `Spinner` / `Skeleton` / `LoadingState` / `loading` compositions / `Progress` |
 | Toast | `Toaster` + `notifySuccess` / `notifyError` / … |
 | Forms | `Label` `Input` `Textarea` `Select` `Checkbox` `Switch` `RadioGroup` `Slider` `Field` `FormField` `FormActions` `Fieldset` `CheckboxField` `Form` `Combobox` `InputGroup` `Calendar` `DatePicker` |
-| Overlays | `Dialog` `AlertDialog` `Sheet` `DropdownMenu` `ContextMenu` `Tooltip` `Popover` `HoverCard` |
+| Overlays | `Dialog` `AlertDialog` `PasskeyDialog` `Sheet` `DropdownMenu` `ContextMenu` `Tooltip` `Popover` `HoverCard` |
 | Nav primitives | `Tabs` `Breadcrumb` `Toggle` `ToggleGroup` (`Sidebar` is showcase-oriented) |
 
 ## Icons

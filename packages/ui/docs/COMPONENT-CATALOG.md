@@ -13,6 +13,7 @@ Import from `@swqt/ui` or `@swqt/ui/<name>`.
 | Export | Notes |
 |--------|--------|
 | `Label` `Input` `Textarea` | Pair Label via `htmlFor` / `id`. |
+| `EmailInput` `PasswordInput` `SearchInput` `UrlInput` `TelInput` `NumberInput` | Typed Input presets over base Input / InputGroup; pair with Label. |
 | `FormField` `FormActions` `Fieldset` `CheckboxField` | eauth-aligned form layout helpers; `CheckboxField` wraps Radix `Checkbox`. |
 | `Select` | Radix select. |
 | `Checkbox` `Switch` `RadioGroup` `Slider` | Choice / range. |
@@ -40,6 +41,9 @@ Import from `@swqt/ui` or `@swqt/ui/<name>`.
 | Export | Notes |
 |--------|--------|
 | `Card` (+ header/content/title helpers) | Panels. |
+| `SourceCode` | Source snippets; language label, syntax highlighting, copy icon. |
+| `TtyLine` | Single-line shell snippet; dark canvas, syntax highlighting, copy without prompt. |
+| `Tty` | Multi-line shell session / log; same copy rules as `TtyLine`. |
 | `Table` (+ parts) | Static markup. |
 | `DataTable` | Client TanStack table; wraps `WideScreenGate`. |
 | `ServerDataTable` | Server search/sort/cursor; viewport fill default on. |
@@ -52,7 +56,7 @@ Import from `@swqt/ui` or `@swqt/ui/<name>`.
 
 | Export | Notes |
 |--------|--------|
-| `Dialog` `AlertDialog` `Sheet` | Modal / drawer. |
+| `Dialog` `AlertDialog` `PasskeyDialog` `Sheet` | Modal / drawer. `PasskeyDialog`: eauth-aligned passkey step-up shell (Cancel + passkey verify). |
 | `DropdownMenu` `ContextMenu` | Menus (shared semantics). |
 | `Tooltip` `Popover` `HoverCard` | Light overlays. |
 
@@ -61,6 +65,7 @@ Import from `@swqt/ui` or `@swqt/ui/<name>`.
 | Export | Notes |
 |--------|--------|
 | `Tabs` | Panels. |
+| `TableOfContents` | Sticky in-page directory with scrollspy; ships TableOfContentsLayout, TableOfContentsPanel, and useScrollSpy helpers. |
 | `Breadcrumb` (+ `BreadcrumbTrail`) | Pass items; **no** product `routeTree` wiring here. |
 | `Toggle` `ToggleGroup` | Mode switches. |
 | `Sidebar` | Showcase-oriented; do not treat as product AppShell nav. |

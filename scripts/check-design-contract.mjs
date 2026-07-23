@@ -1,17 +1,25 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join, relative } from "node:path";
+import { checkFoundationSource } from "./lib/check-foundation.mjs";
 
 const root = process.cwd();
-const sourceRoot = join(root, "packages/ui/src");
+const scanRoots = [
+  join(root, "packages/ui/src"),
+  join(root, "examples/portal/src"),
+  join(root, "examples/ui-consumer/src")
+];
 const tokenFile = join(root, "packages/ui-tokens/src/tokens.css");
 const approvedExceptions = new Map([
   ["components/avatar.tsx", ["size-10"]],
   ["components/empty.tsx", ["size-10"]],
   ["components/wide-screen-gate.tsx", ["size-8"]],
   ["components/data-table.tsx", ["w-12"]],
-  ["components/chart.tsx", ["#fff", "#ccc"]]
+  ["components/chart.tsx", ["#fff", "#ccc"]],
+  ["components/layout/layout-shell.ts", ["h-12"]],
+  ["components/layout/TopBar.tsx", ["h-12"]],
+  ["components/navigation/PortalNavLink.tsx", ["h-12"]]
 ]);
-const forbidden = /(?<![\w-])(?:h|w|size)-(?:7|8|9|10|12)(?![\w-])|#[\da-fA-F]{3,8}\b/g;
+const forbidden = /(?<![\w-&])(?:h|w|size)-(?:7|8|9|10|12)(?![\w-])|(?<![\w-&])#[\da-fA-F]{3,8}\b/g;
 const tokenReference = /var\((--[\w-]+)\)/g;
 const themeBypass = /\bdark:[\w-]/g;
 const runtimeTokenPrefixes = ["--radix-"];
@@ -92,23 +100,31 @@ for (const [themeName, block] of themeBlocks) {
   }
 }
 
-for (const file of await filesAt(sourceRoot)) {
-  const source = await readFile(file, "utf8");
-  const projectPath = relative(sourceRoot, file);
-  const localTokenDefinitions = new Set([...source.matchAll(/["'](--[\w-]+)["']\s*:/g)].map((match) => match[1]));
-  for (const match of source.matchAll(forbidden)) {
-    if (!approvedExceptions.get(projectPath)?.includes(match[0])) {
-      violations.push(`${projectPath}:${match.index}: unapproved raw design value ${match[0]}`);
+for (const sourceRoot of scanRoots) {
+  for (const file of await filesAt(sourceRoot)) {
+    if (file.endsWith(".css")) {
+      continue;
     }
-  }
-  for (const match of source.matchAll(tokenReference)) {
-    const token = match[1];
-    if (!tokenDefinitions.has(token) && !localTokenDefinitions.has(token) && !runtimeTokenPrefixes.some((prefix) => token.startsWith(prefix))) {
-      violations.push(`${projectPath}:${match.index}: undefined token ${token}`);
+    const source = await readFile(file, "utf8");
+    const projectPath = relative(sourceRoot, file);
+    const fileLabel = `${relative(root, sourceRoot)}/${projectPath}`;
+    const localTokenDefinitions = new Set([...source.matchAll(/["'](--[\w-]+)["']\s*:/g)].map((match) => match[1]));
+    const rawColorExceptions = approvedExceptions.get(projectPath) ?? [];
+    for (const match of source.matchAll(forbidden)) {
+      if (!approvedExceptions.get(projectPath)?.includes(match[0])) {
+        violations.push(`${fileLabel}:${match.index}: unapproved raw design value ${match[0]}`);
+      }
     }
-  }
-  for (const match of source.matchAll(themeBypass)) {
-    violations.push(`${projectPath}:${match.index}: bypasses the global theme selector with ${match[0]}`);
+    for (const match of source.matchAll(tokenReference)) {
+      const token = match[1];
+      if (!tokenDefinitions.has(token) && !localTokenDefinitions.has(token) && !runtimeTokenPrefixes.some((prefix) => token.startsWith(prefix))) {
+        violations.push(`${fileLabel}:${match.index}: undefined token ${token}`);
+      }
+    }
+    for (const match of source.matchAll(themeBypass)) {
+      violations.push(`${fileLabel}:${match.index}: bypasses the global theme selector with ${match[0]}`);
+    }
+    violations.push(...checkFoundationSource({ source, fileLabel, rawColorExceptions }));
   }
 }
 

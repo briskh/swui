@@ -10,8 +10,12 @@
 - Use `ServerDataTable` for Runtime/server-backed lists; `DataTable` for in-memory tables.
 - Gate non-adaptable dense tables with `WideScreenGate`.
 - Bump package versions across apps after library changes.
+- Use only colors from Portal `/colors` and typography from `/typography` (see `docs/experience/foundation-contract.md`); run `bun run check:design-contract`.
 
 ## Don't
+
+- Introduce colors outside the foundation contract (no raw hex/rgb/oklch in components, no ad hoc Tailwind chroma such as `text-blue-500`).
+- Introduce typography outside the foundation contract (no `text-4xl`, `font-bold`, arbitrary `text-[…]`, or CDN/webfont imports).
 
 - Copy `src/components/*` into the consumer app as a long-lived fork.
 - Add `react-icons`, Heroicons, Iconify, emoji-as-icons, or ad hoc operational SVGs.

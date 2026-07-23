@@ -25,6 +25,7 @@ export function getCopyPlan(portalDir = portalRoot, root = repoRoot) {
       })),
     { source: join(tokens, "AGENTS.md"), dest: join(out, "tokens", "AGENTS.md") },
     { source: join(tokens, "llms.txt"), dest: join(out, "tokens", "llms.txt") },
+    { source: join(root, "docs/experience/foundation-contract.md"), dest: join(out, "experience/foundation-contract.md") },
     ...readdirSync(tokenDocs)
       .filter((name) => name.endsWith(".md"))
       .map((name) => ({
@@ -41,6 +42,7 @@ export function syncDocs({ portalDir = portalRoot, repo = repoRoot, dryRun = fal
   }
   if (!dryRun) {
     mkdirSync(join(out, "docs"), { recursive: true });
+    mkdirSync(join(out, "experience"), { recursive: true });
     mkdirSync(join(out, "tokens", "docs"), { recursive: true });
   }
   const plan = getCopyPlan(portalDir, repo);

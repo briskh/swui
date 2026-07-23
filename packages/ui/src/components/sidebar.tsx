@@ -142,7 +142,7 @@ export function SidebarTrigger({ className, ...props }: React.ComponentProps<typ
   const { toggleSidebar } = useSidebar();
 
   return (
-    <Button type="button" variant="outline" size="icon" className={className} onClick={toggleSidebar} aria-label="Toggle sidebar" {...props}>
+    <Button type="button" variant="outline" className={className} onClick={toggleSidebar} aria-label="Toggle sidebar" {...props}>
       <PanelLeft aria-hidden="true" />
     </Button>
   );

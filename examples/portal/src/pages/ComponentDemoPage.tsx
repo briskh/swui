@@ -1,6 +1,10 @@
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
+import { Alert, AlertDescription, Badge, BreadcrumbTrail, Card, CardContent } from "@swqt/ui";
 import { documentedExceptions, getComponentDemo } from "../demos/registry";
 import { findCatalogExport } from "../lib/catalog";
+import { PortalPageHeader } from "../components/PortalPageHeader";
+
+const BARE_DEMO_GROUPS = new Set(["data-display"]);
 
 export function ComponentDemoPage() {
   const { groupSlug = "", exportSlug = "" } = useParams();
@@ -11,28 +15,50 @@ export function ComponentDemoPage() {
   }
 
   const Demo = getComponentDemo(match.export.name);
+  const bareDemo = BARE_DEMO_GROUPS.has(match.group.id);
 
   return (
     <div className="flex flex-col gap-6">
-      <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
-        <Link className="hover:text-foreground" to="/components">
-          Components
-        </Link>
-        <span className="px-2">/</span>
-        <span>{match.group.title}</span>
-        <span className="px-2">/</span>
-        <span className="text-foreground">{match.export.name}</span>
-      </nav>
-      <section>
-        <h2 className="text-3xl font-semibold">{match.export.name}</h2>
-        <p className="mt-2 max-w-3xl text-muted-foreground">{match.export.notes}</p>
+      <BreadcrumbTrail
+        items={[
+          { label: "Components", href: "/components" },
+          { label: match.group.title },
+          { label: match.export.name, isCurrentPage: true }
+        ]}
+      />
+
+      <PortalPageHeader title={match.export.name} description={<p>{match.export.notes}</p>}>
         {documentedExceptions.has(match.export.name) ? (
-          <p className="mt-2 text-xs uppercase tracking-wide text-muted-foreground">Documented exception demo</p>
+          <Badge variant="outline" className="mt-2">
+            Documented exception demo
+          </Badge>
         ) : null}
-      </section>
-      <section aria-label={`${match.export.name} demo`} className="rounded-lg border border-border bg-card p-6">
-        {Demo ? <Demo /> : <p className="text-sm text-destructive">Demo not registered.</p>}
-      </section>
+      </PortalPageHeader>
+
+      {bareDemo ? (
+        <section aria-label={`${match.export.name} demo`}>
+          {Demo ? <Demo /> : null}
+          {!Demo ? (
+            <Alert variant="destructive">
+              <AlertDescription>Demo not registered.</AlertDescription>
+            </Alert>
+          ) : null}
+        </section>
+      ) : (
+        <section aria-label={`${match.export.name} demo`}>
+          <Card>
+            <CardContent className="p-6">
+              {Demo ? (
+                <Demo />
+              ) : (
+                <Alert variant="destructive">
+                  <AlertDescription>Demo not registered.</AlertDescription>
+                </Alert>
+              )}
+            </CardContent>
+          </Card>
+        </section>
+      )}
     </div>
   );
 }

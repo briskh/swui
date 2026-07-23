@@ -80,7 +80,6 @@ export function DateRangePresetPicker({ value = "7d", onValueChange, className }
         <Button
           key={preset}
           type="button"
-          size="sm"
           variant={value === preset ? "default" : "outline"}
           onClick={() => onValueChange?.(preset, getUtcRangeForPreset(preset))}
         >

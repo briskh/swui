@@ -45,7 +45,7 @@ export type ServerDataTableProps<TData, TSortKey extends string = string> = {
   bodyMaxHeightClassName?: string;
   /** When true, stretch the table card so its bottom border sits `viewportBottomInsetPx` above the viewport bottom. */
   fillViewport?: boolean;
-  /** Distance from viewport bottom to table card bottom; default matches `h-control-lg` (48px). */
+  /** Distance from viewport bottom to table card bottom; default matches `h-control-lg` (40px). */
   viewportBottomInsetPx?: number;
   rowClassName?: string | ((row: TData) => string | undefined);
   scrollResetKey?: React.Key;
@@ -86,7 +86,7 @@ export const serverDataTableRowClassName = "h-14";
 /** Default number of body rows visible in the scroll viewport before scrolling. */
 export const serverDataTableDefaultVisibleRowCount = 10;
 
-/** Tailwind class for default viewport bottom inset (48px semantic large-control scale). */
+/** Tailwind class for default viewport bottom inset (40px semantic large-control scale). */
 export const serverDataTableViewportBottomInsetClassName = "h-control-lg";
 
 /** Pixel distance from viewport bottom to table card bottom when `fillViewport` is enabled. */
@@ -446,8 +446,7 @@ function ServerDataTableSortHeader({
     <Button
       type="button"
       variant="ghost"
-      size="sm"
-      className="-ml-2 h-control-compact gap-1 px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+      className="-ml-2 gap-1 font-semibold uppercase tracking-wide text-muted-foreground"
       onClick={onToggle}
       aria-label={`Sort by ${label}${active ? (direction === "asc" ? ", ascending" : ", descending") : ""}`}
     >

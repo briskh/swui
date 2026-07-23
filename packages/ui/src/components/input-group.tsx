@@ -13,7 +13,7 @@ export const InputGroup = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
       ref={ref}
       data-slot="input-group"
       className={cn(
-        "flex w-full items-stretch overflow-hidden rounded-md border border-input bg-background shadow-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring has-[:disabled]:opacity-60",
+        "flex h-control-md w-full items-stretch overflow-hidden rounded-md border border-input bg-background shadow-sm has-[:focus-visible]:ring-1 has-[:focus-visible]:ring-ring has-[:disabled]:opacity-60",
         className
       )}
       {...props}
@@ -29,7 +29,7 @@ export const InputGroupInput = React.forwardRef<HTMLInputElement, React.InputHTM
       type={type}
       data-slot="input-group-input"
       className={cn(
-        "min-w-0 flex-1 border-0 bg-transparent px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-0 disabled:cursor-not-allowed aria-invalid:text-destructive",
+        "min-w-0 flex-1 h-full border-0 bg-transparent px-3 py-0 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-0 disabled:cursor-not-allowed aria-invalid:text-destructive",
         className
       )}
       {...props}
@@ -49,7 +49,7 @@ export const InputGroupAddon = React.forwardRef<HTMLDivElement, InputGroupAddonP
       data-slot="input-group-addon"
       data-align={align}
       className={cn(
-        "flex shrink-0 items-center border-input bg-muted px-3 text-sm text-muted-foreground",
+        "flex h-full shrink-0 items-center border-input bg-muted px-3 text-sm text-muted-foreground",
         align === "inline-start" ? "border-r" : "border-l",
         className
       )}

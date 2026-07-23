@@ -6,10 +6,12 @@
 - Explicit light/dark preferences are stored under `swui-theme-preference`; selecting system removes that override.
 - Apply `themeInitializationScript` in the document head before the application bundle when the host can render a head, then mount `ThemeProvider` for reactive synchronization.
 - Do not add a local `.dark` class or a second provider. Cross-tab synchronization uses the browser `storage` event.
+- Dark palette lanes and elevation steps: [color-lanes.md](color-lanes.md).
+- Typography: default UI uses `font-sans`; long-form reading may use `font-serif`; code and IDs use `font-mono` (system-local stacks, no CDN). See `packages/ui-tokens/docs/TOKENS.md` § Typography.
 
 ## Dimensions And Responsive Behavior
 
-- Use 4px-based spacing and the semantic aliases in `@swqt/ui-tokens`; core control heights are `compact=32`, `sm=36`, `md=40`, and `lg=48` pixels. `micro=24` and `xs=28` preserve documented dense-table and calendar geometry; they are not general primary-action sizes.
+- Use 4px-based spacing and the semantic aliases in `@swqt/ui-tokens`; core control heights are `compact=28`, `sm=30`, `md=32`, and `lg=40` pixels. `micro=24` and `xs=28` preserve documented dense-table and calendar geometry; they are not general primary-action sizes.
 - Use the named global breakpoints from the token package. `data-dense` is not a page breakpoint: it is solely the threshold for information-dense controls.
 - Tailwind `max-*` variants are exclusive. To implement the intended `<=820px` compact behavior, use `max-data-dense` with `data-dense=821px`, not `max-[820px]`.
 

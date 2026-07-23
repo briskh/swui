@@ -1,30 +1,34 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@swqt/ui";
+import { Card, CardContent, CardHeader, CardTitle, SourceCode } from "@swqt/ui";
 import { Link } from "react-router-dom";
+import { PortalPageHeader } from "../components/PortalPageHeader";
 import { PORTAL_MCP_EXAMPLE, SWUI_MCP_PUBLIC_URL } from "../lib/portal-content";
 
 export function AgentPage() {
   return (
     <div className="flex flex-col gap-6">
-      <section>
-        <h2 className="text-3xl font-semibold">Agent MCP</h2>
-        <p className="mt-2 max-w-3xl text-muted-foreground">
-          Production MCP URL:{" "}
-          <code data-testid="mcp-public-url">{SWUI_MCP_PUBLIC_URL}</code>. Use the dedicated{" "}
-          <code>swui</code> MCP server for design-system discovery before install. Keep the existing{" "}
-          <code>sw</code> MCP server for SWS methodology and workflow tools. After install, read version-locked docs from{" "}
-          <code>node_modules/@swqt/ui/AGENTS.md</code>.
-        </p>
-      </section>
+      <PortalPageHeader
+        title="Agent MCP"
+        description={
+          <p>
+            Production MCP URL: <code data-testid="mcp-public-url">{SWUI_MCP_PUBLIC_URL}</code>. Use the dedicated{" "}
+            <code>swui</code> MCP server for design-system discovery before install. Keep the existing <code>sw</code>{" "}
+            MCP server for SWS methodology and workflow tools. After install, read version-locked docs from{" "}
+            <code>node_modules/@swqt/ui/AGENTS.md</code>.
+          </p>
+        }
+      />
+
       <Card>
         <CardHeader>
           <CardTitle>Recommended Cursor MCP config</CardTitle>
         </CardHeader>
         <CardContent>
-          <pre className="overflow-x-auto rounded-md bg-muted p-4 text-sm" data-testid="mcp-config-example">
-            <code>{PORTAL_MCP_EXAMPLE}</code>
-          </pre>
+          <div data-testid="mcp-config-example">
+            <SourceCode language="json" value={PORTAL_MCP_EXAMPLE} />
+          </div>
         </CardContent>
       </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Division of responsibility</CardTitle>
@@ -42,6 +46,7 @@ export function AgentPage() {
           </p>
         </CardContent>
       </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Progressive discovery</CardTitle>

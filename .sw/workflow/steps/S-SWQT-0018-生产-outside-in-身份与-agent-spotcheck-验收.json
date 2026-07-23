@@ -297,7 +297,7 @@
         "validationSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; ui.swqt.net on public DNS (Tailscale split-DNS gap on audit host); partial SWS bearer",
         "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
         "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
-        "testCaseSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; partial SWS bearer + ui.swqt.net DNS",
+        "testCaseSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; ui.swqt.net on public DNS (Tailscale split-DNS gap on audit host); partial SWS bearer",
         "coverageSummary": "not-recorded-by-delivery-minimum",
         "explanationSync": "not-recorded-by-delivery-minimum",
         "explanationRefs": "N/A",

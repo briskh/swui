@@ -327,7 +327,7 @@
       "path": ".sw/workflow/steps/S-SWQT-0018-生产-outside-in-身份与-agent-spotcheck-验收.json",
       "sourceFeatureId": "F-SWQT-0006",
       "title": "Step S-SWQT-0018: 生产 outside-in 身份与 Agent SpotCheck 验收",
-      "validationSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; partial SWS bearer + ui.swqt.net DNS",
+      "validationSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; ui.swqt.net on public DNS (Tailscale split-DNS gap on audit host); partial SWS bearer",
       "deliveredAt": "2026-07-23T00:00:00.000Z",
       "rootMount": false
     }
@@ -553,6 +553,6 @@
       "rel": "sourceFeature"
     }
   ],
-  "generatedAt": "2026-07-23T09:54:55.414Z",
-  "contentHash": "sha256:1816df2de1c87ed20102790bba9c160ff7cf51933f5fec8ba60728084d935a4f"
+  "generatedAt": "2026-07-23T09:58:09.266Z",
+  "contentHash": "sha256:25108071d32f2b5e88abc0b8ffe4060ccd0cf139975fb63c1b58820609e5e185"
 }

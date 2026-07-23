@@ -33,9 +33,10 @@ Public URL: ${SWUI_MCP_PUBLIC_URL}
 Use this progressive-disclosure sequence:
 1. Read swui://packages/ui/llms.txt and swui://packages/ui/AGENTS.md for the UI first hop.
 2. Read swui://packages/ui-tokens/llms.txt and swui://packages/ui-tokens/AGENTS.md for token rules.
-3. Search with swui.catalog.search using a non-empty query; default limit is 10 and maximum limit is 25.
-4. Read one exact swui://components/{name} resource or call swui.component.get.
-5. Resolve an exact package version with swui.package.get before installing.
+3. Read swui://foundation/contract — mandatory color + typography allowlist (Portal /colors and /typography).
+4. Search with swui.catalog.search using a non-empty query; default limit is 10 and maximum limit is 25.
+5. Read one exact swui://components/{name} resource or call swui.component.get.
+6. Resolve an exact package version with swui.package.get before installing.
 
 Before install, use these resources and tools for catalog, adoption, and registry metadata.
 After install, prefer node_modules/@swqt/ui/AGENTS.md and same-version package docs as version-locked truth.
@@ -115,6 +116,13 @@ export const RESOURCE_MAP = [
     name: "tokens-reference",
     title: "@swqt/ui-tokens reference",
     description: "Semantic token reference"
+  },
+  {
+    uri: "swui://foundation/contract",
+    file: "experience/foundation-contract.md",
+    name: "foundation-contract",
+    title: "Foundation contract (colors + typography)",
+    description: "Mandatory allowlist aligned with Portal /colors and /typography; enforced by check:design-contract"
   }
 ] as const;
 

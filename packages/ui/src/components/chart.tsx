@@ -92,7 +92,7 @@ export function ChartTooltipContent({
   }
 
   return (
-    <div className="grid min-w-32 gap-1.5 rounded-md border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-md">
+    <div className="grid min-w-32 gap-1.5 rounded-md border border-border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-md">
       {label ? <div className="font-medium">{String(label)}</div> : null}
       <div className="grid gap-1">
         {payload.map((item: ChartTooltipPayloadItem) => {

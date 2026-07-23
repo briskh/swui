@@ -2,6 +2,8 @@
 
 @theme inline {
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: ui-serif, "Songti SC", "SimSun", "Noto Serif CJK SC", "New York", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Segoe UI Mono", "Roboto Mono", "Noto Sans Mono CJK SC", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -28,15 +30,18 @@
   --color-status-error: var(--status-error);
   --color-metric-instrument: var(--metric-instrument);
   --color-metric-asset: var(--metric-asset);
+  --color-tty-background: var(--tty-background);
+  --color-tty-foreground: var(--tty-foreground);
+  --color-tty-border: var(--tty-border);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --spacing-control-micro: 1.5rem;
   --spacing-control-xs: 1.75rem;
-  --spacing-control-compact: 2rem;
-  --spacing-control-sm: 2.25rem;
-  --spacing-control-md: 2.5rem;
-  --spacing-control-lg: 3rem;
+  --spacing-control-compact: 1.75rem;
+  --spacing-control-sm: 1.875rem;
+  --spacing-control-md: 2rem;
+  --spacing-control-lg: 2.5rem;
   --breakpoint-sm: 40rem;
   --breakpoint-md: 48rem;
   --breakpoint-lg: 64rem;
@@ -57,33 +62,65 @@
   --space-stack: 16px;
   --space-section: 32px;
   --space-panel: 16px;
-  --primary: oklch(0.24 0.05 65);
+
+  /* Brand + product semantics */
+  --primary: oklch(0.24 0.05 55);
   --primary-foreground: oklch(0.99 0.012 95);
   --accent: oklch(0.955 0.01 92);
-  --accent-foreground: oklch(0.24 0.05 65);
-  --ring: oklch(0.24 0.05 65);
-  --status-loading: oklch(0.24 0.05 65);
-  --metric-instrument: oklch(0.24 0.05 65);
+  --accent-foreground: oklch(0.24 0.05 55);
+  --ring: var(--primary);
+  --status-loading: var(--primary);
+  --metric-instrument: var(--primary);
   --metric-asset: oklch(0.50 0.03 70);
-  --background: oklch(0.985 0.008 92);
-  --foreground: oklch(0.24 0.044 65);
+
+  /* Surfaces */
+  --background: oklch(0.965 0.008 92);
+  --foreground: oklch(0.24 0.044 55);
   --card: oklch(0.997 0.004 92);
-  --card-foreground: oklch(0.24 0.044 65);
+  --card-foreground: var(--foreground);
   --popover: oklch(0.997 0.004 92);
-  --popover-foreground: oklch(0.24 0.044 65);
+  --popover-foreground: var(--foreground);
   --secondary: oklch(0.935 0.012 92);
-  --secondary-foreground: oklch(0.28 0.04 65);
+  --secondary-foreground: oklch(0.28 0.04 55);
   --muted: oklch(0.955 0.01 92);
   --muted-foreground: oklch(0.50 0.03 70);
-  --destructive: oklch(0.575 0.17 32);
+  --border: oklch(0.915 0.012 92);
+  --input: oklch(0.915 0.012 92);
+
+  /* Status */
+  --destructive: oklch(0.56 0.17 32);
   --destructive-foreground: oklch(0.99 0.006 32);
-  /* Passkey / WebAuthn CTA — teal, distinct from warm primary (aligned with eauth) */
-  --passkey: oklch(0.42 0.10 210);
-  --passkey-foreground: oklch(0.99 0.01 210);
-  --border: oklch(0.865 0.02 80);
-  --input: oklch(0.865 0.02 80);
   --status-ready: oklch(0.48 0.125 150);
-  --status-error: oklch(0.575 0.17 32);
+  --status-error: oklch(0.56 0.17 32);
+
+  /* Passkey / WebAuthn CTA — aliases status-ready (green lane) */
+  --passkey: var(--status-ready);
+  --passkey-foreground: oklch(0.99 0.01 150);
+
+  /* TTY terminal — fixed dark canvas in every theme */
+  --tty-background: oklch(0.10 0.01 265);
+  --tty-foreground: oklch(0.88 0.01 265);
+  --tty-border: oklch(0.22 0.014 265);
+  --tty-prompt: oklch(0.72 0.14 155);
+  --tty-command: oklch(0.90 0.02 95);
+  --tty-flag: oklch(0.68 0.11 210);
+  --tty-string: oklch(0.76 0.11 68);
+  --tty-path: oklch(0.78 0.08 72);
+  --tty-success: oklch(0.72 0.14 155);
+  --tty-error: oklch(0.68 0.16 25);
+  --tty-muted: oklch(0.58 0.018 265);
+
+  /* Source code syntax lanes (on `--source-background` / card) */
+  --source-background: var(--card);
+  --source-foreground: var(--card-foreground);
+  --source-keyword: oklch(0.42 0.10 210);
+  --source-string: oklch(0.48 0.125 150);
+  --source-comment: oklch(0.50 0.03 70);
+  --source-number: oklch(0.55 0.14 68);
+  --source-tag: oklch(0.45 0.11 210);
+  --source-attr: oklch(0.52 0.10 68);
+  --source-punctuation: oklch(0.45 0.02 55);
+
   font-family: var(--font-sans);
   color: var(--foreground);
   background: var(--background);
@@ -95,30 +132,64 @@
 [data-theme="dark"],
 .dark {
   color-scheme: dark;
-  --primary: oklch(0.80 0.22 92);
-  --primary-foreground: oklch(0.16 0.05 92);
-  --accent: oklch(0.94 0.14 95);
-  --accent-foreground: oklch(0.50 0.03 70);
-  --ring: oklch(0.80 0.22 92);
-  --status-loading: oklch(0.80 0.22 92);
-  --metric-instrument: oklch(0.80 0.22 92);
-  --metric-asset: oklch(0.72 0.20 72);
-  --background: oklch(0.16 0.008 260);
-  --foreground: oklch(0.96 0.008 95);
-  --card: oklch(0.20 0.01 260);
-  --card-foreground: oklch(0.96 0.008 95);
-  --popover: oklch(0.20 0.01 260);
-  --popover-foreground: oklch(0.96 0.008 95);
-  --secondary: oklch(0.26 0.015 260);
-  --secondary-foreground: oklch(0.93 0.01 95);
-  --muted: oklch(0.28 0.012 260);
-  --muted-foreground: oklch(0.72 0.012 260);
-  --destructive: oklch(0.68 0.16 32);
-  --destructive-foreground: oklch(0.14 0.02 32);
-  --passkey: oklch(0.72 0.12 210);
-  --passkey-foreground: oklch(0.16 0.04 210);
-  --border: oklch(0.36 0.015 260);
-  --input: oklch(0.38 0.018 260);
-  --status-ready: oklch(0.72 0.13 150);
-  --status-error: oklch(0.72 0.15 32);
+
+  /*
+   * Dark palette — modern cool-neutral surfaces + warm brand accent
+   * (see docs/experience/color-lanes.md). Elevation = lighter surfaces;
+   * primary stays olive-gold; passkey aliases status-ready.
+   */
+
+  /* Brand + product semantics */
+  --primary: oklch(0.76 0.11 68);
+  --primary-foreground: oklch(0.18 0.04 68);
+  --accent: oklch(0.22 0.025 72);
+  --accent-foreground: oklch(0.88 0.08 72);
+  --ring: var(--primary);
+  --status-loading: var(--primary);
+  --metric-instrument: var(--primary);
+  --metric-asset: oklch(0.72 0.04 70);
+
+  /* Surfaces — cool slate elevation ladder */
+  --background: oklch(0.14 0.012 265);
+  --muted: oklch(0.18 0.012 265);
+  --card: oklch(0.19 0.013 265);
+  --popover: oklch(0.21 0.014 265);
+  --secondary: oklch(0.23 0.014 265);
+  --border: oklch(0.28 0.016 265);
+  --input: oklch(0.26 0.015 265);
+
+  /* Copy — cool-neutral, stepped lightness */
+  --foreground: oklch(0.93 0.01 265);
+  --card-foreground: var(--foreground);
+  --popover-foreground: var(--foreground);
+  --secondary-foreground: oklch(0.78 0.015 265);
+  --muted-foreground: oklch(0.62 0.018 265);
+
+  /* Status */
+  --status-ready: oklch(0.72 0.14 155);
+  --status-error: oklch(0.68 0.16 25);
+  --destructive: oklch(0.62 0.17 25);
+  --destructive-foreground: oklch(0.14 0.02 25);
+
+  /* Passkey — aliases status-ready */
+  --passkey: var(--status-ready);
+  --passkey-foreground: oklch(0.14 0.04 155);
+
+  --source-background: var(--card);
+  --source-foreground: var(--card-foreground);
+  --source-keyword: oklch(0.72 0.12 210);
+  --source-string: oklch(0.72 0.14 155);
+  --source-comment: oklch(0.62 0.018 265);
+  --source-number: oklch(0.78 0.10 68);
+  --source-tag: oklch(0.74 0.11 210);
+  --source-attr: oklch(0.76 0.11 68);
+  --source-punctuation: oklch(0.70 0.015 265);
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before {
+    border-color: var(--border);
+  }
 }
