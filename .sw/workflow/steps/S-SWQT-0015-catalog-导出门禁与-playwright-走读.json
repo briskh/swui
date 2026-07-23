@@ -2,8 +2,10 @@
   "schemaVersion": 6,
   "kind": "step",
   "stepId": "S-SWQT-0015",
-  "status": "designed",
-  "overlay": { "state": "none" },
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
   "links": [],
   "title": "Step S-SWQT-0015: Catalog 导出门禁与 Playwright 走读",
   "sourceFeature": {
@@ -14,7 +16,7 @@
   "createdAt": "2026-07-23T05:35:00.000Z",
   "updatedAt": "2026-07-23T05:35:00.000Z",
   "supersedes": "N/A",
-  "nextHandoff": "implement",
+  "nextHandoff": "closed",
   "sections": {
     "goal": {
       "sectionStatus": "done",
@@ -31,7 +33,10 @@
           "quality.yml 集成新检查；mcp-smoke 覆盖新 tools。",
           "docs/experience/portal-and-mcp.md Phase 2 节；R-SWUI-002 状态更新。"
         ],
-        "outOfScope": ["Storybook", "skywalker 强制下线"]
+        "outOfScope": [
+          "Storybook",
+          "skywalker 强制下线"
+        ]
       }
     },
     "inputs": {
@@ -44,7 +49,10 @@
     "dependencies": {
       "sectionStatus": "done",
       "items": {
-        "previousSteps": ["S-SWQT-0013", "S-SWQT-0014"]
+        "previousSteps": [
+          "S-SWQT-0013",
+          "S-SWQT-0014"
+        ]
       }
     },
     "implementation-ready-brief": {
@@ -53,13 +61,112 @@
         "problemDefinition": "catalog demo 与 exports 可能漂移且无回归。",
         "requirementsDefinition": "CI fail on drift；Playwright 覆盖主路径。",
         "firstSlice": "check:catalog-export 在本地可运行。",
-        "readiness": { "readiness": "Yes", "reason": "0013/0014 完成后集成。" }
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "0013/0014 完成后集成。"
+        }
       }
     },
-    "implementation-record": { "sectionStatus": "not-applicable", "items": {} },
-    "use-case": { "sectionStatus": "not-applicable", "items": {} },
-    "review-report": { "sectionStatus": "not-applicable", "items": {} },
-    "delivered-registry-entry": { "sectionStatus": "not-applicable", "items": {} },
-    "completion-audit": { "sectionStatus": "not-applicable", "items": {} }
-  }
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "summary": "Added check:catalog-export CI gate, Playwright /components walkthrough, and Phase 2 experience docs.",
+        "changeSurface": [
+          "scripts/check-catalog-export.mjs",
+          ".github/workflows/quality.yml",
+          "examples/portal/browser.spec.mjs",
+          "docs/experience/portal-and-mcp.md",
+          "docs/research/R-SWUI-002-design-system-portal-mcp-registry-research.md"
+        ],
+        "validation": [
+          "bun run check:catalog-export",
+          "REGISTRY_FIXTURE=1 bun run --filter '@swui/portal-example' test:browser"
+        ],
+        "result": "Phase 2 acceptance is repeatable in CI and local gates."
+      }
+    },
+    "use-case": {
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "cases": [
+          {
+            "name": "Catalog drift fails CI",
+            "evidence": "check:catalog-export validates catalog exports against package and demo registry."
+          }
+        ]
+      }
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "gateOutcomes": [
+          {
+            "gate": "CI and browser coverage",
+            "result": "passed",
+            "evidence": "26 Playwright cases include /components index and representative demos.",
+            "counterEvidenceChecked": "yes"
+          }
+        ],
+        "promotionDisposition": "ready"
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-23",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0015-catalog-导出门禁与-playwright-走读.json",
+        "validationSummary": "F-SWQT-0005 Phase 2 step 0015",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "F-SWQT-0005 Phase 2 step 0015",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0015",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "minimum-auto-filled-by-promote",
+        "minimumSetSatisfied": "Yes - workflow promote populated minimum registry/audit records before setting status=delivered.",
+        "upgradeToFullAuditReason": "not-recorded-by-delivery-minimum",
+        "requirementAudit": [
+          {
+            "requirement": "reviewed Step can be delivered only with closure records.",
+            "status": "implemented",
+            "evidence": "workflow promote populated delivered-registry-entry and completion-audit before status=delivered.",
+            "risk": "Minimum auto-fill is less descriptive than a hand-authored Completion Audit.",
+            "followUp": "Review owner may enrich the audit before delivery when richer evidence is required."
+          }
+        ],
+        "workflowRunAudit": "minimum auto-filled by workflow promote",
+        "intermediateDocumentStateAudit": "delivered-registry-entry and completion-audit populated before final status=delivered.",
+        "documentGovernanceAudit": "minimum auto-filled by workflow promote",
+        "frictionAndImprovementBacklog": "N/A",
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Closing triad minimum: reviewed precondition satisfied; validationSummary present; registry/audit records populated before status=delivered.",
+          "closingSelfAuditConsistency": "minimum auto-filled by workflow promote",
+          "landingChecklistOutcome": "not-applicable",
+          "pluginSkillFriction": "N/A",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "N/A",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "not-recorded-by-delivery-minimum"
+      }
+    }
+  },
+  "validationSummary": "F-SWQT-0005 Phase 2 step 0015"
 }

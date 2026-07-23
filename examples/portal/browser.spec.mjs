@@ -19,6 +19,7 @@ test("overview and navigation links resolve", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Shared Web UI design system" })).toBeVisible();
   const nav = page.getByRole("navigation", { name: "Primary" });
   for (const [href, label] of [
+    ["/components", "Components"],
     ["/packages", "Packages"],
     ["/agent", "Agent"],
     ...conventionRoutes
@@ -92,4 +93,33 @@ test("mcp endpoint accepts initialize", async ({ request }) => {
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
   expect(body).toContain("swui");
+});
+
+test("components index lists catalog groups", async ({ page }) => {
+  await page.goto("/components");
+  await expect(page.getByRole("heading", { name: "Component catalog" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Actions" })).toBeVisible();
+  await expect(page.locator('a[href="/components/actions/button"]')).toBeVisible();
+  await expectNoWcagAaViolations(page);
+});
+
+test("button demo renders variants", async ({ page }) => {
+  await page.goto("/components/actions/button");
+  await expect(page.getByRole("heading", { name: "Button" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Default" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Passkey" })).toBeVisible();
+});
+
+test("dialog demo opens overlay", async ({ page }) => {
+  await page.goto("/components/overlay/dialog");
+  await expect(page.getByRole("button", { name: "Open dialog" })).toBeVisible();
+  await page.getByRole("button", { name: "Open dialog" }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+});
+
+test("form field demo renders labeled input", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/components/forms/formfield");
+  await expect(page.getByText("Username")).toBeVisible();
+  await expect(page.getByRole("textbox")).toBeVisible();
 });

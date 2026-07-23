@@ -1,8 +1,10 @@
 # Portal and MCP delivery experience
 
-Feature: **F-SWQT-0004** — design-system portal + swui MCP MVP (R-SWUI-002 §11.1).
+Features: **F-SWQT-0004** (MVP) + **F-SWQT-0005** (Phase 2 catalog) — design-system portal + swui MCP (R-SWUI-002 §11.1–§11.2).
 
 ## What shipped
+
+### F-SWQT-0004 MVP
 
 - `examples/portal` — Vite/React human portal with Overview, convention pages, `/packages`, and `/agent`.
 - `scripts/sync-docs.mjs` — one-way SSOT sync from `packages/ui/docs`, `AGENTS.md`, and `llms.txt` into `.generated/`.
@@ -11,6 +13,14 @@ Feature: **F-SWQT-0004** — design-system portal + swui MCP MVP (R-SWUI-002 §1
 - swui MCP — resources (`AGENTS.md`, `ADOPTION.md`, `COMPONENT-CATALOG.md`) and tools (`swui.package.get`, `swui.package.installHint`).
 - `packages/ui/docs/ADOPTION.md` — Portal MCP section + dual-slot `.cursor/mcp.json` example.
 
+### F-SWQT-0005 Phase 2
+
+- `/components` — grouped catalog index + per-export demo pages sourced from `COMPONENT-CATALOG.md`.
+- `.generated/catalog-index.json` — structured catalog index generated during `sync-docs`.
+- MCP extensions — `swui.catalog.search`, `swui.component.get`, and `swui://components/{name}` resources.
+- CI — `check:catalog-export` validates catalog ↔ package exports ↔ portal demo registry.
+- Playwright — `/components` index + representative demo walkthrough (Button, Dialog, FormField).
+
 ## Commands
 
 From repo root:
@@ -18,6 +28,7 @@ From repo root:
 ```bash
 bun run sync-docs
 bun run sync-docs:check
+bun run check:catalog-export
 bun run portal:dev
 bun run portal:build
 bun run --filter '@swui/portal-example' test
@@ -36,10 +47,10 @@ Deploy runbook: [examples/portal/DEPLOY.md](../examples/portal/DEPLOY.md).
 
 ## Validation evidence
 
-- Unit: sync-docs, registry-client, MCP tool payloads (`examples/portal/tests/`).
-- Browser: 18 Playwright cases across light/dark covering routes, theme toggle, packages UI, agent MCP docs, registry API, MCP initialize.
-- CI: `.github/workflows/quality.yml` includes portal build, sync-docs check, unit tests, and browser matrix.
-- Production DNS/deploy: `blocked-with-reason(infra)` until `ui.swqt.net` ingress is provisioned; local/preview smoke satisfies MVP acceptance.
+- Unit: sync-docs, catalog-index parser, registry-client, MCP tool payloads (package + catalog search/get).
+- Browser: 26 Playwright cases across light/dark covering routes, theme toggle, packages UI, agent MCP docs, registry API, MCP initialize, and `/components` catalog demos.
+- CI: `.github/workflows/quality.yml` includes portal build, sync-docs check, catalog-export check, unit tests, and browser matrix.
+- Production DNS/deploy: `blocked-with-reason(infra)` until `ui.swqt.net` ingress is provisioned; local/preview smoke satisfies acceptance.
 
 ## Boundaries preserved
 

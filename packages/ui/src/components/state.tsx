@@ -25,7 +25,8 @@ export function LoadingState({ className, label = "Loading" }: LoadingStateProps
   return (
     <Card className={cn("flex h-40 items-center justify-center", className)}>
       <CardContent className="flex items-center justify-center p-0">
-        <Spinner label={label} />
+        <Spinner />
+        <span className="sr-only">{label}</span>
       </CardContent>
     </Card>
   );

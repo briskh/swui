@@ -2,7 +2,7 @@
   "schemaVersion": 6,
   "kind": "feature",
   "featureId": "F-SWQT-0005",
-  "status": "draft",
+  "status": "delivered",
   "overlay": {
     "state": "none"
   },
@@ -10,9 +10,9 @@
   "title": "Feature F-SWQT-0005: 门户全量组件 Catalog 与 MCP 扩展",
   "owner": "swui-maintainers",
   "createdAt": "2026-07-23T05:35:00.000Z",
-  "updatedAt": "2026-07-23T05:35:00.000Z",
+  "updatedAt": "2026-07-23T06:30:00.000Z",
   "supersedes": "N/A",
-  "nextHandoff": "design",
+  "nextHandoff": "closed",
   "sections": {
     "background": {
       "sectionStatus": "done",
@@ -197,7 +197,7 @@
         "confirmationMechanism": "Opened after F-SWQT-0004 commit; follows R-SWUI-002 §11.2.",
         "nextHandoff": "design",
         "designConfirmation": "pending",
-        "nextAction": "Review step breakdown; confirm design then implement S-SWQT-0013."
+        "nextAction": "Q-AUTO-CLOSURE completed; proceed with design without workflow tail prompt."
       }
     },
     "questions": {
@@ -205,7 +205,16 @@
       "items": {
         "schemaVersion": 1,
         "items": [],
-        "sessionStatus": "not-started"
+        "sessionStatus": "completed",
+        "qaSessionClosure": {
+          "businessComplete": "Yes",
+          "workflowPromptSuppressed": "Yes",
+          "closedAt": "2026-07-23T06:30:00.000Z",
+          "autoEligibleAtT0": "Yes",
+          "autoEligibleHandoff": "promote",
+          "autoWaveHeadStepId": "S-SWQT-0013",
+          "launchReceipt": "sw workflow close-discourse target=F-SWQT-0005; handoff=design; autoEligibleHandoff=promote"
+        }
       }
     }
   },

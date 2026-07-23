@@ -15,6 +15,7 @@
     "portal:dev": "bun run --filter '@swui/portal-example' dev",
     "portal:build": "bun run --filter '@swui/portal-example' build",
     "check:design-contract": "node scripts/check-design-contract.mjs",
+    "check:catalog-export": "node scripts/check-catalog-export.mjs",
     "verify:packed-consumer": "node scripts/verify-packed-consumer.mjs"
   }
 }

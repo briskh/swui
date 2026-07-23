@@ -54,6 +54,17 @@ Before installing the packages, agents may query the read-only **swui** MCP serv
 
 Use **swui** for component catalog resources, adoption snippets, and registry metadata. Keep the separate **sw** MCP server for SWS methodology and workflow tools. After install, prefer version-locked docs in `node_modules/@swui/ui/AGENTS.md`.
 
+MCP tools (read-only):
+
+| Tool | Purpose |
+|------|---------|
+| `swui.package.get` | Registry metadata for `@swui/ui` / `@swui/ui-tokens` |
+| `swui.package.installHint` | `.npmrc` template + npm/bun install commands |
+| `swui.catalog.search` | Keyword search over `COMPONENT-CATALOG` exports |
+| `swui.component.get` | Single export details + portal demo path |
+
+Resources include `swui://docs/*` plus `swui://components/{ExportName}` entries aligned with the portal catalog.
+
 Example `.cursor/mcp.json` fragment:
 
 ```json

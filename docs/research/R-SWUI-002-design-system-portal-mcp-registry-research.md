@@ -1,7 +1,7 @@
 # R-SWUI-002：设计系统门户、Agent MCP 与 npm Registry 集成研究
 
 - **文档编号**：R-SWUI-002
-- **状态**：implemented (MVP) — F-SWQT-0004 交付 portal + swui MCP + registry 方案 A；Phase 2 catalog 未含
+- **状态**：implemented (Phase 2) — F-SWQT-0004 MVP + F-SWQT-0005 catalog demo / MCP search
 - **记录类型**：research evidence / 潜在 Feature 输入
 - **日期**：2026-07-23
 - **范围**：`swui` 仓库、`@swui/ui-tokens`、`@swui/ui`、私有 npm registry、Agent 消费路径

@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { PortalLayout } from "./App";
 import { AgentPage } from "./pages/AgentPage";
+import { ComponentDemoPage } from "./pages/ComponentDemoPage";
+import { ComponentsIndexPage } from "./pages/ComponentsIndexPage";
 import { ConventionPage } from "./pages/ConventionPage";
 import { HomePage } from "./pages/HomePage";
 import { PackagesPage } from "./pages/PackagesPage";
@@ -16,6 +18,8 @@ createRoot(document.getElementById("root")!).render(
           <Route index element={<HomePage />} />
           <Route path="conventions/:slug" element={<ConventionPage />} />
           <Route path="packages" element={<PackagesPage />} />
+          <Route path="components" element={<ComponentsIndexPage />} />
+          <Route path="components/:groupSlug/:exportSlug" element={<ComponentDemoPage />} />
           <Route path="agent" element={<AgentPage />} />
         </Route>
       </Routes>

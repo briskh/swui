@@ -2,8 +2,10 @@
   "schemaVersion": 6,
   "kind": "step",
   "stepId": "S-SWQT-0014",
-  "status": "designed",
-  "overlay": { "state": "none" },
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
   "links": [],
   "title": "Step S-SWQT-0014: MCP catalog.search / component.get 与组件资源",
   "sourceFeature": {
@@ -14,7 +16,7 @@
   "createdAt": "2026-07-23T05:35:00.000Z",
   "updatedAt": "2026-07-23T05:35:00.000Z",
   "supersedes": "N/A",
-  "nextHandoff": "implement",
+  "nextHandoff": "closed",
   "sections": {
     "goal": {
       "sectionStatus": "done",
@@ -30,7 +32,10 @@
           "从 catalog 索引生成 component 资源正文（export、variants、notes）。",
           "mcp-smoke 扩展覆盖 search/get。"
         ],
-        "outOfScope": ["swui.quality.getMatrix（可选 P1）", "stdio MCP"]
+        "outOfScope": [
+          "swui.quality.getMatrix（可选 P1）",
+          "stdio MCP"
+        ]
       }
     },
     "inputs": {
@@ -43,8 +48,12 @@
     "dependencies": {
       "sectionStatus": "done",
       "items": {
-        "previousSteps": ["S-SWQT-0013"],
-        "projectResources": ["examples/portal/scripts/mcp-smoke.mjs"]
+        "previousSteps": [
+          "S-SWQT-0013"
+        ],
+        "projectResources": [
+          "examples/portal/scripts/mcp-smoke.mjs"
+        ]
       }
     },
     "implementation-ready-brief": {
@@ -53,13 +62,111 @@
         "problemDefinition": "Agent 无法结构化查询单个组件。",
         "requirementsDefinition": "search 返回匹配条目；get 返回 export 详情。",
         "firstSlice": "swui.component.get name=Button 返回 catalog 段落。",
-        "readiness": { "readiness": "Yes", "reason": "依赖 S-SWQT-0013 catalog 索引。" }
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "依赖 S-SWQT-0013 catalog 索引。"
+        }
       }
     },
-    "implementation-record": { "sectionStatus": "not-applicable", "items": {} },
-    "use-case": { "sectionStatus": "not-applicable", "items": {} },
-    "review-report": { "sectionStatus": "not-applicable", "items": {} },
-    "delivered-registry-entry": { "sectionStatus": "not-applicable", "items": {} },
-    "completion-audit": { "sectionStatus": "not-applicable", "items": {} }
-  }
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "summary": "Extended swui MCP with catalog.search, component.get, and swui://components/{name} resources.",
+        "changeSurface": [
+          "examples/portal/server/handlers.ts",
+          "examples/portal/server/catalog.ts",
+          "examples/portal/scripts/mcp-smoke.mjs",
+          "packages/ui/docs/ADOPTION.md"
+        ],
+        "validation": [
+          "bun run --filter '@swui/portal-example' mcp:smoke",
+          "bun run --filter '@swui/portal-example' test"
+        ],
+        "result": "Agents can search and fetch structured component metadata before install."
+      }
+    },
+    "use-case": {
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "cases": [
+          {
+            "name": "Pre-install component lookup",
+            "evidence": "swui.component.get name=Button returns demo path and resource URI."
+          }
+        ]
+      }
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "sectionStatus": "done",
+        "reviewProfile": "full",
+        "decision": "reviewed",
+        "gateOutcomes": [
+          {
+            "gate": "MCP catalog tools",
+            "result": "passed",
+            "evidence": "mcp-smoke covers search/get and component resource read.",
+            "counterEvidenceChecked": "yes"
+          }
+        ],
+        "promotionDisposition": "ready"
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-23",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0014-mcp-catalog-search-与-component-get.json",
+        "validationSummary": "F-SWQT-0005 Phase 2 step 0014",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "F-SWQT-0005 Phase 2 step 0014",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0014",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "minimum-auto-filled-by-promote",
+        "minimumSetSatisfied": "Yes - workflow promote populated minimum registry/audit records before setting status=delivered.",
+        "upgradeToFullAuditReason": "not-recorded-by-delivery-minimum",
+        "requirementAudit": [
+          {
+            "requirement": "reviewed Step can be delivered only with closure records.",
+            "status": "implemented",
+            "evidence": "workflow promote populated delivered-registry-entry and completion-audit before status=delivered.",
+            "risk": "Minimum auto-fill is less descriptive than a hand-authored Completion Audit.",
+            "followUp": "Review owner may enrich the audit before delivery when richer evidence is required."
+          }
+        ],
+        "workflowRunAudit": "minimum auto-filled by workflow promote",
+        "intermediateDocumentStateAudit": "delivered-registry-entry and completion-audit populated before final status=delivered.",
+        "documentGovernanceAudit": "minimum auto-filled by workflow promote",
+        "frictionAndImprovementBacklog": "N/A",
+        "closingSelfAudit": {
+          "closingSelfAudit": "completed",
+          "closingSelfAuditEvidence": "Closing triad minimum: reviewed precondition satisfied; validationSummary present; registry/audit records populated before status=delivered.",
+          "closingSelfAuditConsistency": "minimum auto-filled by workflow promote",
+          "landingChecklistOutcome": "not-applicable",
+          "pluginSkillFriction": "N/A",
+          "terminologyCandidates": "none",
+          "reusableWorkflowPattern": "N/A",
+          "retrospectiveHandoff": "none"
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "not-recorded-by-delivery-minimum"
+      }
+    }
+  },
+  "validationSummary": "F-SWQT-0005 Phase 2 step 0014"
 }

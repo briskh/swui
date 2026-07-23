@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { generateCatalogIndex } from "./generate-catalog-index.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const portalRoot = join(scriptDir, "..");
@@ -41,10 +42,17 @@ export function syncDocs({ portalDir = portalRoot, repo = repoRoot, dryRun = fal
       cpSync(source, dest);
     }
   }
-  return plan.map(({ source, dest }) => ({
+  const copied = plan.map(({ source, dest }) => ({
     source: relative(repo, source),
     dest: relative(portalDir, dest)
   }));
+  if (!dryRun) {
+    generateCatalogIndex({
+      catalogPath: join(repo, "packages/ui/docs/COMPONENT-CATALOG.md"),
+      outPath: join(portalDir, ".generated/catalog-index.json")
+    });
+  }
+  return copied;
 }
 
 export function checkDocsSync({ portalDir = portalRoot, repo = repoRoot } = {}) {
@@ -82,7 +90,6 @@ function main() {
   console.log(`sync-docs: copied ${copied.length} files to .generated/`);
 }
 
-import { pathToFileURL } from "node:url";
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main();
 }

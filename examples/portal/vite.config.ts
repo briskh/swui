@@ -23,15 +23,17 @@ export default defineConfig({
     }
   ],
   resolve: {
-    alias: {
-      "@swui/ui/utils": path.join(uiSrc, "lib/utils.ts"),
-      "@swui/ui/date": path.join(uiSrc, "lib/date.ts"),
-      "@swui/ui/theme": path.join(uiSrc, "theme.tsx"),
-      "@swui/ui/wide-screen-gate": path.join(uiSrc, "components/wide-screen-gate.tsx"),
-      "@swui/ui/button": path.join(uiSrc, "components/button.tsx"),
-      "@swui/ui/card": path.join(uiSrc, "components/card.tsx"),
-      "@swui/ui": path.join(uiSrc, "index.ts")
-    }
+    alias: [
+      { find: "@swui/ui/utils", replacement: path.join(uiSrc, "lib/utils.ts") },
+      { find: "@swui/ui/date", replacement: path.join(uiSrc, "lib/date.ts") },
+      { find: "@swui/ui/theme", replacement: path.join(uiSrc, "theme.tsx") },
+      { find: "@swui/ui/wide-screen-gate", replacement: path.join(uiSrc, "components/wide-screen-gate.tsx") },
+      { find: "@swui/ui/button", replacement: path.join(uiSrc, "components/button.tsx") },
+      { find: "@swui/ui/card", replacement: path.join(uiSrc, "components/card.tsx") },
+      { find: "@swui/ui/form-field", replacement: path.join(uiSrc, "components/form-field.tsx") },
+      { find: "@swui/ui/form", replacement: path.join(uiSrc, "components/form.tsx") },
+      { find: "@swui/ui", replacement: path.join(uiSrc, "index.ts") }
+    ]
   },
   server: {
     host: "127.0.0.1",

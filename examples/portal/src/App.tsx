@@ -26,6 +26,9 @@ export function PortalLayout() {
                 {page.title}
               </NavLink>
             ))}
+            <NavLink to="/components" className={linkClass}>
+              Components
+            </NavLink>
             <NavLink to="/packages" className={linkClass}>
               Packages
             </NavLink>

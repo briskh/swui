@@ -85,9 +85,9 @@
     },
     "F-SWQT-0005": {
       "kind": "feature",
-      "status": "draft",
+      "status": "delivered",
       "path": ".sw/workflow/feature/F-SWQT-0005-门户全量组件-catalog-与-mcp-扩展.json",
-      "deliveryComplete": false,
+      "deliveryComplete": true,
       "title": "Feature F-SWQT-0005: 门户全量组件 Catalog 与 MCP 扩展",
       "stepPlan": {
         "steps": [
@@ -254,24 +254,33 @@
     },
     "S-SWQT-0013": {
       "kind": "step",
-      "status": "designed",
+      "status": "delivered",
       "path": ".sw/workflow/steps/S-SWQT-0013-组件-catalog-浏览与-demo-页.json",
       "sourceFeatureId": "F-SWQT-0005",
-      "title": "Step S-SWQT-0013: 组件 Catalog 浏览与 Demo 页"
+      "title": "Step S-SWQT-0013: 组件 Catalog 浏览与 Demo 页",
+      "validationSummary": "catalog UI: 77 demos, portal build, check:catalog-export",
+      "deliveredAt": "2026-07-23T00:00:00.000Z",
+      "rootMount": false
     },
     "S-SWQT-0014": {
       "kind": "step",
-      "status": "designed",
+      "status": "delivered",
       "path": ".sw/workflow/steps/S-SWQT-0014-mcp-catalog-search-与-component-get.json",
       "sourceFeatureId": "F-SWQT-0005",
-      "title": "Step S-SWQT-0014: MCP catalog.search / component.get 与组件资源"
+      "title": "Step S-SWQT-0014: MCP catalog.search / component.get 与组件资源",
+      "validationSummary": "F-SWQT-0005 Phase 2 step 0014",
+      "deliveredAt": "2026-07-23T00:00:00.000Z",
+      "rootMount": false
     },
     "S-SWQT-0015": {
       "kind": "step",
-      "status": "designed",
+      "status": "delivered",
       "path": ".sw/workflow/steps/S-SWQT-0015-catalog-导出门禁与-playwright-走读.json",
       "sourceFeatureId": "F-SWQT-0005",
-      "title": "Step S-SWQT-0015: Catalog 导出门禁与 Playwright 走读"
+      "title": "Step S-SWQT-0015: Catalog 导出门禁与 Playwright 走读",
+      "validationSummary": "F-SWQT-0005 Phase 2 step 0015",
+      "deliveredAt": "2026-07-23T00:00:00.000Z",
+      "rootMount": false
     }
   },
   "edges": [
@@ -462,6 +471,6 @@
       "rel": "sourceFeature"
     }
   ],
-  "generatedAt": "2026-07-23T05:38:36.104Z",
-  "contentHash": "sha256:54aade64dc15b561c4d6f8c70e21ff3654dd1896051d0a548978f7554a51fb4c"
+  "generatedAt": "2026-07-23T06:40:44.364Z",
+  "contentHash": "sha256:49a3ef4fbb15a4b5562b4cfd5d56c20dfba3fc76e6695f7e70b016893b5404cf"
 }

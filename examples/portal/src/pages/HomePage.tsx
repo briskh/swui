@@ -28,6 +28,16 @@ export function HomePage() {
         </Card>
         <Card>
           <CardHeader>
+            <CardTitle>Components</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-2 text-sm">
+            <Link className="text-primary underline underline-offset-4" to="/components">
+              Browse the full component catalog
+            </Link>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
             <CardTitle>Install and agents</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-2 text-sm">

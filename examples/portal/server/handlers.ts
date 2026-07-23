@@ -12,6 +12,14 @@ import {
   getTrackedPackages,
   summarizePackage
 } from "./registry-client";
+import {
+  componentResourceBody,
+  componentResourceUri,
+  flattenCatalogExports,
+  getComponentDetails,
+  readCatalogIndex,
+  searchCatalog
+} from "./catalog";
 
 const MCP_INSTRUCTIONS = `swui MCP serves Skywalker design-system discovery only.
 
@@ -72,6 +80,64 @@ export function createSwuiMcpServer() {
     );
   }
 
+  const catalogIndex = readCatalogIndex(join(dirname(fileURLToPath(import.meta.url)), ".."));
+  for (const entry of flattenCatalogExports(catalogIndex)) {
+    const uri = componentResourceUri(entry.name);
+    server.registerResource(
+      entry.name,
+      uri,
+      {
+        description: `${entry.groupTitle} · ${entry.notes}`,
+        mimeType: "application/json"
+      },
+      async () => ({
+        contents: [
+          {
+            uri,
+            mimeType: "application/json",
+            text: componentResourceBody(entry)
+          }
+        ]
+      })
+    );
+  }
+
+  server.registerTool(
+    "swui.catalog.search",
+    {
+      description: "Search COMPONENT-CATALOG exports by keyword",
+      inputSchema: {
+        query: z.string()
+      }
+    },
+    async ({ query }) => ({
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(catalogSearchPayload(query), null, 2)
+        }
+      ]
+    })
+  );
+
+  server.registerTool(
+    "swui.component.get",
+    {
+      description: "Return a single catalog export with notes and portal demo path",
+      inputSchema: {
+        name: z.string()
+      }
+    },
+    async ({ name }) => ({
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(componentGetPayload(name), null, 2)
+        }
+      ]
+    })
+  );
+
   server.registerTool(
     "swui.package.get",
     {
@@ -108,6 +174,29 @@ export function createSwuiMcpServer() {
   );
 
   return server;
+}
+
+export function catalogSearchPayload(query: string) {
+  const index = readCatalogIndex(join(dirname(fileURLToPath(import.meta.url)), ".."));
+  const results = searchCatalog(index, query).map((entry) => ({
+    name: entry.name,
+    group: entry.groupTitle,
+    groupId: entry.groupId,
+    slug: entry.slug,
+    notes: entry.notes,
+    demoPath: `/components/${entry.groupId}/${entry.slug}`,
+    resourceUri: componentResourceUri(entry.name)
+  }));
+  return { query, count: results.length, results };
+}
+
+export function componentGetPayload(name: string) {
+  const index = readCatalogIndex(join(dirname(fileURLToPath(import.meta.url)), ".."));
+  const component = getComponentDetails(index, name);
+  if (!component) {
+    return { found: false, name, error: "Component not found in catalog index" };
+  }
+  return { found: true, component };
 }
 
 export async function packageGetPayload(name: "@swui/ui" | "@swui/ui-tokens") {
