@@ -1,0 +1,313 @@
+{
+  "schemaVersion": 6,
+  "kind": "feature",
+  "featureId": "F-SWQT-0004",
+  "status": "draft",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Feature F-SWQT-0004: 设计系统门户与 Agent MCP",
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-23T05:05:00.000Z",
+  "updatedAt": "2026-07-23T05:10:00.000Z",
+  "supersedes": "N/A",
+  "nextHandoff": "design",
+  "sections": {
+    "background": {
+      "sectionStatus": "done",
+      "items": {
+        "trigger": "R-SWUI-002 已完成架构研究与落地前决策收口；仓库具备 agent 文档、ui-consumer 接入证明与私有 registry 发布能力，但缺少统一人类门户、安装前 Agent 查询面（swui MCP）与 registry 聚合页。",
+        "affectedParties": "@swui/ui、@swui/ui-tokens 维护者；skywalker 及所有消费应用开发者；使用 Cursor/Agent 的组织内工程师。",
+        "whyNow": "R-SWUI-001 主题/尺寸治理已 delivered（F-SWQT-0001–0003）；暴露面与分发面成为下一瓶颈。registry metadata 匿名可读、Host 双 MCP 槽位（暂不开 sws facade）已用户确认。",
+        "bullets": [
+          "交付 R-SWUI-002 §11.1 MVP：examples/portal + ui.swqt.net/mcp + registry 方案 A。",
+          "目标态必须符合设计系统行业最佳实践：文档公开、包分发 registry 权威、SSOT 单向同步、职责分离（portal ≠ 产品壳 ≠ 测试夹具）。",
+          "Phase 2 全量 catalog demo 与扩展 MCP tools 不在本 Feature；Playwright 矩阵继续留 ui-consumer（R-SWUI-004）。"
+        ]
+      }
+    },
+    "problem-statement": {
+      "sectionStatus": "done",
+      "items": {
+        "coreProblem": "设计系统知识、安装路径与版本信息分散于 repo Markdown、node_modules 与 npm.inet.swqt.net；人类无法按 COMPONENT-CATALOG 统一浏览，Agent 安装前无法结构化查询 adoption/版本/peer，且无 ui.swqt.net 类 canonical 入口。",
+        "nonGoals": [
+          "不在 @swui/ui 或 @swui/ui-tokens 包内嵌 MCP server、registry 或产品 AppShell/TopBar/业务路由。",
+          "门户不自托管 tarball、不提供 tarball 下载 UI；不绕过 registry install 鉴权。",
+          "不扩展 examples/ui-consumer 为全量 catalog 文档站；不将 Playwright 截图基线迁入 portal。",
+          "不同步启动 sws 本地 facade 联邦（路径 B）；不在中心 SWS MCP 代理 swui。",
+          "MVP 不含 Storybook MCP 试点、全量组件 demo 页、swui.catalog.search / swui.component.get（属 Phase 2）。",
+          "不强制 skywalker showcase 立即下线（渐进 deprecate，Phase 2 后评估）。"
+        ]
+      }
+    },
+    "context-constraints": {
+      "sectionStatus": "done",
+      "items": {
+        "researchSource": "docs/research/R-SWUI-002-design-system-portal-mcp-registry-research.md §13 落地前决策（已确认）",
+        "projectConstraints": [
+          "共享 Web UI 设计系统仓库；portal 在 examples/portal，遵守 packages/ui/AGENTS.md 层边界。",
+          "npm 分发方案 A：npm.inet.swqt.net 为唯一 tarball 源；publish 仍走 scripts/publish.sh。",
+          "Agent 纪律：未安装包用 portal MCP；已安装包以 node_modules/@swui/ui/AGENTS.md 为版本锁定真源。"
+        ],
+        "technicalConstraints": [
+          "静态门户：Vite + React（与 ui-consumer 技术栈一致）。",
+          "MCP：同域 https://ui.swqt.net/mcp HTTP handler（Node）；命名空间 swui://。",
+          "文档 SSOT：packages/ui/docs/*、AGENTS.md、llms.txt → sync-docs.mjs → portal .generated/；禁止手改副本。",
+          "registry：匿名读 metadata；15min TTL stale 缓存；install 需 _authToken。"
+        ],
+        "axisPositioning": "required: application=design-system-portal; surface=human-site+MCP+registry-ui; technology=Vite+React+Node-MCP+Bun; validation=build+sync-check+MCP-smoke; externalDependency=ui.swqt.net-deploy+ingress.",
+        "axisSplitSignals": "SSOT 同步管道、registry 只读集成、MCP HTTP 服务、CI/deploy 验收有独立失败面；单 Feature 因共同关闭 R-SWUI-002 MVP 目标态。",
+        "axisSnapshot": "四 Step 顺序依赖：portal 骨架 → registry 页 → MCP 服务 → CI/deploy 与文档 handoff。",
+        "targetStateArchitecture": {
+          "canonicalEntry": "https://ui.swqt.net",
+          "routes": {
+            "/": "Overview — 库定位、skywalker 关系、安装入口",
+            "/conventions/*": "DESIGN-SUMMARY、DO-AND-DONT、ADOPTION（sync-docs 生成）",
+            "/packages": "@swui/ui + @swui/ui-tokens 版本、peer、install、.npmrc",
+            "/mcp": "swui HTTP MCP — resources + swui.package.get/installHint",
+            "/agent": "MCP 连接说明、与 AGENTS.md / sw mcp 分工"
+          },
+          "hostMcp": {
+            "sw": "现有 methodology / workflow（不变）",
+            "swui": "url https://ui.swqt.net/mcp（新增第二槽位）"
+          },
+          "ssotFlow": "packages/*/docs → sync-docs.mjs → portal .generated/ + MCP resource index → deploy；npm tarball 仅经 registry",
+          "layerBoundary": {
+            "@swui/ui": "运行时库 + 随包 agent 文档",
+            "examples/portal": "展示 + MCP + registry UI",
+            "examples/ui-consumer": "adoption 证明 + Playwright 矩阵",
+            "npm.inet.swqt.net": "publish / install / semver / tarball"
+          }
+        }
+      }
+    },
+    "research-evidence": {
+      "sectionStatus": "done",
+      "items": {
+        "level": "boundary-only",
+        "evidence": [
+          {
+            "source": "R-SWUI-002 §1–§13",
+            "retrievedAt": "2026-07-23",
+            "conclusion": "方案 A registry 集成、examples/portal、双槽位 MCP、公开只读 docs/MCP、MVP 范围与决策表已锁定。",
+            "applicability": "直接定义本 Feature 范围与验收。"
+          },
+          {
+            "source": "R-SWUI-003 §1.2–§5",
+            "retrievedAt": "2026-07-23",
+            "conclusion": "中心 SWS 代理 swui 不可行；短期路径 A 双槽位；路径 B facade 暂不启动。",
+            "applicability": "Host MCP 配置与 swui/sws 分工文档。"
+          },
+          {
+            "source": "R-SWUI-004 §1.2",
+            "retrievedAt": "2026-07-23",
+            "conclusion": "Playwright fixture 留 ui-consumer；portal 为人类 catalog；Storybook MCP 为 P2 可选。",
+            "applicability": "本 Feature 不包含 Storybook；测试职责边界。"
+          },
+          {
+            "source": "packages/ui/llms.txt — Components showcase host app: Not in this package",
+            "retrievedAt": "2026-07-23",
+            "conclusion": "展示宿主 intentionally 在 package 外；portal 是正确落点。",
+            "applicability": "层边界合法性证据。"
+          }
+        ],
+        "documentationChecked": "skipped-with-reason(MCP HTTP transport follows R-SWUI-002 §5.3; no new framework beyond Vite/React/Node patterns already in repo)",
+        "residualRisk": "ui.swqt.net 部署与 ingress 配置属组织基础设施；Feature 以可本地 build/smoke 的交付物 + deploy runbook 为验收，staging 不可达时 documented blocked-with-reason。"
+      }
+    },
+    "options-telos": {
+      "sectionStatus": "done",
+      "items": {
+        "options": [
+          {
+            "id": "A",
+            "name": "扩展 ui-consumer 为门户 + MCP",
+            "technical": "复用现有 Vite 应用与 Playwright。",
+            "economic": "初始改动少。",
+            "legal": "无特殊影响。",
+            "operational": "测试夹具与文档站职责再次混杂；违背 R-SWUI-002 §5.1 推荐。",
+            "schedule": "看似快，长期维护成本高。"
+          },
+          {
+            "id": "B",
+            "name": "examples/portal MVP + HTTP MCP + registry 方案 A（目标态）",
+            "technical": "职责清晰；SSOT 单向同步；与 shadcn/Radix 类 docs+registry 模式一致。",
+            "economic": "前置新建 portal，减少文档漂移与 Agent 配置混乱。",
+            "legal": "公开 docs、私有 install — 组织已确认策略。",
+            "operational": "双 MCP 槽位文档化；publish → deploy 流水线可重复。",
+            "schedule": "四 Step 可顺序推进；MVP 可独立交付价值。"
+          },
+          {
+            "id": "C",
+            "name": "仅更新 Markdown 文档，不建 portal/MCP",
+            "technical": "无法提供安装前 Agent 查询与统一发现入口。",
+            "economic": "最低实现成本。",
+            "legal": "无收益。",
+            "operational": "R-SWUI-002 缺口持续存在。",
+            "schedule": "最快但不达标。"
+          }
+        ],
+        "recommended": "B",
+        "conclusion": "ProceedWithTargetState：采用 R-SWUI-002 §13 已确认决策，按四 Step 交付 MVP；Phase 2 catalog 另开 Feature。"
+      }
+    },
+    "decision-summary": {
+      "sectionStatus": "done",
+      "items": {
+        "changePosture": "migrate-forward",
+        "changePostureSource": "user-confirmed",
+        "proposedDecision": "交付 ui.swqt.net 目标态 MVP：examples/portal 静态站 + 同域 /mcp Node handler + /packages registry 只读集成；Host 双槽位 sw+swui；SSOT sync-docs 管道；CI portal:build + sync-docs --check。",
+        "observableSuccess": "人类可浏览 Overview 与约定页；/packages 显示 live 或 stale 标记的版本与 install 命令；Agent 经 swui MCP 在安装前获取 package 元数据与 installHint；CI 阻止 docs 漂移；ADOPTION 含 MCP 连接说明。",
+        "testabilityRisks": "生产 deploy 与 ui.swqt.net DNS 依赖组织 infra；registry 长期不可达时 stale 缓存必须有显式标记；MCP 与 sw mcp 混淆需 instructions 与 runbook。",
+        "primaryIntegrationSurface": "examples/portal 构建产物 + https://ui.swqt.net/mcp 对 swui.package.get 的结构化响应。",
+        "firstDemonstrableSlice": "sync-docs 生成约定页 + portal dev server 可本地打开 Overview 与 ADOPTION 同步内容。",
+        "pushSequence": [
+          "T0 设计确认：审阅本 Feature 目标态与四 Step 边界（当前阶段）。",
+          "T1 S-SWQT-0009：portal 骨架 + sync-docs + CI build/check — 本地可 demo 约定页。",
+          "T2 S-SWQT-0010：registry-client + /packages — 本地或 CI 可读 npm.inet.swqt.net metadata。",
+          "T3 S-SWQT-0011：MCP HTTP + 双槽位文档 — Cursor 可连本地 /staging /mcp 并完成 package.get。",
+          "T4 S-SWQT-0012：quality.yml 集成 + deploy runbook + MVP 验收清单 — 准备 tag 发布后刷新。",
+          "T5 可选后续：开 F-SWQT-0005（Phase 2 全量 catalog + swui.catalog.search/component.get）。"
+        ],
+        "tracerScan": "T-hit=T2,T4; N-hit=none; weak>=2=No"
+      }
+    },
+    "acceptance-criteria": {
+      "sectionStatus": "done",
+      "items": {
+        "criteria": [
+          "examples/portal 存在且 bun run build 成功；Overview 与 DESIGN-SUMMARY、DO-AND-DONT、ADOPTION 页内容来自 sync-docs.mjs 生成的 .generated/，CI sync-docs --check 失败于手改漂移。",
+          "/packages（或等价路由）展示 @swui/ui 与 @swui/ui-tokens 的 dist-tags.latest、版本列表、peerDependencies、copy-paste install 命令与 .npmrc 模板；无 tarball 下载按钮。",
+          "registry-client 实现 15min TTL 缓存；upstream 失败时返回 stale 响应并含 stale:true 与 cachedAt。",
+          "HTTP MCP 于 /mcp 暴露 resources：AGENTS.md、ADOPTION.md、COMPONENT-CATALOG.md；tools：swui.package.get、swui.package.installHint；initialize instructions 写明 swui vs sw 分工与 install 后读 node_modules 真源。",
+          "packages/ui/docs/ADOPTION.md（或 project companion）含推荐 .cursor/mcp.json 双槽位片段（sw + swui url）。",
+          ".github/workflows/quality.yml 含 portal:build 与 sync-docs --check；现有 quality gates 不回归。",
+          "deploy runbook 文档化：git tag → publish.sh --apply → portal deploy → MCP 索引刷新；生产不可达时 acceptance 以 staging/local smoke + blocked-with-reason(deploy) 记录。",
+          "R-SWUI-002 链接本 Feature；交付后 research 状态可更新为 implemented（MVP 范围）。"
+        ],
+        "observableSuccess": "上述每项由命令输出、HTTP/MCP smoke、CI log 或显式 blocked-with-reason 验证。",
+        "mvpBoundary": "不含 /components 全量 demo、swui.catalog.search、swui.component.get、stdio MCP、sws facade、Storybook 试点。"
+      }
+    },
+    "step-breakdown": {
+      "sectionStatus": "done",
+      "items": {
+        "steps": [
+          {
+            "stepId": "S-SWQT-0009",
+            "title": "Portal 骨架与 SSOT 同步管道",
+            "phase": "portal-foundation",
+            "dependencies": "无；建立 docs → portal 单向 SSOT。",
+            "materialized": true,
+            "summary": "新建 examples/portal、sync-docs.mjs、Overview 与约定页；CI build 与 drift check。",
+            "status": "designed",
+            "boundary": "Vite 应用与同步脚本；不改 @swui/ui 公共 API。",
+            "purpose": "人类可读约定页与 SSOT 管道 — MVP 第一条可演示切片。",
+            "executionOwner": "swui-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0010",
+            "title": "Registry 集成与 /packages 页",
+            "phase": "registry-ui",
+            "dependencies": "S-SWQT-0009 portal 可 build。",
+            "materialized": true,
+            "summary": "registry-client 只读 metadata、stale 缓存、/packages install 指引 UI。",
+            "status": "designed",
+            "boundary": "只读 registry API；无 tarball 镜像与下载 UI。",
+            "purpose": "方案 A registry 集成 — 安装前版本与 peer 可发现。",
+            "executionOwner": "swui-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0011",
+            "title": "HTTP MCP 服务与 Agent 双槽位接入",
+            "phase": "mcp-http",
+            "dependencies": "S-SWQT-0010 registry-client 可被 MCP tools 复用。",
+            "materialized": true,
+            "summary": "server/mcp HTTP handler、3 resources、2 tools、ADOPTION 双槽位文档。",
+            "status": "designed",
+            "boundary": "swui:// 命名空间；不实现 sws workflow tools。",
+            "purpose": "安装前 Agent 结构化查询面。",
+            "executionOwner": "swui-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0012",
+            "title": "CI、部署 runbook 与 MVP 交付验收",
+            "phase": "ci-deploy-acceptance",
+            "dependencies": "S-SWQT-0009、S-SWQT-0010、S-SWQT-0011。",
+            "materialized": true,
+            "summary": "quality.yml 集成、deploy runbook、MCP smoke、research 状态与 experience 索引。",
+            "status": "designed",
+            "boundary": "CI 与文档 handoff；生产 deploy 可 documented external。",
+            "purpose": "关闭 R-SWUI-002 MVP 可重复验收与推动入口。",
+            "executionOwner": "swui-maintainers"
+          }
+        ]
+      }
+    },
+    "open-questions": {
+      "sectionStatus": "done",
+      "items": {
+        "blocking": [],
+        "nonBlocking": [
+          {
+            "item": "ui.swqt.net 生产 deploy 宿主与 ingress 细节",
+            "reasonNotBlockingCurrentWork": "MVP 可在本地/staging build + MCP smoke 验收；deploy 以 runbook + blocked-with-reason 记录至 infra ready。",
+            "moduleBoundary": "organization infrastructure",
+            "targetAnchor": "S-SWQT-0012 deploy runbook",
+            "consumerOwner": "swui-maintainers + platform/infra",
+            "revisitTrigger": "准备首次 portal 生产发布或 DNS 切流时",
+            "residualRisk": "生产 URL 不可用期间 Agent 仅能用本地 MCP 或 node_modules 文档。"
+          },
+          {
+            "item": "skywalker showcase 渐进 deprecate 时间表",
+            "reasonNotBlockingCurrentWork": "portal MVP 不依赖 skywalker 侧改动；canonical 链接可在 Phase 2 全量 catalog 后加。",
+            "moduleBoundary": "skywalker apps/web",
+            "targetAnchor": "future F-SWQT-0005 or cross-repo coordination",
+            "consumerOwner": "skywalker + swui-maintainers",
+            "revisitTrigger": "portal Phase 2 全量 /components demo 交付后",
+            "residualRisk": "短期存在双 showcase 面，需文档标明 canonical 入口。"
+          },
+          {
+            "item": "组织强制单 MCP 槽位 → sws facade 路径 B",
+            "reasonNotBlockingCurrentWork": "用户已确认暂不同步开 sws Feature；双槽位为当前目标态。",
+            "moduleBoundary": "sws local mcp facade",
+            "targetAnchor": "R-SWUI-003 path B Feature in sws repo",
+            "consumerOwner": "sws-maintainers",
+            "revisitTrigger": "平台政策禁止 Host 第二 MCP 槽位时",
+            "residualRisk": "需迁移 .cursor/mcp.json 与 ADOPTION 说明。"
+          }
+        ]
+      }
+    },
+    "handoff-gate": {
+      "sectionStatus": "done",
+      "items": {
+        "informationComplete": "Yes",
+        "blockingOpenQuestions": "none",
+        "confirmationMechanism": "R-SWUI-002 §13 决策与用户确认 registry 匿名读、双槽位暂不 federate；Feature 文档与 Step 拆分已完成，待 design handoff 确认。",
+        "nextHandoff": "design",
+        "designConfirmation": "pending",
+        "nextAction": "Q-AUTO-CLOSURE completed; proceed with design without workflow tail prompt."
+      }
+    },
+    "questions": {
+      "sectionStatus": "done",
+      "items": {
+        "schemaVersion": 1,
+        "items": [],
+        "sessionStatus": "completed",
+        "qaSessionClosure": {
+          "businessComplete": "Yes",
+          "workflowPromptSuppressed": "Yes",
+          "closedAt": "2026-07-23T05:10:00.000Z",
+          "autoEligibleAtT0": "Yes",
+          "autoEligibleHandoff": "promote",
+          "autoWaveHeadStepId": "S-SWQT-0009",
+          "launchReceipt": "sw workflow close-discourse target=F-SWQT-0004; handoff=design; autoEligibleHandoff=promote"
+        }
+      }
+    }
+  },
+  "closingStepId": "S-SWQT-0012"
+}

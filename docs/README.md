@@ -5,6 +5,7 @@
 - [Theme and dimensions delivery experience](experience/theme-and-dimensions.md)
 - [Design-contract exception register](experience/design-contract-exceptions.md)
 - [Core theme/state quality matrix](experience/quality-matrix.md)
+- [Portal and MCP delivery experience](experience/portal-and-mcp.md)
 - [Raw policy](raw/README.md)
 - [Projection](projection/README.md)
 - Machine reference: `.sw/workflow/ref/`

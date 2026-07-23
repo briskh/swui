@@ -62,6 +62,27 @@
         ]
       }
     },
+    "F-SWQT-0004": {
+      "kind": "feature",
+      "status": "draft",
+      "path": ".sw/workflow/feature/F-SWQT-0004-设计系统门户与-agent-mcp.json",
+      "deliveryComplete": false,
+      "title": "Feature F-SWQT-0004: 设计系统门户与 Agent MCP",
+      "stepPlan": {
+        "steps": [
+          "S-SWQT-0009",
+          "S-SWQT-0010",
+          "S-SWQT-0011",
+          "S-SWQT-0012"
+        ],
+        "computedOrder": [
+          "S-SWQT-0009",
+          "S-SWQT-0010",
+          "S-SWQT-0011",
+          "S-SWQT-0012"
+        ]
+      }
+    },
     "S-SWQT-0001": {
       "kind": "step",
       "status": "delivered",
@@ -171,6 +192,34 @@
       "validationSummary": "Packed tarballs passed explicit Bun isolated and workspace-hoisted consumers; CI quality gates are configured.",
       "deliveredAt": "2026-07-16T00:00:00.000Z",
       "rootMount": false
+    },
+    "S-SWQT-0009": {
+      "kind": "step",
+      "status": "designed",
+      "path": ".sw/workflow/steps/S-SWQT-0009-portal-骨架与-ssot-同步管道.json",
+      "sourceFeatureId": "F-SWQT-0004",
+      "title": "Step S-SWQT-0009: Portal 骨架与 SSOT 同步管道"
+    },
+    "S-SWQT-0010": {
+      "kind": "step",
+      "status": "designed",
+      "path": ".sw/workflow/steps/S-SWQT-0010-registry-集成与-packages-页.json",
+      "sourceFeatureId": "F-SWQT-0004",
+      "title": "Step S-SWQT-0010: Registry 集成与 /packages 页"
+    },
+    "S-SWQT-0011": {
+      "kind": "step",
+      "status": "designed",
+      "path": ".sw/workflow/steps/S-SWQT-0011-http-mcp-服务与-agent-双槽位接入.json",
+      "sourceFeatureId": "F-SWQT-0004",
+      "title": "Step S-SWQT-0011: HTTP MCP 服务与 Agent 双槽位接入"
+    },
+    "S-SWQT-0012": {
+      "kind": "step",
+      "status": "designed",
+      "path": ".sw/workflow/steps/S-SWQT-0012-ci-部署-runbook-与-mvp-交付验收.json",
+      "sourceFeatureId": "F-SWQT-0004",
+      "title": "Step S-SWQT-0012: CI、部署 runbook 与 MVP 交付验收"
     }
   },
   "edges": [
@@ -276,8 +325,58 @@
       "from": "S-SWQT-0008",
       "to": "F-SWQT-0002",
       "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0009",
+      "to": "F-SWQT-0004",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0010",
+      "to": "S-SWQT-0009",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0010",
+      "to": "F-SWQT-0004",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0011",
+      "to": "S-SWQT-0010",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0011",
+      "to": "F-SWQT-0004",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0012",
+      "to": "S-SWQT-0009",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0012",
+      "to": "S-SWQT-0010",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0012",
+      "to": "S-SWQT-0011",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0012",
+      "to": "F-SWQT-0004",
+      "rel": "sourceFeature"
     }
   ],
-  "generatedAt": "2026-07-16T16:15:43.018Z",
-  "contentHash": "sha256:3d0fc33335c3eade2f5e65b4f8a21b36f545a8198cf238c90514db5ec8af5be2"
+  "generatedAt": "2026-07-23T05:03:50.971Z",
+  "contentHash": "sha256:f3f6748a5318cafe4d9971598d7a8655e8d9aea44cd8911f4eb269c035c0da66"
 }

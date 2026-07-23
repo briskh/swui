@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0012",
+  "status": "designed",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0012: CI、部署 runbook 与 MVP 交付验收",
+  "sourceFeature": {
+    "id": "F-SWQT-0004",
+    "href": "../feature/F-SWQT-0004-设计系统门户与-agent-mcp.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-23T05:05:00.000Z",
+  "updatedAt": "2026-07-23T05:05:00.000Z",
+  "supersedes": "N/A",
+  "nextHandoff": "implement",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "将 portal 纳入 CI 质量门禁，文档化 ui.swqt.net deploy runbook，执行 MVP 验收清单，并更新 research 与项目 discoverability。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          ".github/workflows/quality.yml：portal:build、sync-docs --check（必要时 registry smoke optional）。",
+          "docs/ 或 examples/portal/DEPLOY.md：tag → publish.sh --apply → portal deploy → MCP 索引刷新。",
+          "MCP health smoke 脚本（tools/list 或 package.get）。",
+          "docs/research/R-SWUI-002 链接 F-SWQT-0004；可选 docs/experience 条目。",
+          "F-SWQT-0004 acceptance-criteria 全项核对清单。"
+        ],
+        "outOfScope": [
+          "实际生产 ingress/DNS 实施（可 blocked-with-reason 记录 owner）。",
+          "Phase 2 catalog、F-SWQT-0005 开单。"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "researchEvidence": "R-SWUI-002 §8.3 发布流水线；§11.1 MVP 第 5–6 项。",
+        "integrationSurface": ".github/workflows/quality.yml + deploy runbook"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": ["S-SWQT-0009", "S-SWQT-0010", "S-SWQT-0011"],
+        "externalDependencies": ["GitHub Actions", "ui.swqt.net infra（可选）"],
+        "projectResources": ["sw doctor --project .", "现有 quality gates"]
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "problemDefinition": "portal 若未进 CI，docs 漂移与 build 回归无法被 merge 捕获；deploy 无 runbook 则 publish 后 portal  stale。",
+        "requirementsDefinition": "PR 触发 portal build+check；maintainer 可按 runbook 刷新生产；验收清单全绿或显式 blocked。",
+        "nonGoals": ["不强制本 Step 内完成生产 DNS"],
+        "plainLanguage": "合并前 CI 守住 portal；发版后知道怎么刷新 ui.swqt.net。",
+        "firstSlice": "quality.yml 新增 portal:build 步骤在 PR 上绿。",
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "前三 Step 完成后即可集成 CI 与 runbook；生产 deploy 可 external blocked。"
+        }
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "completion-audit": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    }
+  }
+}

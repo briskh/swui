@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "proposal_id": "sha256:fa5130a15eb579c864bd863f55acd816d56bab6e2a60045bafee88d94da4a722",
+  "created_at": "2026-07-23T05:16:02.324Z",
+  "expires_at": "2026-07-23T05:46:02.324Z",
+  "change": {
+    "schema": "swqt-workflow-write/v1",
+    "action": "workflow.section-set-batch",
+    "rename": null,
+    "files": [
+      [
+        ".sw/workflow/steps/S-SWQT-0009-portal-骨架与-ssot-同步管道.json",
+        "{\n  \"schemaVersion\": 6,\n  \"kind\": \"step\",\n  \"stepId\": \"S-SWQT-0009\",\n  \"status\": \"designed\",\n  \"overlay\": {\n    \"state\": \"none\"\n  },\n  \"links\": [],\n  \"title\": \"Step S-SWQT-0009: Portal 骨架与 SSOT 同步管道\",\n  \"sourceFeature\": {\n    \"id\": \"F-SWQT-0004\",\n    \"href\": \"../feature/F-SWQT-0004-设计系统门户与-agent-mcp.json\"\n  },\n  \"owner\": \"swui-maintainers\",\n  \"createdAt\": \"2026-07-23T05:05:00.000Z\",\n  \"updatedAt\": \"2026-07-23T05:05:00.000Z\",\n  \"supersedes\": \"N/A\",\n  \"nextHandoff\": \"implement\",\n  \"sections\": {\n    \"goal\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"statement\": \"建立 examples/portal 与 packages/*/docs 的单向 SSOT 同步管道，使人类可在本地浏览 Overview 与核心约定页，且 CI 能检测文档漂移。\"\n      }\n    },\n    \"scope\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"inScope\": [\n          \"新建 examples/portal（Vite + React + workspace 依赖 @swui/ui）。\",\n          \"scripts/sync-docs.mjs：packages/ui/docs/*、AGENTS.md、llms.txt → examples/portal/.generated/。\",\n          \"路由：/ Overview、/conventions/design-summary、do-and-dont、adoption（Markdown 渲染）。\",\n          \"根 package.json workspace 脚本：portal:dev、portal:build、sync-docs、sync-docs:check。\",\n          \"全局 ThemeProvider + ThemeControl toolbar（theme/density 上下文，对齐 R-SWUI-001 交付）。\"\n        ],\n        \"outOfScope\": [\n          \"/packages registry 页、/mcp、/components 全量 demo。\",\n          \"修改 @swui/ui 公共 API 或 tarball 内容结构。\"\n        ]\n      }\n    },\n    \"inputs\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"researchEvidence\": \"R-SWUI-002 §9.2 建议落点；§12 风险 #1 docs 漂移缓解。\",\n        \"integrationSurface\": \"examples/portal/src + examples/portal/scripts/sync-docs.mjs\"\n      }\n    },\n    \"dependencies\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"previousSteps\": [],\n        \"externalDependencies\": [\n          \"Bun 1.3.14\",\n          \"Vite\",\n          \"React 19\"\n        ],\n        \"projectResources\": [\n          \"packages/ui/docs/\",\n          \"packages/ui/AGENTS.md\",\n          \"examples/ui-consumer/vite.config.ts（参考）\"\n        ]\n      }\n    },\n    \"implementation-ready-brief\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"problemDefinition\": \"约定文档仅存在于 packages 内，无独立人类浏览入口，且缺少构建时同步机制。\",\n        \"requirementsDefinition\": \"portal dev/build 成功；约定页内容与 SSOT 一致；sync-docs --check 在 drift 时 exit 非零。\",\n        \"nonGoals\": [\n          \"不手改 .generated/\",\n          \"不引入 AppShell/TopBar\"\n        ],\n        \"plainLanguage\": \"先有一个能打开的、内容与 npm 包 docs 同步的约定站骨架。\",\n        \"firstSlice\": \"bun run sync-docs && cd examples/portal && bun run dev → 可见 ADOPTION 同步内容。\",\n        \"readiness\": {\n          \"readiness\": \"Yes\",\n          \"reason\": \"R-SWUI-002 §13 决策已确认；Vite/React 与 docs SSOT 路径明确。\"\n        }\n      }\n    },\n    \"implementation-record\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"executionContract\": {\n          \"expectedChangeSurface\": \"examples/portal scaffold, sync-docs.mjs, convention pages, portal scripts\",\n          \"acceptanceCriteria\": \"portal dev/build succeeds; sync-docs copies SSOT; Playwright convention routes pass\",\n          \"validationEvidenceRequired\": \"bun test tests/sync-docs.test.mjs; portal build; browser convention tests\"\n        },\n        \"implementationSummary\": {\n          \"whatChanged\": \"Added examples/portal Vite app, sync-docs pipeline, Overview and convention markdown pages, ThemeControl layout.\",\n          \"whySatisfiesStep\": \"Humans can browse synced docs; CI can detect SSOT drift after sync-docs.\",\n          \"intentionallyUnchanged\": \"No @swui/ui public API changes.\"\n        },\n        \"validationReferences\": [\n          {\n            \"commandOrEvidence\": \"bun test tests/sync-docs.test.mjs\",\n            \"result\": \"passed\"\n          },\n          {\n            \"commandOrEvidence\": \"bun run build\",\n            \"result\": \"passed\"\n          },\n          {\n            \"commandOrEvidence\": \"playwright convention routes\",\n            \"result\": \"passed\"\n          }\n        ]\n      }\n    },\n    \"use-case\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    },\n    \"review-report\": {\n      \"sectionStatus\": \"done\",\n      \"items\": {\n        \"reviewProfile\": \"full\",\n        \"decision\": \"reviewed\",\n        \"gateOutcomes\": [\n          {\n            \"gate\": \"scope and SSOT\",\n            \"result\": \"passed\",\n            \"evidence\": \"Portal skeleton only; docs copied from packages/ui SSOT.\",\n            \"residualRisk\": \"none\",\n            \"counterEvidenceChecked\": \"yes\"\n          }\n        ],\n        \"promotionDisposition\": \"ready\"\n      }\n    },\n    \"delivered-registry-entry\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    },\n    \"completion-audit\": {\n      \"sectionStatus\": \"not-applicable\",\n      \"items\": {}\n    }\n  }\n}"
+      ]
+    ],
+    "deletions": [],
+    "preconditions": [
+      {
+        "id": "workflow-write",
+        "status": "passed"
+      },
+      {
+        "id": "section-set-batch-entry",
+        "status": "passed",
+        "section": "implementation-record",
+        "payloadHash": "sha256:93d277953cc5d370e3318b55296879cccbefe2cf2801f5b80ba47ac6d2a06d5f"
+      },
+      {
+        "id": "section-set-batch-entry",
+        "status": "passed",
+        "section": "review-report",
+        "payloadHash": "sha256:4c0e133cc594f17ffa8ae80e1a1098322378b4ab1e3dd8d879f793d483f9dc6d"
+      },
+      {
+        "id": "section-set-batch",
+        "status": "passed",
+        "entryCount": 2,
+        "payloadHash": "sha256:d6a3ccdc74a8b93dec876d2696e9b5dd63c7b1c0e8247a39acceb67a086effb7"
+      }
+    ],
+    "validation_handoff": [
+      "sw workflow validate --id … --root /home/blade/swui",
+      "sw workflow ledger --incremental --apply --root /home/blade/swui"
+    ],
+    "rollback_note": "git checkout -- .sw/workflow/steps/S-SWQT-0009-portal-骨架与-ssot-同步管道.json",
+    "lifecycle_sync_feature": null,
+    "repairMode": false
+  }
+}

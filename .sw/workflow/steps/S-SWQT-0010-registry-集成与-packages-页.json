@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0010",
+  "status": "designed",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0010: Registry 集成与 /packages 页",
+  "sourceFeature": {
+    "id": "F-SWQT-0004",
+    "href": "../feature/F-SWQT-0004-设计系统门户与-agent-mcp.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-23T05:05:00.000Z",
+  "updatedAt": "2026-07-23T05:05:00.000Z",
+  "supersedes": "N/A",
+  "nextHandoff": "implement",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "实现 registry 只读客户端与 /packages 页，匿名展示 @swui/ui 与 @swui/ui-tokens 版本、peer 与 install 指引，含 stale 降级。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "server/registry-client.ts（或 portal 内等价模块）：GET npm.inet.swqt.net/@swui%2fui 等。",
+          "15min TTL 内存/文件缓存；失败返回 stale + cachedAt。",
+          "/packages 页面：dist-tags.latest、版本列表、peerDependencies、npm/bun install 命令、.npmrc 模板。",
+          "无 tarball 下载按钮；dist.tarball 不在 UI 暴露。"
+        ],
+        "outOfScope": [
+          "NPM_READ_TOKEN（metadata 匿名可读已确认）。",
+          "publish.sh 改动、tarball 镜像。"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "researchEvidence": "R-SWUI-002 §8 Registry 集成方案 A；§13 registry metadata 匿名可读。",
+        "integrationSurface": "examples/portal/server/registry-client.ts + /packages route"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": ["S-SWQT-0009"],
+        "externalDependencies": ["npm.inet.swqt.net 网络可达（CI 可 skip-with-reason 若不可达）"],
+        "projectResources": ["scripts/publish.sh", "SWUI_NPM_REGISTRY 默认 URL"]
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "problemDefinition": "版本与 peer 信息仅在 registry，开发者需手动 npm view 或查 publish 记录。",
+        "requirementsDefinition": "packages 页展示两包 latest 与 install 片段；registry 宕机时显示 stale 横幅。",
+        "nonGoals": ["不缓存 tarball", "不提供匿名 install"],
+        "plainLanguage": "安装前在浏览器一眼看到装什么版本、怎么配 .npmrc。",
+        "firstSlice": "registry-client 单元测试或脚本 smoke 返回 @swui/ui dist-tags。",
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "registry metadata 匿名可读已确认；依赖 S-SWQT-0009 portal 可 build。"
+        }
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "completion-audit": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    }
+  }
+}

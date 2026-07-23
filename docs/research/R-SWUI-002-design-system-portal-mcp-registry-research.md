@@ -1,7 +1,7 @@
 # R-SWUI-002：设计系统门户、Agent MCP 与 npm Registry 集成研究
 
 - **文档编号**：R-SWUI-002
-- **状态**：draft — 架构与方案已确认；门户 / MCP / registry 集成尚未实现
+- **状态**：implemented (MVP) — F-SWQT-0004 交付 portal + swui MCP + registry 方案 A；Phase 2 catalog 未含
 - **记录类型**：research evidence / 潜在 Feature 输入
 - **日期**：2026-07-23
 - **范围**：`swui` 仓库、`@swui/ui-tokens`、`@swui/ui`、私有 npm registry、Agent 消费路径
@@ -13,7 +13,7 @@
 
 1. **来源**：本 UI 库主要源自 **skywalker** 项目的 Web UI 层；2026-07-16 抽离为独立仓库 `swui`，内部设计系统代号 **Skywalker**。组件基于 shadcn/ui + Radix 风格；npm 包为 `@swui/ui-tokens` 与 `@swui/ui`。
 2. **现状缺口**：仓库已有 Markdown agent 文档、`examples/ui-consumer` 接入证明与 Playwright 质量矩阵，但**没有**面向人类与 Agent 的统一门户 / 全量组件展示站；`packages/ui/llms.txt` 明确将 *Components showcase host app* 列为 **Not in this package**。
-3. **可行性**：可在 `examples/portal`（或 `apps/portal`）内建独立门户，展示全部控件与约定；同域或 sidecar 暴露 **MCP** 供 Agent 查询；npm 分发采用 **方案 A** — 以现有私有 registry `npm.inet.swqt.net` 为唯一包源，门户只读集成元数据与安装指引，**不自托管 tarball**。
+3. **可行性**：在 **`examples/portal`** 内建独立门户，展示全部控件与约定；同域 **`/mcp`** 暴露 HTTP MCP 供 Agent 查询；npm 分发采用 **方案 A** — 以现有私有 registry `npm.inet.swqt.net` 为唯一包源，门户只读集成元数据与安装指引，**不自托管 tarball**。
 4. **推荐路径**：统一入口（如 `ui.swqt.net`）= 人类展示 + MCP 查询 + registry 安装页；`@swui/ui` 包本身仍不包含产品壳层或 MCP 服务端代码。
 
 ### 1.2. 潜在 Feature 目标
@@ -243,21 +243,23 @@ examples/portal/
 
 ## 10. 鉴权与安全
 
-| 访问者 | 门户 HTML / MCP docs | registry install |
+| 访问者 | 门户 HTML / MCP docs / MCP tools | registry install / tarball |
 | --- | --- | --- |
-| 组织内授权用户 | 可读 | 需 `_authToken` |
-| 未授权 | 可公开 catalog 文档（组织策略待定） | registry 403 |
+| 任意（内网 DNS 可达） | **公开只读** — catalog、约定、MCP resources、`swui.package.*` 元数据 | 需 `_authToken`；匿名 **403** |
+| 维护者 CI | 同左 | deploy 不注入 token；metadata **匿名可读**（已确认） |
 
-门户不得绕过 registry 鉴权提供匿名 tarball 镜像。
+门户不得绕过 registry 鉴权提供匿名 tarball 镜像；`/packages` **不**提供 tarball 下载按钮，仅 install 命令与 `.npmrc` 模板。
 
 ## 11. MVP 与分阶段交付
 
 ### 11.1. MVP（第一阶段）
 
-1. `examples/portal` 骨架：Overview + 基于 Markdown 的约定页。
-2. `/packages`：读 registry，展示 `@swui/ui` / `@swui/ui-tokens` 版本与 install 命令。
+1. `examples/portal` 骨架：Overview + 基于 `sync-docs.mjs` 同步的约定页（禁止手改 `.generated/`）。
+2. `/packages`：匿名读 registry metadata，展示版本、peer、install 命令（无 tarball 下载 UI）。
 3. MCP resources：`AGENTS.md`、`ADOPTION.md`、`COMPONENT-CATALOG.md`。
-4. MCP tool：`swui.package.get`（registry 元数据）。
+4. MCP tools：`swui.package.get`、`swui.package.installHint`（含 stale 缓存标记）。
+5. CI：`portal:build` + `sync-docs --check`；tag 发布后 deploy 刷新 portal 与 MCP 索引。
+6. Host：双 MCP 槽位（`sw` + `swui`）；**不**同步启动 sws facade 联邦 Feature。
 
 ### 11.2. 第二阶段
 
@@ -267,7 +269,7 @@ examples/portal/
 
 ### 11.3. 第三阶段（可选）
 
-1. Storybook 或等价 visual/a11y 基线（呼应 R-SWUI-001 §4.1 Storybook 引用）。
+1. Storybook 或等价 visual/a11y 基线（呼应 R-SWUI-001 §4.1 Storybook 引用）；路线对比见 [R-SWUI-004](R-SWUI-004-storybook-mcp-vs-playwright-fixture-draft.md)。
 2. 与 skywalker `apps/web` showcase 路由的能力对齐评估（是否废弃重复面）。
 
 ## 12. 风险与缓解
@@ -280,13 +282,28 @@ examples/portal/
 | 门户吸收产品壳职责 | 遵守 AGENTS.md：无 AppShell/TopBar/业务路由 |
 | 私有包误公开 | registry 鉴权 + MCP 不镜像 tarball |
 
-## 13. 待决问题
+## 13. 落地前决策（已确认）
 
-1. 门户正式域名与部署宿主（`ui.swqt.net` 是否为最终域名）。
-2. MCP HTTP 是否与门户同进程，或独立 sidecar。
-3. 文档页面对未登录用户是否完全公开。
-4. 是否在 skywalker 侧 deprecate 局部 showcase，统一跳转 portal。
-5. **MCP 与 SWS 整合路径**：见 [R-SWUI-003](R-SWUI-003-swui-mcp-sws-integration-research.md)（双槽位 vs 本地 facade 联邦；中心代理不可行）。
+2026-07-23 架构讨论 + 同日决策收口。Feature 建议编号 **F-SWQT-0004**。
+
+| 议题 | 决策 |
+| --- | --- |
+| 正式域名 | **`ui.swqt.net`**（与 `agent.swqt.net` 对称） |
+| 部署形态 | 静态门户（Vite build）+ 同域 **`/mcp`** Node handler；ingress 反代，MVP 不拆独立 MCP 域名 |
+| 仓库落点 | **`examples/portal/`**（不用 `apps/portal`） |
+| 公开策略 | 门户 HTML、MCP resources/tools **公开只读**；install / tarball 仍走 registry 鉴权 |
+| registry metadata | **`npm.inet.swqt.net` 允许匿名读 metadata**（已确认）；portal **无需** `NPM_READ_TOKEN` |
+| registry 缓存 | 服务端 TTL **15min**；不可达时 stale 缓存 + 显式 `stale` / `cachedAt` |
+| Host MCP | **路径 A — 双槽位**（`sw` + `swui` → `https://ui.swqt.net/mcp`）；**先不同步开** sws 路径 B facade Feature |
+| npm 分发 | **方案 A**（已定） |
+| 展示 vs 测试 | portal = 人类 catalog demo；**Playwright 矩阵留 `ui-consumer`**（见 R-SWUI-004） |
+| stdio MCP | MVP **不做**；P1 可选本地 `mcp:stdio` |
+| skywalker showcase | **渐进 deprecate**（portal MVP 后加 canonical 链接；全量 catalog 后再评估下线） |
+
+### 13.1. 残余待决（不阻塞 MVP）
+
+1. skywalker showcase 下线时间表（依赖 portal Phase 2 全量 demo）。
+2. 若未来组织 **强制单 MCP 槽位**，再开 sws 路径 B；预埋：upstream HTTP、swui 独立 Bearer、不扩 `capabilityProjection`（见 [R-SWUI-003](R-SWUI-003-swui-mcp-sws-integration-research.md)）。
 
 ## 14. 本地证据索引
 
@@ -302,10 +319,10 @@ examples/portal/
 
 ## 15. 建议下一步
 
-1. 开 Feature（建议编号 F-SWQT-0004 或独立 SWUI Feature 序列）：*设计系统门户与 Agent MCP*。
-2. 实现 MVP §11.1，registry 集成严格遵循方案 A。
+1. 开 Feature **F-SWQT-0004**：*设计系统门户与 Agent MCP*（workflow：`.sw/workflow/feature/F-SWQT-0004-设计系统门户与-agent-mcp.json`）。
+2. 实现 MVP §11.1，registry 集成严格遵循方案 A；决策见 §13。
 3. 在 `docs/research/README.md` 与本研究保持索引同步；交付后在 project docs 增加 experience 条目（可选）。
 
 ---
 
-*本研究由 2026-07-23 架构讨论整理；npm 分发方案已确认采用 **方案 A（接现有私有 registry）**。*
+*本研究由 2026-07-23 架构讨论整理。npm **方案 A**、§13 落地前决策、registry metadata 匿名可读、Host **双槽位（暂不开 sws facade）** 均已确认。*

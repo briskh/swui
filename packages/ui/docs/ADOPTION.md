@@ -47,3 +47,31 @@ After install, agents should read from `node_modules/@swui/ui/`:
 - `docs/*`
 
 Same pattern for `@swui/ui-tokens`.
+
+## Portal MCP (pre-install discovery)
+
+Before installing the packages, agents may query the read-only **swui** MCP server hosted by the design-system portal (`https://ui.swqt.net/mcp` in production; local portal dev/preview exposes the same `/mcp` route).
+
+Use **swui** for component catalog resources, adoption snippets, and registry metadata. Keep the separate **sw** MCP server for SWS methodology and workflow tools. After install, prefer version-locked docs in `node_modules/@swui/ui/AGENTS.md`.
+
+Example `.cursor/mcp.json` fragment:
+
+```json
+{
+  "mcpServers": {
+    "sw": {
+      "command": "sw",
+      "args": ["mcp"],
+      "env": {
+        "SW_MCP_URL": "https://agent.swqt.net/mcp",
+        "SW_MCP_TOKEN": "${SW_MCP_TOKEN}"
+      }
+    },
+    "swui": {
+      "url": "https://ui.swqt.net/mcp"
+    }
+  }
+}
+```
+
+Private registry install still requires `_authToken` in `.npmrc`; MCP does not mirror tarballs.
