@@ -31,11 +31,12 @@ Consumer-facing design intent. Token **values** live in `@swui/ui-tokens`.
 | Static table | `Table` + `ScrollArea` / `Pagination` |
 | Client sort/filter/select | `DataTable` |
 | Server search/sort/cursor | `ServerDataTable` |
-| Failures | `Alert` |
-| Empty | `Empty` (`zero-data` / `filtered` / `error` / `no-permission` / `network-error`) |
-| Loading | `Spinner` / `Skeleton` / `loading` compositions / `Progress` |
+| Failures | `Alert` (default / destructive / success / warning) |
+| Status labels | `Badge` (incl. success / warning / destructive / outline) · `Chip` · `InlineNotice` |
+| Empty | `Empty` (`zero-data` / …) · `EmptyState` (simple card wrapper) |
+| Loading | `Spinner` / `Skeleton` / `LoadingState` / `loading` compositions / `Progress` |
 | Toast | `Toaster` + `notifySuccess` / `notifyError` / … |
-| Forms | `Label` `Input` `Textarea` `Select` `Checkbox` `Switch` `RadioGroup` `Slider` `Field` `Form` `Combobox` `InputGroup` `Calendar` `DatePicker` |
+| Forms | `Label` `Input` `Textarea` `Select` `Checkbox` `Switch` `RadioGroup` `Slider` `Field` `FormField` `FormActions` `Fieldset` `CheckboxField` `Form` `Combobox` `InputGroup` `Calendar` `DatePicker` |
 | Overlays | `Dialog` `AlertDialog` `Sheet` `DropdownMenu` `ContextMenu` `Tooltip` `Popover` `HoverCard` |
 | Nav primitives | `Tabs` `Breadcrumb` `Toggle` `ToggleGroup` (`Sidebar` is showcase-oriented) |
 

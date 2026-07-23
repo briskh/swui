@@ -6,6 +6,8 @@ const alertVariants = cva("grid gap-1 rounded-md border p-4 text-sm", {
   variants: {
     variant: {
       default: "border-border bg-card text-card-foreground",
+      success: "border-[color:var(--status-ready)]/30 bg-[color:var(--status-ready)]/10 text-[color:var(--status-ready)]",
+      warning: "border-[color:var(--status-error)]/30 bg-[color:var(--status-error)]/10 text-[color:var(--status-error)]",
       destructive: "border-destructive/50 bg-destructive/10 text-destructive"
     }
   },

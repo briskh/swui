@@ -8,7 +8,11 @@ const badgeVariants = cva("inline-flex h-6 items-center rounded-md border px-2 t
       default: "border-border bg-muted text-muted-foreground",
       ready: "border-[color:var(--status-ready)]/30 bg-[color:var(--status-ready)]/10 text-[color:var(--status-ready)]",
       loading: "border-[color:var(--status-loading)]/30 bg-[color:var(--status-loading)]/10 text-[color:var(--status-loading)]",
-      error: "border-destructive/30 bg-destructive/10 text-destructive"
+      error: "border-destructive/30 bg-destructive/10 text-destructive",
+      success: "border-[color:var(--status-ready)]/30 bg-[color:var(--status-ready)]/10 text-[color:var(--status-ready)]",
+      warning: "border-[color:var(--status-error)]/30 bg-[color:var(--status-error)]/10 text-[color:var(--status-error)]",
+      destructive: "border-destructive/30 bg-destructive/10 text-destructive",
+      outline: "border-border bg-card text-foreground"
     }
   },
   defaultVariants: {

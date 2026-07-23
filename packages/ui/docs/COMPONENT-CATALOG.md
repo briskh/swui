@@ -13,6 +13,7 @@ Import from `@swui/ui` or `@swui/ui/<name>`.
 | Export | Notes |
 |--------|--------|
 | `Label` `Input` `Textarea` | Pair Label via `htmlFor` / `id`. |
+| `FormField` `FormActions` `Fieldset` `CheckboxField` | eauth-aligned form layout helpers; `CheckboxField` wraps Radix `Checkbox`. |
 | `Select` | Radix select. |
 | `Checkbox` `Switch` `RadioGroup` `Slider` | Choice / range. |
 | `Field` | Help + error grouping. |
@@ -25,7 +26,10 @@ Import from `@swui/ui` or `@swui/ui/<name>`.
 
 | Export | Notes |
 |--------|--------|
-| `Alert` `Badge` | Status / labels. |
+| `Alert` `Badge` | Status / labels. `Badge`: default, ready, loading, error, success, warning, destructive, outline. `Alert`: default, destructive, success, warning. |
+| `Chip` | Mono text chip; default / outline. |
+| `InlineNotice` | Inline success hint with check icon (`--status-ready`). |
+| `EmptyState` `LoadingState` | Card-wrapped empty / loading placeholders (eauth parity). |
 | `Skeleton` `Spinner` `Progress` | Loading. |
 | `Empty` | Variants: zero-data, filtered, error, no-permission, network-error. |
 | `Toaster` `toastPolicy` `notifySuccess` `notifyError` `notifyAction` `notifyPersistent` | Sonner; single project toaster. |
