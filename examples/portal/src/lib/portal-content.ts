@@ -21,18 +21,16 @@ export function getConventionMarkdown(slug: ConventionSlug) {
   return docModules[key] ?? null;
 }
 
+export { SWUI_MCP_PUBLIC_URL, localSwuiMcpUrl } from "../../shared/mcp-path";
+
 export const PORTAL_MCP_EXAMPLE = `{
   "mcpServers": {
     "sw": {
       "command": "sw",
-      "args": ["mcp"],
-      "env": {
-        "SW_MCP_URL": "https://agent.swqt.net/mcp",
-        "SW_MCP_TOKEN": "\${SW_MCP_TOKEN}"
-      }
+      "args": ["mcp"]
     },
     "swui": {
-      "url": "https://ui.swqt.net/mcp"
+      "url": "https://agent.swqt.net/mcp/swui"
     }
   }
 }`;

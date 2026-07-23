@@ -1,7 +1,12 @@
 {
-  "name": "@swui/ui-tokens",
+  "name": "@swqt/ui-tokens",
   "version": "1.0.0",
   "description": "swui design tokens (CSS variables + Tailwind v4 theme bridges)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/briskh/swui.git",
+    "directory": "packages/ui-tokens"
+  },
   "type": "module",
   "files": [
     "AGENTS.md",
@@ -19,11 +24,11 @@
     "./docs/*": "./docs/*"
   },
   "publishConfig": {
-    "access": "restricted",
-    "registry": "https://npm.inet.swqt.net/"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "pack": "bun pm pack",
-    "publish:dry": "npm publish --dry-run --registry \"${SWUI_NPM_REGISTRY:-https://npm.inet.swqt.net/}\""
+    "publish:dry": "npm publish --dry-run --registry \"${SWUI_NPM_REGISTRY:-https://registry.npmjs.org/}\""
   }
 }

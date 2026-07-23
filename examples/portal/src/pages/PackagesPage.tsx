@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@swui/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@swqt/ui";
+import { buildNpmrcTemplate, DEFAULT_NPM_REGISTRY, isPublicNpmRegistry } from "../../shared/registry-install";
 
 interface RegistryPayload {
   stale: boolean;
@@ -14,7 +15,7 @@ interface RegistryPayload {
   error?: string;
 }
 
-const PACKAGES = ["@swui/ui", "@swui/ui-tokens"] as const;
+const PACKAGES = ["@swqt/ui", "@swqt/ui-tokens"] as const;
 
 function encodePackage(name: string) {
   return encodeURIComponent(name);
@@ -48,8 +49,9 @@ export function PackagesPage() {
     };
   }, []);
 
-  const registry = entries[0]?.registry ?? "https://npm.inet.swqt.net/";
-  const npmrc = `@swui:registry=${registry}\n//${new URL(registry).host}/:_authToken=\${NPM_TOKEN}`;
+  const registry = entries[0]?.registry ?? DEFAULT_NPM_REGISTRY;
+  const npmrc = buildNpmrcTemplate(registry);
+  const requiresAuth = !isPublicNpmRegistry(registry);
   const stale = entries.some((entry) => entry.stale);
 
   return (
@@ -57,8 +59,10 @@ export function PackagesPage() {
       <section>
         <h2 className="text-3xl font-semibold">Packages</h2>
         <p className="mt-2 text-muted-foreground">
-          Read-only registry metadata from <code>{registry}</code>. Install still requires registry authentication; this
-          page does not mirror tarballs.
+          Read-only registry metadata from <code>{registry}</code>.
+          {requiresAuth
+            ? " Install requires registry authentication; this page does not mirror tarballs."
+            : " Public packages install from npmjs.org with no registry auth; this page does not mirror tarballs."}
         </p>
         {stale ? (
           <p className="mt-3 rounded-md border border-border bg-muted px-3 py-2 text-sm" data-testid="registry-stale-banner">
@@ -113,17 +117,17 @@ export function PackagesPage() {
           <div>
             <p className="font-medium">Bun</p>
             <pre data-testid="install-command-bun">
-              <code>bun add @swui/ui @swui/ui-tokens</code>
+              <code>bun add @swqt/ui @swqt/ui-tokens</code>
             </pre>
           </div>
           <div>
             <p className="font-medium">npm</p>
             <pre data-testid="install-command-npm">
-              <code>npm install @swui/ui @swui/ui-tokens</code>
+              <code>npm install @swqt/ui @swqt/ui-tokens</code>
             </pre>
           </div>
           <div>
-            <p className="font-medium">.npmrc template</p>
+            <p className="font-medium">{requiresAuth ? ".npmrc template" : ".npmrc (optional)"}</p>
             <pre data-testid="npmrc-template">
               <code>{npmrc}</code>
             </pre>

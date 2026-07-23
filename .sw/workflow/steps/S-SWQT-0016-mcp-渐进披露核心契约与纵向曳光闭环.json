@@ -1,0 +1,389 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0016",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0016: MCP 渐进披露核心契约与纵向曳光闭环",
+  "sourceFeature": {
+    "id": "F-SWQT-0006",
+    "href": "../feature/F-SWQT-0006-mcp-与-agent-暴露面渐进披露收敛.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-23T08:40:19.702Z",
+  "updatedAt": "2026-07-23T08:40:19.702Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "建立小型稳定首跳与按需读取的新 swui MCP 契约，完成 initialize → 文档首跳 → Button 搜索 → 精确组件资源 → 包版本/错误的本地纵向闭环。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "重设 initialize instructions 与稳定文档首跳，完整暴露 @swqt/ui 和 @swqt/ui-tokens 的 AGENTS、llms、采用指南及必要设计/token 文档。",
+          "将组件发现从 resources/list 全量枚举改为 swui://components/{name} ResourceTemplate，并保留精确组件读取。",
+          "为 catalog.search、component.get、package.get、package.installHint 建立有界输入、title/description、只读 annotations、outputSchema、structuredContent 与 JSON text。",
+          "catalog.search 拒绝空查询，默认 limit=10、最大 25，返回 total/count/truncated 并满足 16 KiB 预算。",
+          "package.get 实施精确 version 解析、结构化 not-found、resolvedVersion 与 registry freshness/source 语义。",
+          "为 FormField、DateHelpers、cn/utility/type 等导出建立 catalog/import hint 正反向一致性检查，并补齐 TypeScript 类型。",
+          "扩展 unit、protocol contract 与 MCP smoke，覆盖成功、错误、边界和序列化预算。"
+        ],
+        "outOfScope": [
+          "Host MCP 配置、HTTP prefix 路由和项目 companion 收敛（S-SWQT-0017）。",
+          "生产 Caddy/DNS/upstream 变更、npm publish 与生产 deploy。",
+          "旧 URI、旧工具名、旧返回形状或全量 resources/list 的兼容层。"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "sourceFeature": "F-SWQT-0006（.sw/workflow/feature/F-SWQT-0006-mcp-与-agent-暴露面渐进披露收敛.json）",
+        "researchEvidence": "Feature background/problem/context/acceptance；本地 MCP 审计：80 resources、0 templates、空搜索 77 项、工具缺少结构化契约、version 静默回落。",
+        "optionsTelos": "Q-02=A：完整的新契约渐进披露重设；changePosture=break-accepted（user-confirmed）。",
+        "projectCompanionRefs": "projectCompanionAnchor: project-swqt-companion；packages/ui/AGENTS.md；packages/ui-tokens/AGENTS.md。"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": [],
+        "externalDependencies": [
+          "@modelcontextprotocol/sdk 1.29.0 与 zod 的当前项目安装面。",
+          "Portal .generated 内容由 examples/portal/scripts/sync-docs.mjs 从 packages/* SSOT 生成。"
+        ],
+        "userDecisions": [
+          "Q-01=C：break-accepted，不保留已发布 MCP/Agent 表面兼容。",
+          "Q-02=A：一次完成完整渐进披露重设。",
+          "Q-05=auto：完成设计后自动推进本地可执行链。"
+        ],
+        "projectResources": [
+          "examples/portal/server/handlers.ts",
+          "examples/portal/server/catalog.ts",
+          "examples/portal/server/registry-client.ts",
+          "examples/portal/tests/",
+          "examples/portal/scripts/mcp-smoke.mjs",
+          "packages/ui/AGENTS.md",
+          "packages/ui-tokens/AGENTS.md"
+        ],
+        "axisPositioning": "required；axisTrigger=public-contract+runtime-integration；axisCoordinate=stage:design, application:sdk/public-mcp, technology:TypeScript+MCP, validation:unit+contract+integration, layer:project, evidence:runtime-observed；坐标只定位证据类型，不替代测试。",
+        "axisSplitSnapshot": "axisSplitSignals=risk-domain-split,validation-boundary,documentation-boundary；axisSnapshot=public MCP contract + protocol validation；当前保持单 Step，因为 resources/templates/tools/version 共用同一 McpServer 注册与一个原子协议预算；若 SDK 强制拆出独立 adapter 才再拆。",
+        "postDesignClarification": "not-applicable；用户新增指令仅确认 Q-05=auto，未改变已确认范围、风险、验收或契约。",
+        "temporaryArtifactLifecycle": "not-applicable；不创建 Agent 自选临时交接文件，嵌套 workflow payload 使用 sw payload prepare 的 tool-owned handle。"
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "testDrivenDesign": {
+          "testCaseDesign": "Unit + MCP protocol contract + in-memory integration smoke：文档首跳、ResourceTemplate 精确读、搜索边界/预算、工具 schema/annotations/structuredContent、package 精确版本/not-found/freshness、catalog import parity。",
+          "acceptanceToTestMapping": "AC1→initialize instructions 断言；AC2→resources/templates 数量与字节预算；AC3→每个宣称 URI 可读；AC4→空查询/limit/truncated/16KiB；AC5→tools/list schema+annotations 与 callTool structuredContent；AC6→精确版本成功/不存在负例；AC7→catalog↔exports 正反向；AC14 tracer→initialize→docs→Button search→template read→version/error smoke。",
+          "riskToTestLevelMapping": "public MCP/protocol contract→contract+integration；parser/search/version branches→unit；compatibility/security boundary→显式负例；主链→in-memory full-path smoke。",
+          "regressionTestDesign": "designed：覆盖既有空搜索无界、80 resources、0 templates、version 静默 latest、缺失 structuredContent/import hint 漂移。",
+          "coverageAssessment": "touched-code",
+          "coverageMetric": "project-defined（bun test --coverage 可用性由 implement 验证）",
+          "coverageSkipReason": "N/A",
+          "residualRisk": "本地 in-memory 协议无法证明生产 gateway identity；转交 S-SWQT-0018 outside-in gate。",
+          "followUp": "S-SWQT-0018 在已部署入口执行远端 identity 与真实 Agent SpotCheck。"
+        },
+        "explanationSyncBrief": "公开契约更改须同步 packages/ui/docs/ADOPTION.md、Portal Agent 页面/部署说明与 project companion；实际回写由 S-SWQT-0017 承接。",
+        "problemDefinition": "当前 swui MCP 的首跳过大且不完整：组件被全量枚举，工具契约不可机读，搜索无界，package version 查询不精确，导致 Agent 过读、误路由和假成功。",
+        "requirementsDefinition": "建立一个唯一的新版本公共 MCP 契约：小首跳、按需模板、有界工具、精确版本与可机读结果，并以预算、负例和纵向 smoke 证明。",
+        "nonGoals": [
+          "不保留旧契约兼容。",
+          "不修改 SWS 中心服务或插件方法论。",
+          "不执行 npm publish 或生产 deploy。"
+        ],
+        "plainLanguage": {
+          "unclear": "Agent 连接后既看不全必要文档，又一次看到全部组件；调用工具时还无法可靠判断只读性、结果形状和版本是否真实命中。",
+          "why": "把第一跳缩小并把细节改成按需读取，才能同时保证准确触达与低上下文成本。",
+          "outcome": "Agent 能用固定流程找到 Button 和指定包版本；错误输入得到结构化错误，不再静默回落或淹没上下文。",
+          "prose": "先给地图，再按名字取详情；每次调用都有限、有类型、可验证。"
+        },
+        "options": [
+          {
+            "id": "A",
+            "name": "使用 SDK 原生 ResourceTemplate 与 registerTool 契约",
+            "cuttingPoint": "在现有 McpServer 上集中定义稳定文档、动态组件模板和共享结构化 payload。",
+            "impact": "复用 SDK 生命周期，协议面与 tests/listTools/listResourceTemplates 对齐。",
+            "risk": "需要准确适配 SDK 1.29.0 的 outputSchema/structuredContent 类型。",
+            "validationCost": "中等：unit + in-memory protocol smoke。",
+            "rejectWhen": "SDK 无法表达所需动态模板或结构化结果。"
+          },
+          {
+            "id": "B",
+            "name": "自建低层 MCP JSON-RPC 分发",
+            "cuttingPoint": "绕过 McpServer 注册 API，手工实现 resources/tools 请求。",
+            "impact": "完全控制协议，但重复 SDK 能力并扩大错误面。",
+            "risk": "协议漂移、类型和 transport 兼容成本高。",
+            "validationCost": "高：需覆盖全部 JSON-RPC 分支。",
+            "rejectWhen": "SDK 原生能力可满足契约。"
+          }
+        ],
+        "openDecisions": [],
+        "recommendedOption": {
+          "option": "A",
+          "rationale": "现有 SDK 已支持 ResourceTemplate、tool annotations/outputSchema 和 structuredContent；可最小化自定义协议面并保留类型检查。",
+          "assumptionsFromFeature": "break-accepted；公开只读发现面；packages/* 文档为 SSOT；生产部署不在自动授权范围。",
+          "assumptionChanges": "none"
+        },
+        "granularity": {
+          "granularityDecision": "fine-enough",
+          "whySmallEnough": "只闭合一个公共 MCP server contract 与其本地协议证据，不包含 Host/部署治理。",
+          "whyNotSplitFurther": "resources/templates/tools/version/search 共用 handlers/catalog/registry-client 和同一协议预算；横向拆分会造成共享文件冲突与中间不一致契约。",
+          "splitSignals": "若出现独立安全/写工具、独立 registry provider 或 SDK adapter 边界则拆新 Step。",
+          "coarseJustification": "单一公共契约不变量与同一纵向 smoke 使当前粒度保持内聚。",
+          "proposedChildSteps": "N/A"
+        },
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "范围、契约、错误语义、预算、测试映射和项目文件均已明确；不存在阻塞性开放决策。",
+          "missingItems": "none",
+          "partiallySafeToProceed": "N/A"
+        },
+        "forwardImpact": [
+          {
+            "target": "S-SWQT-0017",
+            "impactType": "documentation+host premise",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0017",
+            "resolution": "将新 MCP URI/工具/门禁同步到 Host、docs、companion 与 tarball gate。"
+          },
+          {
+            "target": "S-SWQT-0018",
+            "impactType": "acceptance dependency",
+            "timing": "defer-with-reason",
+            "owner": "S-SWQT-0018",
+            "resolution": "本地契约通过后再执行远端 identity 与 Agent SpotCheck；部署权限由外部 owner 提供。"
+          }
+        ],
+        "profileNote": "stepProfile=full；guardrail risk domain=public-protocol+agent-surface；changePosture=break-accepted inherited；ssotImpactExpected=ssot-update-required（S-SWQT-0017 更新项目事实入口）。"
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "executionContract": {
+          "expectedChangeSurface": "examples/portal/server/{handlers,catalog,registry-client}.ts, examples/portal/scripts/{sync-docs,mcp-smoke}.mjs, generated token documentation, and focused Portal contract tests.",
+          "acceptanceCriteria": "Small static first-hop; one exact component ResourceTemplate; bounded non-empty search; four fully described read-only tools with output schemas and dual structured/text output; exact package version semantics; import-hint parity; passing unit/protocol/smoke/type gates.",
+          "validationEvidenceRequired": "Portal server typecheck, Bun unit/protocol suite, in-memory MCP smoke, catalog/export parity, and explicit count/byte assertions.",
+          "rollbackNotes": "No data migration or external state mutation. Roll back the resource map/template and tool payload registrations together, then regenerate .generated docs. Old public MCP shapes are intentionally not retained under the user-confirmed break-accepted posture."
+        },
+        "implementationSummary": {
+          "whatChanged": "Replaced per-component static resource enumeration with 10 documentation resources plus swui://components/{name}; added typed catalog/import guidance; bounded search; exact registry version resolution with source/freshness; and complete MCP tool metadata, structuredContent, JSON text, errors, and budgets.",
+          "whySatisfiesStep": "The implementation closes every S-SWQT-0016 in-scope contract and exercises the actual MCP client/server protocol, including resource/template/tool discovery and invalid-input behavior.",
+          "intentionallyUnchanged": "No npm publish, production deployment, DNS/Caddy mutation, or SWS service behavior. Host configuration and project-companion truth remain assigned to S-SWQT-0017; the strict path helper is staged for that next Step and is not claimed as this Step's acceptance evidence."
+        },
+        "changeSurface": {
+          "codeAnchors": "examples/portal/server/handlers.ts; examples/portal/server/catalog.ts; examples/portal/server/registry-client.ts; examples/portal/scripts/sync-docs.mjs; examples/portal/scripts/mcp-smoke.mjs",
+          "configAnchors": "N/A — host and deployment configuration deferred to S-SWQT-0017.",
+          "documentationAnchors": "packages/ui/{AGENTS.md,llms.txt,docs/*} and packages/ui-tokens/{AGENTS.md,llms.txt,docs/*} remain SSOT; synchronized copies live under examples/portal/.generated.",
+          "dataOrMigrationAnchors": "Registry fixture metadata under examples/portal/fixtures/registry; no persistent data migration."
+        },
+        "executionNotes": {
+          "decisionsDuringImplementation": "Use 10 stable package-document resources, a non-enumerating ResourceTemplate, server-side byte-aware truncation, a 1.0.0 MCP implementation identity, explicit FormField/DateHelpers/cn/Theme import mappings, and normalized error objects.",
+          "deviationsFromBrief": "No acceptance deviation. The canonical path helper was tightened early because its focused assertion shares the protocol contract test file; its lifecycle evidence remains with S-SWQT-0017.",
+          "risksDiscovered": "The workspace Bun binary is not on the shell PATH, so direct absolute-Bun commands are required in this environment. Remote registry truth and deployed production behavior remain outside this local Step."
+        },
+        "validationReferences": [
+          {
+            "commandOrEvidence": "/home/blade/.bun/bin/bun run --filter '@swqt/portal-example' typecheck",
+            "result": "passed",
+            "notes": "Client and server TypeScript checks exited 0."
+          },
+          {
+            "commandOrEvidence": "cd examples/portal && /home/blade/.bun/bin/bun test tests/",
+            "result": "passed",
+            "notes": "19 tests passed, 0 failed, 114 expectations; includes MCP list/read/call contract and count/byte limits."
+          },
+          {
+            "commandOrEvidence": "cd examples/portal && /home/blade/.bun/bin/bun run scripts/mcp-smoke.mjs",
+            "result": "passed",
+            "notes": "In-memory MCP smoke passed for resources, template, four tool descriptors, structured outputs, exact version, search, and component read."
+          },
+          {
+            "commandOrEvidence": "/home/blade/.bun/bin/bun run scripts/check-catalog-export.mjs",
+            "result": "passed",
+            "notes": "77 catalog exports checked against 281 package exports and 77 demos; alias and virtual-export policy honored."
+          }
+        ]
+      }
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "gateOutcomes": [
+          {
+            "gate": "change-posture validation",
+            "result": "passed",
+            "evidence": "sw validation run --scope change-posture --validation-surface auto-segment-review --scope-anchor S-SWQT-0016: pass, 0 findings.",
+            "residualRisk": "none for the user-confirmed break-accepted local contract.",
+            "counterEvidenceChecked": "Verified Feature posture predates no enforcement exception and has explicit user confirmation."
+          },
+          {
+            "gate": "TypeScript contract",
+            "result": "passed",
+            "evidence": "/home/blade/.bun/bin/bun run --filter '@swqt/portal-example' typecheck exited 0.",
+            "residualRisk": "none observed.",
+            "counterEvidenceChecked": "Server callback, Zod input/output schema, ResourceTemplate variables, and structuredContent types compile together."
+          },
+          {
+            "gate": "unit + protocol contract",
+            "result": "passed",
+            "evidence": "20 tests, 0 failures, 144 expectations; initialize identity/instructions, all 10 static reads, template read, listTools metadata, success/error tool calls, exact versions, source isolation, and budgets covered.",
+            "residualRisk": "HTTP middleware branches remain partly integration-covered and are exercised again in S-SWQT-0017/browser gates.",
+            "counterEvidenceChecked": "Review found and fixed full-response byte accounting and cross-registry cache contamination before rerun."
+          },
+          {
+            "gate": "coverage",
+            "result": "passed",
+            "evidence": "bun test --coverage: overall 85.71% functions / 88.91% lines; catalog 100% functions / 99.11% lines; registry-client 92.86% / 94.83%.",
+            "residualRisk": "Raw Node HTTP adapter error branches are lower coverage and belong to the next host/integration Step.",
+            "counterEvidenceChecked": "Coverage gaps inspected; no uncovered core search/version/resource registration acceptance branch blocks this Step."
+          },
+          {
+            "gate": "MCP vertical tracer",
+            "result": "passed",
+            "evidence": "mcp-smoke passed initialize → all docs → template → tools → exact package version → Button search → component read.",
+            "residualRisk": "In-memory transport does not prove the deployed gateway identity; hard-deferred to S-SWQT-0018.",
+            "counterEvidenceChecked": "Smoke verifies full serialized search result remains within 16 KiB and structuredContent is present."
+          },
+          {
+            "gate": "catalog/export parity and patch hygiene",
+            "result": "passed",
+            "evidence": "check:catalog-export passed for 77 catalog exports / 281 package exports / 77 demos; scoped git diff --check passed.",
+            "residualRisk": "Future catalog changes can drift unless this existing gate remains required in CI.",
+            "counterEvidenceChecked": "Explicit alias/virtual/utility/type cases FormField, DateHelpers, cn, and Theme are protocol-tested."
+          },
+          {
+            "gate": "Tier-1 workflow JSON",
+            "result": "passed",
+            "evidence": "sw workflow validate --id S-SWQT-0016: 0 errors, 0 warnings.",
+            "residualRisk": "none.",
+            "counterEvidenceChecked": "Implementation record and lifecycle state are schema-valid."
+          }
+        ],
+        "projectCompanionFactDecision": "ssot-update-required and intentionally open: S-SWQT-0017 owns Host configuration, documentation truth, validation handoff, and tarball freshness. This does not block S-SWQT-0016 because those surfaces are explicitly out of scope and separately materialized.",
+        "reviewDecision": {
+          "reviewDecision": "passed",
+          "reason": "All S-SWQT-0016 hard gates pass after two review findings were corrected and revalidated; no blocking counter-evidence remains in the local public MCP contract.",
+          "reviewProfile": "full public-contract review with unit, protocol, integration tracer, coverage, negative cases, serialization budgets, and change-posture validation"
+        },
+        "promotionDisposition": {
+          "promotionDisposition": "promote",
+          "promotionOwner": "swui-maintainers via active auto chain",
+          "promotionRevisitTrigger": "Reopen if the SDK registration/output schema changes, resource list exceeds 12 items/12 KiB, full search response exceeds 16 KiB, catalog parity fails, or exact version lookup regresses.",
+          "closureIntegrityCheck": "Implementation record done; review evidence complete; external production and Host facts are explicitly owned by S-SWQT-0017/S-SWQT-0018 rather than silently claimed."
+        }
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-23T08:56:39.000Z",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0016-mcp-渐进披露核心契约与纵向曳光闭环.json",
+        "validationSummary": "typecheck; 20 tests/144 expectations; coverage; MCP tracer; catalog/export parity; change-posture and workflow validation passed",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "typecheck; 20 tests/144 expectations; coverage; MCP tracer; catalog/export parity; change-posture and workflow validation passed",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0016",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "full — public MCP protocol and Agent discovery surface",
+        "minimumSetSatisfied": "Yes: implementation record, full review report, hard gates, counter-evidence fixes, requirement-by-requirement evidence, and downstream ownership are recorded.",
+        "upgradeToFullAuditReason": "Required by stepProfile=full and the public-contract/Agent-surface risk domain.",
+        "requirementAudit": [
+          {
+            "requirement": "Initialize instructions and complete UI/token documentation first hop",
+            "status": "implemented",
+            "evidence": "MCP_INSTRUCTIONS names the ordered first-hop flow; protocol test checks initialize instructions and reads all 10 static resources.",
+            "risk": "Future documentation additions require an intentional resource-map decision.",
+            "followUp": "S-SWQT-0017 synchronizes public docs and companion truth."
+          },
+          {
+            "requirement": "Small resources/list and exact swui://components/{name} ResourceTemplate",
+            "status": "implemented",
+            "evidence": "resources/list contains 10 entries under 12 KiB; templates/list exposes one component template; Button exact read passes.",
+            "risk": "none observed.",
+            "followUp": "Keep count/byte/template assertions in the Portal suite."
+          },
+          {
+            "requirement": "All four tools expose arguments, title, annotations, outputSchema, structuredContent, and JSON text",
+            "status": "implemented",
+            "evidence": "listTools contract asserts every descriptor; all four success calls and package error call assert JSON text equals structuredContent.",
+            "risk": "SDK schema conversion changes could alter listed JSON Schema.",
+            "followUp": "Reopen on MCP SDK upgrade."
+          },
+          {
+            "requirement": "Non-empty bounded search: default 10, max 25, total/count/truncated, complete response <=16 KiB",
+            "status": "implemented",
+            "evidence": "Direct and protocol tests cover empty rejection, default, clamp, truncation, and complete dual-form result byte length.",
+            "risk": "Longer future catalog notes reduce returned count but remain truthful through truncated=true.",
+            "followUp": "Retain byte-aware truncation and budget regression."
+          },
+          {
+            "requirement": "Exact package version, structured not-found, resolvedVersion, source/freshness",
+            "status": "implemented",
+            "evidence": "0.9.0 and 1.0.0 exact resolution, 9.9.9 VERSION_NOT_FOUND, fixture/cache/none source states, stale fallback, and registry-isolated cache pass.",
+            "risk": "Live registry availability remains an open-world dependency.",
+            "followUp": "S-SWQT-0018 verifies deployed live behavior outside-in."
+          },
+          {
+            "requirement": "Catalog/import parity including FormField, DateHelpers, cn utility, and Theme type",
+            "status": "implemented",
+            "evidence": "Typed importHint model plus explicit special-case tests; catalog/export gate passes 77/281/77.",
+            "risk": "New type-only or virtual catalog exports need an explicit import-hint case.",
+            "followUp": "Keep catalog/export gate required in CI."
+          },
+          {
+            "requirement": "Unit, protocol, MCP smoke, typecheck, coverage, and negative cases",
+            "status": "implemented",
+            "evidence": "Typecheck passed; 20 tests/144 expectations passed; overall 85.71% function and 88.91% line coverage; MCP smoke and catalog parity passed.",
+            "risk": "Production gateway and human Agent usability are deliberately not local evidence.",
+            "followUp": "S-SWQT-0017 handles host/browser/package gates; S-SWQT-0018 handles remote identity and human spotcheck."
+          }
+        ],
+        "workflowRunAudit": "Five-stage chain followed: design artifacts and Q&A closure already recorded; implementing→implemented, reviewing→reviewed transitions used schema-backed workflow intents; auto advanced only after Tier-1 write evidence; promotion is next.",
+        "intermediateDocumentStateAudit": "No temporary handoff Markdown or shadow status files were created. Tool-owned payload handles were used for nested section writes. The Step remained schema-valid at review.",
+        "documentGovernanceAudit": "Package docs remain SSOT and generated Portal copies are derived by sync-docs. No installed SWS asset or managed AGENTS.md block was edited. No npm publish or production deploy occurred.",
+        "frictionAndImprovementBacklog": "Environment Bun is absent from PATH, requiring an absolute binary path. SWS workflow dry-run diffs are verbose for full-profile Steps; no methodology intake is required for task completion.",
+        "closingSelfAudit": {
+          "closingSelfAudit": "passed",
+          "closingSelfAuditEvidence": "All in-scope requirements have positive and negative evidence; review-discovered budget and cache-source defects were fixed and rerun.",
+          "closingSelfAuditConsistency": "The Step claims only local MCP contract completion and preserves explicit downstream ownership for Host docs and production identity.",
+          "landingChecklistOutcome": "ready-for-promotion",
+          "pluginSkillFriction": "No blocking skill contradiction; tool-first writes and auto segment evidence were honored.",
+          "terminologyCandidates": "complete response budget (structuredContent + JSON text); registry-isolated cache provenance",
+          "reusableWorkflowPattern": "For MCP tools that must return both structured and text forms, budget the entire call result and contract-test list metadata plus calls through an in-memory transport.",
+          "retrospectiveHandoff": "Carry exact URI/tool/version facts into S-SWQT-0017, then test those facts against the deployed identity in S-SWQT-0018."
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "Proceed immediately to S-SWQT-0017. Production deploy/publish remains unauthorized; S-SWQT-0018 must report a truthful external/HITL blocker if the new build is not deployed or a human spotcheck is unavailable."
+      }
+    }
+  },
+  "stepProfile": "full",
+  "validationSummary": "typecheck; 20 tests/144 expectations; coverage; MCP tracer; catalog/export parity; change-posture and workflow validation passed"
+}

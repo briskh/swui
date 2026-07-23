@@ -1,6 +1,6 @@
-# Component catalog (`@swui/ui`)
+# Component catalog (`@swqt/ui`)
 
-Import from `@swui/ui` or `@swui/ui/<name>`.
+Import from `@swqt/ui` or `@swqt/ui/<name>`.
 
 ## Actions
 
@@ -20,7 +20,7 @@ Import from `@swui/ui` or `@swui/ui/<name>`.
 | `Form` | React Hook Form helpers. |
 | `Combobox` `Command` | cmdk-backed search. |
 | `InputGroup` | Affix composition. |
-| `Calendar` `DatePicker` | UTC storage helpers in `@swui/ui/date`. |
+| `Calendar` `DatePicker` | UTC storage helpers in `@swqt/ui/date`. |
 
 ## Feedback
 
@@ -76,6 +76,6 @@ Import from `@swui/ui` or `@swui/ui/<name>`.
 | Export | Notes |
 |--------|--------|
 | `ThemeProvider` `useTheme` `ThemeControl` `Theme` | Global `system` / `light` / `dark` preference; effective theme is light or dark. |
-| `cn` | `@swui/ui/utils` |
-| Date helpers | `@swui/ui/date` |
-| `WideScreenGate` `WideScreenPlaceholder` | Compact `<=820px` gate; import from `@swui/ui`. |
+| `cn` | `@swqt/ui/utils` |
+| Date helpers | `@swqt/ui/date` |
+| `WideScreenGate` `WideScreenPlaceholder` | Compact `<=820px` gate; import from `@swqt/ui`. |

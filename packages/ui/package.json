@@ -1,7 +1,12 @@
 {
-  "name": "@swui/ui",
+  "name": "@swqt/ui",
   "version": "1.0.0",
   "description": "swui React UI primitives with global theme provider",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/briskh/swui.git",
+    "directory": "packages/ui"
+  },
   "type": "module",
   "sideEffects": false,
   "files": [
@@ -63,12 +68,12 @@
     "@radix-ui/react-tooltip": "*"
   },
   "publishConfig": {
-    "access": "restricted",
-    "registry": "https://npm.inet.swqt.net/"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "pack": "bun pm pack",
-    "publish:dry": "npm publish --dry-run --registry \"${SWUI_NPM_REGISTRY:-https://npm.inet.swqt.net/}\""
+    "publish:dry": "npm publish --dry-run --registry \"${SWUI_NPM_REGISTRY:-https://registry.npmjs.org/}\""
   },
   "devDependencies": {
     "@types/react": "^19.2.7",

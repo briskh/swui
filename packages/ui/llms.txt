@@ -1,12 +1,12 @@
-# @swui/ui
+# @swqt/ui
 
 > AI / agent quick index. Prefer AGENTS.md for rules.
 
 ## Package
 
-- Name: `@swui/ui`
+- Name: `@swqt/ui`
 - Peers: React 19, Radix family, lucide, CVA, … (see package.json)
-- Tokens: require `@swui/ui-tokens/tokens.css` in the app
+- Tokens: require `@swqt/ui-tokens/tokens.css` in the app
 
 ## Must read
 
@@ -35,4 +35,4 @@
 
 ## Sibling
 
-- `@swui/ui-tokens` — CSS tokens
+- `@swqt/ui-tokens` — CSS tokens

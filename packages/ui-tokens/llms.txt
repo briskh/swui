@@ -1,11 +1,11 @@
-# @swui/ui-tokens
+# @swqt/ui-tokens
 
 > AI / agent quick index. Prefer AGENTS.md for full rules.
 
 ## Package
 
-- Name: `@swui/ui-tokens`
-- Entry CSS: `@swui/ui-tokens/tokens.css` (also `@swui/ui-tokens`)
+- Name: `@swqt/ui-tokens`
+- Entry CSS: `@swqt/ui-tokens/tokens.css` (also `@swqt/ui-tokens`)
 - Role: design tokens only (no React)
 
 ## Must read
@@ -16,17 +16,17 @@
 
 ## Sibling packages
 
-- `@swui/ui` — React primitives + ThemeProvider + WideScreenGate
+- `@swqt/ui` — React primitives + ThemeProvider + WideScreenGate
 
 
 ## Theme contract
 
-- global light/dark runtime is owned by @swui/ui ThemeProvider
+- global light/dark runtime is owned by @swqt/ui ThemeProvider
 - `:root` + reserved `.dark` CSS both ship
 
 ## Install sketch
 
 ```css
 @import "tailwindcss";
-@import "@swui/ui-tokens/tokens.css";
+@import "@swqt/ui-tokens/tokens.css";
 ```

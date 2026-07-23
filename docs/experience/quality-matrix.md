@@ -17,6 +17,6 @@ The current browser command contains five tests across eight projects. The dense
 Run with:
 
 ```bash
-bun run --filter '@swui/ui-consumer-example' test:browser
+bun run --filter '@swqt/ui-consumer-example' test:browser
 bun run verify:packed-consumer
 ```

@@ -1,4 +1,4 @@
-# @swui/ui-tokens — Agent instructions
+# @swqt/ui-tokens — Agent instructions
 
 **Read this file first** when installing or changing Skywalker design tokens in any consuming project.
 
@@ -10,7 +10,7 @@ CSS design tokens for organization-wide organization Web UI style:
 - Tailwind CSS v4 `@theme inline` bridges
 - `@custom-variant dark` (`.dark` class)
 
-It does **not** include React components. For primitives (including `WideScreenGate`) use `@swui/ui`.
+It does **not** include React components. For primitives (including `WideScreenGate`) use `@swqt/ui`.
 
 ## First hop (AI)
 
@@ -23,9 +23,9 @@ It does **not** include React components. For primitives (including `WideScreenG
 
 - Prefer semantic tokens (`bg-primary`, `text-muted-foreground`) over hard-coded chroma.
 - Do **not** fork a second token file in the consumer; bump this package instead.
-- Runtime theme contract supports light and dark values. Consumers select the effective theme through `@swui/ui` `ThemeProvider`; do not fork token files or mount competing theme selectors.
+- Runtime theme contract supports light and dark values. Consumers select the effective theme through `@swqt/ui` `ThemeProvider`; do not fork token files or mount competing theme selectors.
 - Token **values** in `src/tokens.css` are authoritative for published packages. Keep consumer docs aligned with that file.
 
 ## Registry
 
-Default private registry: `https://npm.inet.swqt.net/` (override with `SWUI_NPM_REGISTRY`).
+Published on the public npm registry: `https://registry.npmjs.org/`. Override with `SWUI_NPM_REGISTRY` when consuming from an org mirror (for example `https://npm.inet.swqt.net/`).

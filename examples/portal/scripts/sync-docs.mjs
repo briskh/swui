@@ -11,15 +11,25 @@ const repoRoot = join(portalRoot, "../..");
 export function getCopyPlan(portalDir = portalRoot, root = repoRoot) {
   const out = join(portalDir, ".generated");
   const ui = join(root, "packages/ui");
-  const docs = join(ui, "docs");
+  const uiDocs = join(ui, "docs");
+  const tokens = join(root, "packages/ui-tokens");
+  const tokenDocs = join(tokens, "docs");
   return [
     { source: join(ui, "AGENTS.md"), dest: join(out, "AGENTS.md") },
     { source: join(ui, "llms.txt"), dest: join(out, "llms.txt") },
-    ...readdirSync(docs)
+    ...readdirSync(uiDocs)
       .filter((name) => name.endsWith(".md"))
       .map((name) => ({
-        source: join(docs, name),
+        source: join(uiDocs, name),
         dest: join(out, "docs", name)
+      })),
+    { source: join(tokens, "AGENTS.md"), dest: join(out, "tokens", "AGENTS.md") },
+    { source: join(tokens, "llms.txt"), dest: join(out, "tokens", "llms.txt") },
+    ...readdirSync(tokenDocs)
+      .filter((name) => name.endsWith(".md"))
+      .map((name) => ({
+        source: join(tokenDocs, name),
+        dest: join(out, "tokens", "docs", name)
       }))
   ];
 }
@@ -31,6 +41,7 @@ export function syncDocs({ portalDir = portalRoot, repo = repoRoot, dryRun = fal
   }
   if (!dryRun) {
     mkdirSync(join(out, "docs"), { recursive: true });
+    mkdirSync(join(out, "tokens", "docs"), { recursive: true });
   }
   const plan = getCopyPlan(portalDir, repo);
   for (const { source, dest } of plan) {

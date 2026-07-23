@@ -1,7 +1,8 @@
+
+[mcp_servers.swui]
+url = "https://agent.swqt.net/mcp/swui"
+
 [mcp_servers.sw]
+x-sw-managed = true
 command = "sw"
 args = ["mcp"]
-
-[mcp_servers.sw.env]
-SW_MCP_URL = "https://agent.swqt.net/mcp"
-SW_MCP_TOKEN = "${SW_MCP_TOKEN}"

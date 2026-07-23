@@ -2,6 +2,7 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, extname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { handleMcpHttpRequest, handleRegistryApi } from "./handlers";
+import { isSwuiMcpHttpPath } from "../shared/mcp-path";
 
 const portalRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const distRoot = join(portalRoot, "dist");
@@ -41,7 +42,7 @@ const server = Bun.serve({
   port,
   async fetch(request: Request) {
     const url = new URL(request.url);
-    if (url.pathname === "/mcp" || url.pathname.startsWith("/mcp/")) {
+    if (isSwuiMcpHttpPath(url.pathname)) {
       return handleMcpHttpRequest(request);
     }
     const registryResponse = await handleRegistryApi(url.pathname);

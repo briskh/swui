@@ -12,10 +12,10 @@
     "types": ["vite/client"],
     "resolveJsonModule": true,
     "paths": {
-      "@swui/ui": ["../../packages/ui/src/index.ts"],
-      "@swui/ui/*": ["../../packages/ui/src/components/*"],
-      "@swui/ui/utils": ["../../packages/ui/src/lib/utils.ts"],
-      "@swui/ui/theme": ["../../packages/ui/src/theme.tsx"]
+      "@swqt/ui": ["../../packages/ui/src/index.ts"],
+      "@swqt/ui/*": ["../../packages/ui/src/components/*"],
+      "@swqt/ui/utils": ["../../packages/ui/src/lib/utils.ts"],
+      "@swqt/ui/theme": ["../../packages/ui/src/theme.tsx"]
     }
   },
   "include": ["src", "vite.config.ts"]

@@ -11,13 +11,13 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      "@swui/ui/utils": path.join(uiSrc, "lib/utils.ts"),
-      "@swui/ui/date": path.join(uiSrc, "lib/date.ts"),
-      "@swui/ui/theme": path.join(uiSrc, "theme.tsx"),
-      "@swui/ui/wide-screen-gate": path.join(uiSrc, "components/wide-screen-gate.tsx"),
-      "@swui/ui/button": path.join(uiSrc, "components/button.tsx"),
-      "@swui/ui/card": path.join(uiSrc, "components/card.tsx"),
-      "@swui/ui": path.join(uiSrc, "index.ts")
+      "@swqt/ui/utils": path.join(uiSrc, "lib/utils.ts"),
+      "@swqt/ui/date": path.join(uiSrc, "lib/date.ts"),
+      "@swqt/ui/theme": path.join(uiSrc, "theme.tsx"),
+      "@swqt/ui/wide-screen-gate": path.join(uiSrc, "components/wide-screen-gate.tsx"),
+      "@swqt/ui/button": path.join(uiSrc, "components/button.tsx"),
+      "@swqt/ui/card": path.join(uiSrc, "components/card.tsx"),
+      "@swqt/ui": path.join(uiSrc, "index.ts")
     }
   }
 });

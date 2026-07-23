@@ -1,0 +1,644 @@
+{
+  "schemaVersion": 6,
+  "kind": "feature",
+  "featureId": "F-SWQT-0006",
+  "status": "draft",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Feature F-SWQT-0006: MCP 与 Agent 暴露面渐进披露收敛",
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-23T07:58:30.046Z",
+  "updatedAt": "2026-07-23T09:14:59.023Z",
+  "supersedes": "N/A",
+  "nextHandoff": "design",
+  "sections": {
+    "background": {
+      "sectionStatus": "done",
+      "items": {
+        "trigger": "用户要求深入理解并细致整理、验证 MCP 及 LLM/Agent/AI 暴露面；outside-in 审计发现公开路由身份、首跳完整性和渐进披露预算不成立。",
+        "affectedParties": "通过 npm 包、Portal、HTTP MCP、Cursor/Codex Host 使用 @swqt/ui 与 @swqt/ui-tokens 的维护者、Agent 和消费者。",
+        "whyNow": "@swqt/ui 与 @swqt/ui-tokens 已公开为 1.0.0，而当前公网 /mcp/swui 错路由至 SWS；继续发布或宣传会扩大错误首跳与过时配置。",
+        "bullets": [
+          "本地 swui MCP initialize、4 个只读工具和定点资源读取可运行。",
+          "公网 /mcp、/mcp/sws、/mcp/swui 认证后均标识为 sws 0.1.144；匿名 /mcp/swui 返回 401。",
+          "当前 resources/list 一次返回 80 项，其中 77 个组件；catalog 空查询返回 77 项。",
+          "packages/ui/AGENTS.md 要求的 llms.txt、DESIGN-SUMMARY、DO-AND-DONT 与 tokens 首跳未完整暴露。"
+        ]
+      }
+    },
+    "problem-statement": {
+      "sectionStatus": "done",
+      "items": {
+        "coreProblem": "当前公开发现面无法稳定把 Agent 路由到 swui：生产 /mcp/swui 实际返回 SWS；本地首跳只暴露 3 份文档且一次枚举 77 个组件；工具缺少可机读只读性、结构化输出、版本与新鲜度语义；Host 与验证真源同时漂移。",
+        "nonGoals": [
+          "不在本 Feature 自动发布 npm 新版本或执行生产部署。",
+          "不修改已安装 SWS 插件方法论资产或中心 SWS 服务。",
+          "不构建 AppShell、TopBar、业务路由或第二套主题所有权。",
+          "不以一次模型回答代替可重复的协议测试与人工 SpotCheck。"
+        ]
+      }
+    },
+    "context-constraints": {
+      "sectionStatus": "done",
+      "items": {
+        "projectConstraints": "本仓库是共享 Web UI 设计系统，不是产品壳；不得新增 AppShell、TopBar 或业务路由；一个全局 ThemeProvider 负责 system/light/dark；使用语义 token；发布物必须携带 Agent 文档。",
+        "technicalConstraints": "MCP 基线为 2025-11-25；本地 @modelcontextprotocol/sdk 解析为 1.29.0。break-accepted 允许新版本重新设计工具名、文档 URI、资源形状和发现流程，不要求兼容旧表面。当前 isSwuiMcpHttpPath 还会错误接受 /mcp/sws 与任意 /mcp/*，必须纳入边界测试。",
+        "runtimeConstraints": "生产变更涉及 agent.swqt.net Caddy、ui.swqt.net DNS/上游与匿名策略，仓库内只能形成可部署配置与 outside-in smoke；未经用户明示不部署、不发布。",
+        "compatibilityConstraints": "用户已确认 break-accepted：不为已发布版本保留 MCP/Agent 兼容层；后续新版本作为唯一受支持契约。该豁免不降低新版本内部一致性、错误语义、版本精确性、文档同步和 outside-in 验收要求。",
+        "documentationConstraints": "packages/* 为 SSOT；Portal .generated 必须由 sync-docs 生成且 check 无漂移；Project companion 必须准确列出 CI/E2E/MCP/doctor gate；不得把安装插件资产写成项目事实。",
+        "projectCompanionRefs": "projectCompanionAnchor: project-swqt-companion；Root AGENTS.md 的 Validation、Workflow + Invocation、Layer Boundary。",
+        "notes": "Axis positioning required: stage=discourse; application=MCP/Agent discovery; technology=HTTP MCP + npm package docs; validation=contract/outside-in/host; layer=project + deployment sibling; evidence=runtime-observed; evolution=public-contract break-accepted（user-confirmed）。Axis split/snapshot: single-feature-with-reason；虽然跨 Host、MCP、docs 与部署层，但它们共同闭合同一 Agent 首跳链和同一 outside-in 验收，拆分会失去可独立成立的目标。axisSplitSignals=layer-boundary,validation-boundary,evidence-boundary,documentation-boundary；Axis coordinate/snapshot is not evidence。"
+      }
+    },
+    "research-evidence": {
+      "sectionStatus": "done",
+      "items": {
+        "summary": "2026-07-23 当前证据：公共 npm 上两包 latest 均为 1.0.0；tarball 含 AGENTS/llms/docs，但已发布 ADOPTION 仍指向无法解析的 ui.swqt.net/mcp 并示例注入退役 SW_MCP_* env。本地 swui MCP 可 initialize、15 个 Portal 单测与 sync-docs:check 通过，但 resources/list=80、templates/list=0、空搜索=77 条/22082 bytes；4 个工具均无 title、annotations、outputSchema 或 structuredContent；package.get 请求 9.9.9 仍静默返回 latest 1.0.0。Portal typecheck 仍有 16 个 implicit-any 错误，sw doctor 被 project-host-credentials-forbidden 阻塞。当前共享路径谓词错误地把 /mcp/sws 与任意 /mcp/* 判为 swui。Sibling Caddy 配置语法有效且意图按前缀分流，但尚未部署：匿名生产 /mcp/swui 仍为 401，ui.swqt.net 当前无 DNS。推断：公网错路由/401 是部署或 upstream 未就绪，而非本地 handler 已验收。",
+        "sources": [
+          "npm registry metadata/tarballs @swqt/ui@1.0.0、@swqt/ui-tokens@1.0.0；retrievedAt=2026-07-23；refreshTrigger=新版本发布。",
+          "本地 in-memory MCP protocol audit；retrievedAt=2026-07-23；resources=80/templates=0/tools=4/emptySearch=22082 bytes。",
+          "sw doctor --project .；retrievedAt=2026-07-23；blocked=project-host-credentials-forbidden。",
+          "Portal typecheck、sync-docs:check、15-unit-test、design-contract、catalog-export；retrievedAt=2026-07-23。",
+          "examples/portal/shared/mcp-path.ts 路径矩阵；retrievedAt=2026-07-23；/mcp/sws=true 为反例。",
+          "/home/blade/sws/debian/caddy/agent.swqt.net.caddy + caddy validate；retrievedAt=2026-07-23；配置合法但 remote parity 未成立。",
+          "https://modelcontextprotocol.io/specification/2025-11-25/server/resources；retrievedAt=2026-07-23；ResourceTemplate/annotations。",
+          "https://modelcontextprotocol.io/specification/2025-11-25/server/tools；retrievedAt=2026-07-23；annotations/outputSchema/structuredContent。",
+          "docs/research/R-SWUI-002-design-system-portal-mcp-registry-research.md 与 R-SWUI-003-swui-mcp-sws-integration-research.md；项目意图=独立公开只读发现面。"
+        ]
+      }
+    },
+    "options-telos": {
+      "sectionStatus": "done",
+      "items": {
+        "options": [
+          {
+            "id": "A",
+            "name": "完整的新契约渐进披露重设",
+            "fitWhen": "准确触达与渐进披露均为硬目标，且新版本不承担旧 MCP/Agent 契约兼容义务。",
+            "benefits": "以小型稳定首跳、组件 ResourceTemplate、有界搜索、结构化工具输出、精确版本语义和 outside-in identity gate 建立唯一新契约。",
+            "costs": "需同时修改 MCP handler/catalog/sync、协议与预算测试、Host/companion/部署文档，并完成真实 Agent SpotCheck；生产路由仍需部署方执行。",
+            "risks": "若生产 gateway、DNS、匿名策略或 upstream 未同步，本地完成后仍只能声明 local-fixed。",
+            "notWhen": "仅追求紧急恢复入口，或无法承担完整协议和 outside-in 验收。",
+            "telos": {
+              "technical": "一次建立小首跳、按需读取、结构化错误与可机读契约。",
+              "economic": "一次性改造较大，长期 token、误路由和排障成本最低。",
+              "legal": "只暴露公开包文档与元数据，不输出凭据或 SWS 管理能力。",
+              "operational": "本地协议、Host 静态门禁与生产 outside-in smoke 分层验收。",
+              "strategic": "新版本成为后续唯一 Agent 契约真源。"
+            }
+          },
+          {
+            "id": "B",
+            "name": "仅修复正确性与可达性",
+            "fitWhen": "发布时间优先，只要求修复 server identity、路径、文档、Host 配置和类型错误。",
+            "benefits": "改动较少，可最快恢复正确入口。",
+            "costs": "继续保留全量组件枚举、较弱工具契约和较高上下文成本。",
+            "risks": "不能满足最初的渐进披露目标，临时修复容易被误当最终契约。",
+            "notWhen": "准确触达与渐进披露都是硬验收原则。",
+            "telos": {
+              "technical": "恢复正确性但保留 discovery 膨胀。",
+              "economic": "短期便宜，长期推理与维护成本较高。",
+              "legal": "与 A 相同。",
+              "operational": "部署链较短，但质量门禁较弱。",
+              "strategic": "仅适合作为紧急修复。"
+            }
+          },
+          {
+            "id": "C",
+            "name": "两阶段交付新契约",
+            "fitWhen": "必须先恢复最小正确首跳，并能承诺第二阶段截止时间与退出门禁。",
+            "benefits": "更快获得正确入口，并摊平完整改造的协调压力。",
+            "costs": "需要维护临时契约、阶段二计划和两轮验证。",
+            "risks": "第二阶段可能被搁置，临时版本可能被消费者当成稳定契约。",
+            "notWhen": "无法保证第二阶段 owner、期限或独立验收。",
+            "telos": {
+              "technical": "通过阶段门逐步达到完整新契约。",
+              "economic": "摊平改造成本，但增加双阶段协调成本。",
+              "legal": "需明确临时表面的支持边界。",
+              "operational": "必须定义阶段二触发、截止和退出条件。",
+              "strategic": "部署窗口受限时的折中路径。"
+            }
+          }
+        ],
+        "recommendedOption": "A",
+        "recommendationRationale": "准确触达与渐进披露是用户原始硬目标；在 break-accepted 前提下，直接建立完整新契约比保留旧表面或制造临时表面更简单、更可验证。",
+        "discussionTopic": "确定新版本 swui MCP/Agent 暴露面的改造深度。",
+        "clarification": "用户已确认 Q-01=C / break-accepted 与 Q-02=A / 完整新契约重设；公开匿名只读是目标，写能力与 SWS 管理面继续保持鉴权且不属于 swui。"
+      }
+    },
+    "decision-summary": {
+      "sectionStatus": "in-progress",
+      "items": {
+        "changePosture": "break-accepted",
+        "changePostureSource": "user-confirmed",
+        "decision": "Q-01=C：break-accepted；Q-02=A：完整的新契约渐进披露重设。",
+        "rationale": "Q-01 recommendationOverride=Yes；overrideReason=user-selected；confirmedDiffersFromRecommended=Yes；narrowedScope=仅设计和验证新版本的唯一 MCP/Agent 契约，不保留旧 URI、工具名、返回形状或全量枚举行为；unchangedForbiddenItems=不自动 npm publish、不自动生产 deploy、不修改 SWS 插件/中心服务、不暴露凭据、不引入 AppShell/TopBar/业务路由。Q-02 recommendationFollowed=Yes；选择一次完成小首跳、ResourceTemplate、有界搜索、结构化工具、精确版本语义及 outside-in identity gate。interactionMode=sequential-gate；structuredChoiceToolStatus=unavailable；confirmationMechanism=text-options-with-fallback。",
+        "userConfirmation": "Q-01：不用考虑已经发布的版本，用新版本覆盖即可。Q-02：A。",
+        "postureChoiceMechanism": "markdown-fallback",
+        "postureChoiceAt": "2026-07-23T08:20:40.000Z",
+        "recommendedPostureId": "migrate-forward",
+        "userPostureSelection": "break-accepted",
+        "breakScope": "新版本可删除或重命名旧 MCP 文档 URI、工具名、返回形状及全量 resources/list 行为；新版本内部契约仍必须准确、可机读、有界并通过本地与 outside-in 验收。",
+        "userConfirmedBreaking": "Yes"
+      }
+    },
+    "acceptance-criteria": {
+      "sectionStatus": "done",
+      "items": {
+        "criteria": [
+          "initialize instructions 给出可执行首跳：先读 llms/AGENTS，再按 search → exact get/resource → install/version 流程使用；不得暗示 SWS 管理工具属于 swui。",
+          "resources/list 只枚举稳定文档首跳，数量不超过 12 且序列化结果不超过 12 KiB；77 个组件通过 swui://components/{name} ResourceTemplate 定点读取，templates/list 可见并支持补全。",
+          "UI 与 tokens 两包的 AGENTS、llms、采用指南及必要设计/token 文档均有稳定 URI；任何 instructions/AGENTS 宣称的 URI 都可成功读取。",
+          "swui.catalog.search 拒绝无约束空查询，默认 limit=10、最大 25，并返回 total/count/truncated；单次序列化结果不超过 16 KiB。",
+          "新版本工具集合和名称可重新设计；每个最终工具必须具有 title/参数说明、readOnly/destructive/idempotent/openWorld annotations、outputSchema、structuredContent 与必要的兼容 JSON text，且不得携带已废弃表面的兼容义务。",
+          "swui.package.get 对 version 实施精确语义；不存在版本返回结构化 not-found，不得静默回落 latest；返回 resolvedVersion 与 freshness/source 信息。",
+          "FormField、DateHelpers、utility/type 等 catalog/import hint 与实际包导出语义一致，并有正反向 catalog gate或等价解释。",
+          "HTTP path matrix 必须只让 /mcp/swui 及其受控子路径进入 swui handler；/mcp/sws 与任意未知 /mcp/* 均不得被 portal 误接管。",
+          "Portal typecheck、sync-docs:check、design-contract、catalog gate、MCP contract/protocol smoke、浏览器 gate 按 companion 声明通过；Project companion 不再虚报 CI/E2E skipped。",
+          "sw doctor --project . 通过：项目 Host 配置不含 SW_MCP_* 凭据/env，managed host/hook 状态收敛或有明确 blocked-with-reason。",
+          "outside-in smoke 证明 /mcp 与 /mcp/sws 标识为 SWS，/mcp/swui 标识为 swui 且只暴露 swui.*；公开匿名策略与 DNS/upstream 行为明确。若无部署权限，必须保持 blocked-with-reason，不得宣称完成。",
+          "发布前 tarball gate 校验 Agent 文档存在、内容与源码同源且所有 MCP URL/Host 示例可通过 doctor 与远端 identity smoke；本 Feature 不自动 npm publish 或生产 deploy。",
+          "至少完成一轮 8 个代表性提示的真实 Agent + 人工 SpotCheck，记录首跳正确率、是否过读、误路由与纠偏；机器矩阵不能代替此证据。",
+          "Tracer-first 主集成链：agent.swqt.net /mcp/swui → portal handler → 小首跳 resources/templates/tools → @swqt 包文档/registry；首个可演示闭环是 initialize → 读 llms/AGENTS → search Button → exact component resource → package version/error。tracerScan: T-hit=T2,T4,T5; N-hit=none; weak>=2=Yes。"
+        ],
+        "observableSuccess": "一个未知上下文 Agent 连接 swui 后，能在规定暴露预算内识别这是 @swqt 设计系统，读取正确包首跳，搜索并定点获取组件/工具信息；不会拿到 SWS 管理面，不会把 /mcp/sws 交给 swui，也不会被 77 项全量枚举淹没。",
+        "testabilityRisks": "生产 Caddy/DNS/upstream、匿名访问策略、npm 发布与真实模型 SpotCheck 需要外部环境或人工权限；本地可以完成协议、预算、错误、路径矩阵与 Host 静态/集成测试，但不得把本地绿等同生产可用。"
+      }
+    },
+    "step-breakdown": {
+      "sectionStatus": "done",
+      "items": {
+        "steps": [
+          {
+            "stepId": "S-SWQT-0016",
+            "title": "MCP 渐进披露核心契约与纵向曳光闭环",
+            "phase": "local-contract",
+            "dependencies": "none；Feature execution-wave head",
+            "materialized": true,
+            "summary": "重设小首跳、ResourceTemplate、有界工具、精确版本与结构化协议，并用本地 full-path smoke 证明。",
+            "status": "designed",
+            "notes": "changePosture=break-accepted；完整 brief/readiness=Yes。",
+            "boundary": "只改项目层 swui MCP 运行时、catalog/registry 与测试；不碰 Host/生产部署。",
+            "purpose": "优先穿过主集成面，建立可执行 head Step。",
+            "href": "../steps/S-SWQT-0016-mcp-渐进披露核心契约与纵向曳光闭环.json",
+            "acceptanceHooks": [
+              "Feature AC1-AC7",
+              "Feature AC14 tracer-first"
+            ],
+            "validationFocus": [
+              "resources/templates budget",
+              "tool schemas+structuredContent",
+              "search/version negative cases",
+              "catalog parity",
+              "in-memory protocol smoke"
+            ],
+            "intakeRefs": [],
+            "propagationTargets": [
+              "S-SWQT-0017",
+              "S-SWQT-0018"
+            ],
+            "propagationFiles": {},
+            "executionOwner": "swui-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0017",
+            "title": "Host 路由、文档真源与发布包门禁收敛",
+            "phase": "host-docs-package",
+            "dependencies": "dependsOn S-SWQT-0016",
+            "materialized": true,
+            "summary": "严格 /mcp/swui 路径、移除 Host 凭据漂移、修复 typecheck、同步 companion/docs/tarball 与 deploy-ready 配置。",
+            "status": "designed",
+            "notes": "完整 brief/readiness=Yes；不执行 production deploy/npm publish。",
+            "boundary": "项目 Host/配置/文档/质量门与 sibling deploy-ready 静态配置；不做远端最终验收。",
+            "purpose": "让源码、Host、文档、打包态和验证真源一致。",
+            "href": "../steps/S-SWQT-0017-host-路由-文档真源与发布包门禁收敛.json",
+            "acceptanceHooks": [
+              "Feature AC8-AC10",
+              "Feature AC12"
+            ],
+            "validationFocus": [
+              "HTTP path negative matrix",
+              "portal typecheck/tests/browser",
+              "sync/design/catalog",
+              "sw doctor",
+              "packed consumer/tarball",
+              "Caddy syntax"
+            ],
+            "intakeRefs": [],
+            "propagationTargets": [
+              "S-SWQT-0018",
+              "project-swqt-companion"
+            ],
+            "propagationFiles": {},
+            "executionOwner": "swui-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0018",
+            "title": "生产 outside-in 身份与 Agent SpotCheck 验收",
+            "phase": "production-evidence",
+            "dependencies": "dependsOn S-SWQT-0016,S-SWQT-0017",
+            "materialized": true,
+            "summary": "只读验证生产 SWS/swui 身份、匿名/DNS/upstream，并完成 8 提示 Agent+人工 SpotCheck；无权限时诚实 blocked。",
+            "status": "designed",
+            "notes": "完整 brief/readiness=Yes；production identity 与 human evidence 为 hard promotion gates。",
+            "boundary": "只读远端验收与证据记录；未经明示不部署、不改 DNS、不发布。",
+            "purpose": "隔离最后一公里外部证据，防止把 local-fixed 误报为 production-ready。",
+            "href": "../steps/S-SWQT-0018-生产-outside-in-身份与-agent-spotcheck-验收.json",
+            "acceptanceHooks": [
+              "Feature AC11",
+              "Feature AC13",
+              "Feature AC14 production tracer"
+            ],
+            "validationFocus": [
+              "endpoint identity matrix",
+              "anonymous policy",
+              "DNS/upstream",
+              "8-prompt Agent rubric",
+              "human SpotCheck"
+            ],
+            "intakeRefs": [],
+            "propagationTargets": [
+              "F-SWQT-0006 lifecycle",
+              "deployment maintainer"
+            ],
+            "propagationFiles": {},
+            "executionOwner": "swui-maintainers+deployment-maintainer+human-reviewer"
+          }
+        ]
+      }
+    },
+    "open-questions": {
+      "sectionStatus": "done",
+      "items": {
+        "questions": [
+          {
+            "id": "Q-01",
+            "question": "本 Feature 的兼容姿态是否由 project-default migrate-forward 提升为用户确认？标准选项：migrate-forward、dual-run、break-accepted、greenfield；因 npm 1.0 已公开，greenfield 当前与生产事实冲突。",
+            "status": "resolved",
+            "proposedDefault": "migrate-forward",
+            "owner": "user",
+            "answeredAt": "2026-07-23T08:20:40.000Z",
+            "overrideReason": "user-selected：不考虑已发布版本，新版本直接覆盖。",
+            "recommendationFollowed": "No",
+            "resolutionSummary": "选择 C / break-accepted；不保留旧 MCP/Agent 表面兼容层。",
+            "selectedOptionId": "C",
+            "selectedOptionTitle": "break-accepted（接受破坏）",
+            "selectedPosture": "break-accepted"
+          },
+          {
+            "id": "Q-02",
+            "question": "在 break-accepted 前提下，新版本采用 A 完整渐进披露重设、B 仅修正确性与可达性，还是 C 两阶段交付？",
+            "status": "resolved",
+            "proposedDefault": "A",
+            "owner": "user",
+            "answeredAt": "2026-07-23T08:25:42.000Z",
+            "recommendationFollowed": "Yes",
+            "resolutionSummary": "选择 A：完整的新契约渐进披露重设。",
+            "selectedOptionId": "A",
+            "selectedOptionTitle": "完整的新契约渐进披露重设",
+            "selectedPosture": "break-accepted"
+          }
+        ],
+        "risks": [
+          "生产 gateway/DNS 未部署或 catch-all 顺序错误。",
+          "公开匿名只读策略若与运维安全政策冲突，需要返回 discourse。",
+          "现有 dirty worktree 与并发用户修改必须逐文件保留，不能覆盖。"
+        ],
+        "resolvedClarifications": [
+          {
+            "topic": "SWS 与 swui 服务边界",
+            "conclusion": "SWS 中心管理面保持鉴权且不属于本 Feature；swui 只读发现面必须呈现独立 server identity 与 swui.* surface。",
+            "evidence": [
+              "本地/生产 initialize 对比",
+              "AGENTS.md Layer Boundary",
+              "R-SWUI-003"
+            ]
+          },
+          {
+            "topic": "发布与部署权限",
+            "conclusion": "本 Feature 可准备和验证代码/配置，但不自动 npm publish 或生产 deploy。",
+            "evidence": [
+              "用户当前请求未明示发布或部署",
+              "SWS auto 边界"
+            ]
+          },
+          {
+            "topic": "兼容姿态",
+            "conclusion": "用户确认 break-accepted；新版本不承担已发布 MCP/Agent 表面的兼容义务。",
+            "evidence": [
+              "用户原话：不用考虑已经发布的版本，用新版本覆盖即可。",
+              "HIR-QAP Q-01=C，answeredAt=2026-07-23T08:20:40.000Z"
+            ]
+          },
+          {
+            "topic": "新版本改造深度",
+            "conclusion": "用户选择完整的新契约渐进披露重设，一次完成准确触达、按需披露和可重复验收。",
+            "evidence": [
+              "用户对 HIR-QAP Q-02 回复：A。",
+              "Q-02 advisorRecommendation=A，answeredAt=2026-07-23T08:25:42.000Z"
+            ]
+          }
+        ]
+      }
+    },
+    "handoff-gate": {
+      "sectionStatus": "done",
+      "items": {
+        "confirmedInto": "discourse",
+        "progress": "Q-01 与 Q-02 均已用户确认并写回：break-accepted + 完整的新契约渐进披露重设。业务 HIR-QAP 已清零；close-discourse dry-run 被结构门禁阻塞，因为 Feature 尚无首个 materialized Step。",
+        "validationGate": "通过：workflow JSON/v6、HIR-QAP gate/writeback、sync-docs:check、design-contract、catalog-export、Portal 15 tests、本地 MCP smoke、Caddy syntax。结构阻塞：close-discourse=blocked-with-reason(launch-projection-incomplete: no head Step)。既有外部阻塞：sw doctor(project-host-credentials-forbidden)、Portal typecheck(16 implicit-any)、生产 /mcp/swui 匿名 401、ui.swqt.net DNS、生产 server identity 未切为 swui、真实 Agent+人工 SpotCheck。",
+        "doNotClobber": "保留用户/并发工作树修改，尤其 namespace 发布迁移、packages/ui/docs/ADOPTION.md、examples/portal/DEPLOY.md、shared/mcp-path.ts、browser.spec.mjs、portal-content.ts 以及 sibling sws Caddy/smoke 改动。",
+        "nextAction": "Q-AUTO-CLOSURE completed; proceed with design without workflow tail prompt.",
+        "informationComplete": "Yes",
+        "nextHandoff": "design",
+        "references": [
+          "sws://reference/discourse-posture-choice-gate.v1.md",
+          "sws://reference/hir-qap.md",
+          "sws://reference/tracer-first-delivery.md",
+          "projectCompanionAnchor: project-swqt-companion"
+        ]
+      }
+    },
+    "questions": {
+      "sectionStatus": "done",
+      "items": {
+        "schemaVersion": 1,
+        "sessionStatus": "completed",
+        "items": [
+          {
+            "questionId": "Q-01",
+            "title": "确认 MCP/Agent 暴露面修复的兼容姿态",
+            "background": "@swqt/ui 与 @swqt/ui-tokens 1.0.0 已公开发布；发布包仍携带错误 MCP 入口和退役 Host env 示例。Feature 默认 migrate-forward，但尚未获得用户确认。",
+            "meaning": "选择决定是否保留现有工具名、旧文档 URI、组件读取兼容层及迁移回归义务。",
+            "thread": "gate",
+            "status": "resolved",
+            "interactionMode": "sequential-gate",
+            "options": [
+              {
+                "id": "A",
+                "title": "migrate-forward（兼容迁移）",
+                "posture": "migrate-forward",
+                "analysis": {
+                  "fitWhen": "已有公共 1.0 消费者且无法证明无人依赖现有表面。",
+                  "impact": "保留兼容读取，同时将首跳改为模板化、有界披露。",
+                  "diffFromRecommended": "无（推荐项）。"
+                },
+                "pros": [
+                  "兼容 1.0",
+                  "满足准确触达与渐进披露"
+                ],
+                "cons": [
+                  "需要完整协议与回归测试"
+                ],
+                "risks": [
+                  "未知客户端可能依赖全量 resources/list"
+                ],
+                "telos": {
+                  "technical": "兼容扩展并收敛首跳。",
+                  "economic": "中等改造降低长期 token 成本。",
+                  "legal": "仅暴露公开包信息。",
+                  "operational": "本地与远端分层验收。",
+                  "strategic": "建立稳定 1.x Agent 契约。"
+                }
+              },
+              {
+                "id": "B",
+                "title": "dual-run（双面并行）",
+                "posture": "dual-track",
+                "analysis": {
+                  "fitWhen": "已知客户端强依赖全量枚举且能承担过渡观测。",
+                  "impact": "新旧发现面并存，短期兼容最强。",
+                  "diffFromRecommended": "多保留一套表面与退出门禁。"
+                },
+                "pros": [
+                  "迁移风险最低"
+                ],
+                "cons": [
+                  "持续支付全量枚举成本",
+                  "双轨最复杂"
+                ],
+                "risks": [
+                  "旧面可能长期无法退出"
+                ],
+                "telos": {
+                  "technical": "双契约一致性测试。",
+                  "economic": "长期成本最高。",
+                  "legal": "与推荐项相同。",
+                  "operational": "需切换与退出条件。",
+                  "strategic": "仅适合作为过渡。"
+                }
+              },
+              {
+                "id": "C",
+                "title": "break-accepted（接受破坏）",
+                "posture": "break-accepted",
+                "analysis": {
+                  "fitWhen": "能协调全部消费者并明确接受主版本破坏。",
+                  "impact": "移除旧兼容，现有消费者可能中断。",
+                  "diffFromRecommended": "以破坏兼容换取更小实现。"
+                },
+                "pros": [
+                  "最终契约最简"
+                ],
+                "cons": [
+                  "需要主版本和迁移通知",
+                  "缺少消费者清单"
+                ],
+                "risks": [
+                  "未知客户端被静默破坏"
+                ],
+                "telos": {
+                  "technical": "最简但破坏最大。",
+                  "economic": "协调成本高。",
+                  "legal": "须明确 breaking 声明。",
+                  "operational": "回滚复杂。",
+                  "strategic": "当前证据不足。"
+                }
+              },
+              {
+                "id": "D",
+                "title": "greenfield（视为无消费者）",
+                "posture": "neutral",
+                "analysis": {
+                  "fitWhen": "能证明无生产消费者。",
+                  "impact": "最大化简化，但与公共 npm 1.0 冲突。",
+                  "diffFromRecommended": "当前会触发 posture-fact-conflict。"
+                },
+                "pros": [
+                  "实现自由度最高"
+                ],
+                "cons": [
+                  "与已发布事实冲突"
+                ],
+                "risks": [
+                  "误删真实消费者路径"
+                ],
+                "telos": {
+                  "technical": "绿场最简。",
+                  "economic": "误判代价高。",
+                  "legal": "需解释公共承诺冲突。",
+                  "operational": "当前被阻塞。",
+                  "strategic": "当前不适用。"
+                }
+              },
+              {
+                "id": "E",
+                "title": "defer（暂缓）",
+                "posture": "defer",
+                "analysis": {
+                  "fitWhen": "需先补消费者、匿名策略或部署责任事实。",
+                  "impact": "保持 discourse，不进入实现。",
+                  "diffFromRecommended": "以延迟换取更多证据。"
+                },
+                "pros": [
+                  "避免过度推断"
+                ],
+                "cons": [
+                  "错误公开面继续存在"
+                ],
+                "risks": [
+                  "修复持续阻塞"
+                ],
+                "telos": {
+                  "technical": "无变更。",
+                  "economic": "产生延迟成本。",
+                  "legal": "无新增风险。",
+                  "operational": "维持当前故障。",
+                  "strategic": "仅适合短暂收集证据。"
+                }
+              }
+            ],
+            "advisorRecommendation": {
+              "status": "recommend",
+              "recommendedOptionId": "A",
+              "rationale": "公共 npm 1.0 与未知 Agent 消费者已构成兼容风险；migrate-forward 唯一同时满足兼容和渐进披露。",
+              "alternateOptionId": "B",
+              "alternateWhen": "存在全量枚举依赖且能维护明确退出窗口。"
+            },
+            "selectedOption": "C",
+            "selectedAt": "2026-07-23T08:20:40.000Z",
+            "overrideReason": "用户明确要求不考虑已发布版本，后续新版本直接采用新契约。"
+          },
+          {
+            "questionId": "Q-02",
+            "title": "确定新版本 MCP 暴露面的改造深度",
+            "background": "Q-01 已确认 break-accepted：新版本不承担旧 MCP/Agent 契约兼容义务。当前审计仍显示生产身份错路由、resources/list 一次枚举 80 项、缺少 ResourceTemplate、空搜索无界、工具缺少结构化契约且 package version 查询会静默回落 latest。",
+            "meaning": "该选择决定新版本是一次完成准确触达与渐进披露，还是只修复可达性，或拆成两阶段交付；会直接改变实现范围、验收预算和远端验证门禁。",
+            "thread": "gate",
+            "status": "resolved",
+            "interactionMode": "sequential-gate",
+            "options": [
+              {
+                "id": "A",
+                "title": "完整的新契约渐进披露重设",
+                "posture": "break-accepted",
+                "analysis": {
+                  "fitWhen": "准确触达与渐进披露都是本 Feature 的硬目标，并允许新版本重设表面。",
+                  "impact": "以小型稳定首跳、组件 ResourceTemplate、有界搜索、结构化工具输出、精确版本语义和 outside-in identity gate 取代旧表面。",
+                  "diffFromRecommended": "无（推荐项）。"
+                },
+                "pros": [
+                  "完整满足原始目标",
+                  "无需背负旧 URI、工具名或全量枚举兼容层",
+                  "新契约最清晰且长期上下文成本最低"
+                ],
+                "cons": [
+                  "实现与协议测试范围最大",
+                  "仍需生产路由、DNS 与匿名策略配合"
+                ],
+                "risks": [
+                  "若远端部署无法同步，本地完成后仍只能声明 local-fixed"
+                ],
+                "telos": {
+                  "technical": "一次建立小首跳、按需读取和可机读契约。",
+                  "economic": "一次性改造较大，长期 token 与排障成本最低。",
+                  "legal": "仅暴露公开包资料，不含凭据或 SWS 管理能力。",
+                  "operational": "要求本地协议与生产 outside-in 双层验收。",
+                  "strategic": "形成可作为后续版本唯一真源的新 Agent 契约。"
+                }
+              },
+              {
+                "id": "B",
+                "title": "仅修复正确性与可达性",
+                "posture": "neutral",
+                "analysis": {
+                  "fitWhen": "发布时间优先，只要求先修路由、文档、Host 配置、路径边界和类型错误。",
+                  "impact": "保留当前大体发现模型，包括全量组件枚举和较弱工具契约。",
+                  "diffFromRecommended": "明显缩小实现，但不完成渐进披露目标。"
+                },
+                "pros": [
+                  "改动较少",
+                  "可最快恢复正确 server identity 和文档入口"
+                ],
+                "cons": [
+                  "resources/list 与搜索仍会产生较高上下文成本",
+                  "工具结构化输出和版本语义仍不完整"
+                ],
+                "risks": [
+                  "容易把临时修复误当最终状态",
+                  "不能满足用户最初提出的渐进披露原则"
+                ],
+                "telos": {
+                  "technical": "恢复正确性但保留 discovery 膨胀。",
+                  "economic": "短期便宜，长期推理与维护成本较高。",
+                  "legal": "与推荐项相同。",
+                  "operational": "部署链较短，但质量门禁较弱。",
+                  "strategic": "适合作为紧急修复，不适合作为最终契约。"
+                }
+              },
+              {
+                "id": "C",
+                "title": "两阶段交付新契约",
+                "posture": "defer",
+                "analysis": {
+                  "fitWhen": "需要先恢复正确路由，再在明确期限内补齐完整渐进披露。",
+                  "impact": "第一阶段修身份、路径、文档和最小首跳；第二阶段完成模板、搜索预算、结构化工具、版本语义与真实 Agent SpotCheck。",
+                  "diffFromRecommended": "最终目标相同，但允许中间状态并增加阶段退出门禁。"
+                },
+                "pros": [
+                  "更快获得可用的正确入口",
+                  "降低一次交付的协调压力"
+                ],
+                "cons": [
+                  "需要维护临时契约和第二阶段截止条件",
+                  "验证与发布协调次数更多"
+                ],
+                "risks": [
+                  "第二阶段可能被长期搁置",
+                  "临时版本可能被消费者当成稳定契约"
+                ],
+                "telos": {
+                  "technical": "通过阶段门逐步达到完整新契约。",
+                  "economic": "摊平改造成本，但增加双阶段协调成本。",
+                  "legal": "需清晰标注临时表面和支持边界。",
+                  "operational": "必须定义阶段二触发与退出时间。",
+                  "strategic": "适合部署窗口受限时的折中路径。"
+                }
+              }
+            ],
+            "advisorRecommendation": {
+              "status": "recommend",
+              "recommendedOptionId": "A",
+              "rationale": "用户原始目标同时要求准确触达与渐进披露；既然已接受 breaking change，直接建立完整新契约比保留或制造临时表面更简单、更可验证。",
+              "alternateOptionId": "C",
+              "alternateWhen": "生产路由修复有紧迫窗口，且能承诺第二阶段截止时间与独立验收。"
+            },
+            "selectedOption": "A",
+            "selectedAt": "2026-07-23T08:25:42.000Z"
+          }
+        ],
+        "qaSessionClosure": {
+          "businessComplete": "Yes",
+          "workflowPromptSuppressed": "Yes",
+          "closedAt": "2026-07-23T09:14:59.023Z",
+          "autoEligibleAtT0": "Yes",
+          "autoEligibleHandoff": "promote",
+          "autoWaveHeadStepId": "S-SWQT-0018",
+          "launchReceipt": "sw workflow close-discourse target=F-SWQT-0006; handoff=design; autoEligibleHandoff=promote"
+        }
+      }
+    }
+  }
+}

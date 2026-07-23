@@ -14,7 +14,7 @@ describe("sync-docs", () => {
     }
   });
 
-  test("copies UI docs and agent files into .generated", () => {
+  test("copies UI and token docs into .generated", () => {
     tempRoot = mkdtempSync(join(tmpdir(), "portal-sync-"));
     const portalDir = join(tempRoot, "portal");
     mkdirSync(portalDir, { recursive: true });
@@ -22,7 +22,13 @@ describe("sync-docs", () => {
     const copied = syncDocs({ portalDir, repo: repoRoot });
     expect(copied.length).toBeGreaterThan(4);
     expect(readFileSync(join(portalDir, ".generated/docs/ADOPTION.md"), "utf8")).toContain("Portal MCP");
-    expect(readFileSync(join(portalDir, ".generated/AGENTS.md"), "utf8")).toContain("@swui/ui");
+    expect(readFileSync(join(portalDir, ".generated/AGENTS.md"), "utf8")).toContain("@swqt/ui");
+    expect(readFileSync(join(portalDir, ".generated/tokens/docs/TOKENS.md"), "utf8")).toContain(
+      "@swqt/ui-tokens"
+    );
+    expect(readFileSync(join(portalDir, ".generated/tokens/AGENTS.md"), "utf8")).toContain(
+      "@swqt/ui-tokens"
+    );
   });
 
   test("--check detects drift without writing", () => {
@@ -43,5 +49,7 @@ describe("sync-docs", () => {
     expect(dests.some((dest) => dest.endsWith("docs/DESIGN-SUMMARY.md"))).toBe(true);
     expect(dests.some((dest) => dest.endsWith("docs/DO-AND-DONT.md"))).toBe(true);
     expect(dests.some((dest) => dest.endsWith("docs/COMPONENT-CATALOG.md"))).toBe(true);
+    expect(dests.some((dest) => dest.endsWith("tokens/docs/TOKENS.md"))).toBe(true);
+    expect(dests.some((dest) => dest.endsWith("tokens/llms.txt"))).toBe(true);
   });
 });

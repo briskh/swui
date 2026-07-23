@@ -1,0 +1,415 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0017",
+  "status": "delivered",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Step S-SWQT-0017: Host 路由、文档真源与发布包门禁收敛",
+  "sourceFeature": {
+    "id": "F-SWQT-0006",
+    "href": "../feature/F-SWQT-0006-mcp-与-agent-暴露面渐进披露收敛.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-23T08:40:29.050Z",
+  "updatedAt": "2026-07-23T08:40:29.050Z",
+  "supersedes": "N/A",
+  "nextHandoff": "closed",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "收敛 swui 的 HTTP 路由、Host 配置、项目 companion、文档同步与发布包验证，使本地/打包态只暴露新的准确入口并通过项目门禁。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "严格限定 Portal 只接管 /mcp/swui 及受控子路径，拒绝 /mcp、/mcp/sws 与未知 /mcp/*。",
+          "移除 .cursor/mcp.json 与 .codex/config.toml 中退役 SW_MCP_* env/凭据，仅保留由 sw 管理的 command/args，并登记独立 swui URL。",
+          "修复 Portal server TypeScript strict 错误并为 path matrix 增加回归测试。",
+          "同步 packages/*、Portal README/DEPLOY/Agent 页面和 examples 中的新 MCP/Host 使用说明；保留 packages/* 为 SSOT。",
+          "更新 project-swqt-companion 的 CI/E2E/MCP/doctor 真实 gate，不再虚报 skipped。",
+          "验证 sync-docs、design-contract、catalog-export、Portal typecheck/tests/browser、sw doctor 与打包消费者/tarball Agent 文档新鲜度。",
+          "核对 sibling /home/blade/sws 的 Caddy prefix 配置和 outside-in smoke 脚本为 deploy-ready，但不执行生产部署。"
+        ],
+        "outOfScope": [
+          "生产 Caddy reload、DNS/upstream 修改或匿名策略上线。",
+          "npm publish。",
+          "8 提示真实 Agent + 人工 SpotCheck（S-SWQT-0018）。",
+          "删除或重写与本 Feature 无关的 dirty-worktree 修改。"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "sourceFeature": "F-SWQT-0006；依赖 S-SWQT-0016 的最终 MCP 公共契约。",
+        "researchEvidence": "审计事实：isSwuiMcpHttpPath 误接管 /mcp/sws；Host 配置含 SW_MCP_*；project companion 虚报 CI/E2E skipped；Portal typecheck 16 个 implicit-any。",
+        "optionsTelos": "采用单一严格路径与生成式文档真源；不保留 legacy bare /mcp 兼容。",
+        "projectCompanionRefs": "Root AGENTS.md Validation/Workflow/Layer Boundary；.cursor/skills/project-swqt-companion/SKILL.md。"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": [
+          "S-SWQT-0016"
+        ],
+        "externalDependencies": [
+          "本地可用 bun、Playwright/browser gate 与 sw doctor。",
+          "sibling /home/blade/sws 中已有未提交 Caddy/smoke 改动须逐文件保留。"
+        ],
+        "userDecisions": [
+          "break-accepted：允许删除 legacy /mcp 兼容路径和退役 Host env。",
+          "不自动 npm publish 或生产 deploy。"
+        ],
+        "projectResources": [
+          "examples/portal/shared/mcp-path.ts",
+          "examples/portal/server/index.ts",
+          "examples/portal/server/handlers.ts",
+          ".cursor/mcp.json",
+          ".codex/config.toml",
+          ".cursor/skills/project-swqt-companion/SKILL.md",
+          "examples/portal/scripts/sync-docs.mjs",
+          "scripts/verify-packed-consumer.mjs",
+          "/home/blade/sws/debian/caddy/agent.swqt.net.caddy"
+        ],
+        "axisPositioning": "required；axisTrigger=host-loading+public-route+documentation+validation；axisCoordinate=stage:design, application:agent-host, validation:path-matrix+doctor+package+browser, layer:project+sibling-deploy-config, evidence:static+runtime-local。",
+        "axisSplitSnapshot": "axisSplitSignals=layer-boundary,validation-boundary,documentation-boundary；与 S-SWQT-0016 分拆以避免公共 MCP 行为和 Host/发布治理共享一个 review 风险域；与 S-SWQT-0018 分拆以隔离外部权限。",
+        "postDesignClarification": "not-applicable；无设计后范围 delta。",
+        "temporaryArtifactLifecycle": "允许测试 runner 自有 build/pack 输出；最终由既有脚本 cleanup，不能删除用户或无关 dirty-worktree 文件；workflow payload 仅用 tool-owned handles。"
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "testDrivenDesign": {
+          "testCaseDesign": "Path helper unit matrix + Portal typecheck/tests/browser + sync-docs/design/catalog gates + sw doctor + packed-consumer/tarball checks + Caddy syntax/smoke dry validation。",
+          "acceptanceToTestMapping": "AC8→/mcp path matrix 正负例；AC9→typecheck/sync/design/catalog/browser；AC10→sw doctor 无 Host 凭据；AC12→pack/verify Agent docs 与 URL；文档/companion→sync-docs + 定点内容断言。",
+          "riskToTestLevelMapping": "HTTP route/host config→integration+negative matrix；TypeScript helper→unit；package/document truth→pack consumer+sync contract；deployment config→syntax+read-only smoke。",
+          "regressionTestDesign": "designed：覆盖 /mcp/sws 被误接管、SW_MCP_* 残留、companion skipped 漂移和 tarball stale docs。",
+          "coverageAssessment": "touched-code",
+          "coverageMetric": "project-defined（Portal tests/coverage signal）",
+          "coverageSkipReason": "N/A",
+          "residualRisk": "Caddy syntax通过不证明生产已 reload；远端结果由 S-SWQT-0018 决定。",
+          "followUp": "S-SWQT-0018 执行 read-only outside-in 与 human evidence。"
+        },
+        "explanationSyncBrief": "项目事实必须回写 project companion 与人读 docs；packages/* 是内容 SSOT，Portal .generated 只能由 sync-docs 生成。",
+        "problemDefinition": "即使本地 MCP 逻辑正确，过宽 HTTP prefix、带凭据的 Host 配置、失真的 companion 和陈旧 tarball 仍会让 Agent 连接错误服务或使用错误门禁。",
+        "requirementsDefinition": "形成一个严格、无凭据、可打包、可由 Root/companion 定位且通过本地质量门的 Host/文档/发布证据链。",
+        "nonGoals": [
+          "不执行生产部署或 DNS 修改。",
+          "不发布 npm。",
+          "不覆盖无关用户改动。"
+        ],
+        "plainLanguage": {
+          "unclear": "入口规则、Host 配置和文档说法彼此不一致；本地能跑不代表消费者或生产会走到同一个服务。",
+          "why": "必须让路径、配置、文档和打包结果共享一个事实源并由门禁自动反证漂移。",
+          "outcome": "只有 /mcp/swui 到达 swui；Host 不携带凭据；消费者包中的 Agent 文档与源码一致；companion 列出可实际执行的门禁。",
+          "prose": "把路标、入口和验收清单对齐，避免代码正确但接线错误。"
+        },
+        "options": [
+          {
+            "id": "A",
+            "name": "单一严格路径 + 生成式文档/项目事实",
+            "cuttingPoint": "共享 mcp-path helper，Host 只用 sw mcp command，Portal 内容由 packages/* 生成，companion 登记真实门禁。",
+            "impact": "删除 legacy bare /mcp 兼容，所有本地和打包态门禁对齐。",
+            "risk": "需要同步多个事实入口并处理现有 dirty changes。",
+            "validationCost": "中高：typecheck、tests、browser、doctor、pack。",
+            "rejectWhen": "用户要求保留 legacy path（当前已明确 break-accepted）。"
+          },
+          {
+            "id": "B",
+            "name": "保留宽 prefix 与手工文档",
+            "cuttingPoint": "仅修少量说明，不改变 Host/env 和 /mcp/* 接管。",
+            "impact": "短期改动小。",
+            "risk": "持续误路由、凭据漂移和文档陈旧。",
+            "validationCost": "低但无法满足验收。",
+            "rejectWhen": "准确触达是硬目标。"
+          }
+        ],
+        "openDecisions": [],
+        "recommendedOption": {
+          "option": "A",
+          "rationale": "break-accepted 已消除 legacy 兼容义务；共享 helper 与生成式 SSOT 能建立可重复门禁。",
+          "assumptionsFromFeature": "不自动部署/发布；dirty worktree 必须保留；SWS 管理面独立。",
+          "assumptionChanges": "none"
+        },
+        "granularity": {
+          "granularityDecision": "fine-enough",
+          "whySmallEnough": "只处理 Host/路由/文档/包证据这一治理链，不改变 MCP 业务契约或执行生产验证。",
+          "whyNotSplitFurther": "这些面共同决定消费者是否连接并读取同一新契约，且由同一 doctor/pack/docs quality merge point 验收。",
+          "splitSignals": "若需要真实部署权限或人类体验裁决，转 S-SWQT-0018；若出现独立发布授权，另走 release 工作流。",
+          "coarseJustification": "本 Step 的共享不变量是‘源码、Host、文档、tarball 同源且无误路由/凭据’。",
+          "proposedChildSteps": "N/A"
+        },
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "所有文件面、门禁和禁止动作已知；生产权限不属于本 Step 的执行前置。",
+          "missingItems": "none",
+          "partiallySafeToProceed": "N/A"
+        },
+        "forwardImpact": [
+          {
+            "target": "S-SWQT-0018",
+            "impactType": "premise+validation",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0018",
+            "resolution": "以 S0017 通过后的路径、配置和 smoke 脚本作为远端验收前提。"
+          },
+          {
+            "target": "project-swqt-companion",
+            "impactType": "current project fact",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0017",
+            "resolution": "回写真实 CI/E2E/MCP/doctor gate 与 invocation facts。"
+          }
+        ],
+        "profileNote": "stepProfile=full；guardrail risk domain=agent-surface+public-route+deployment-entry；ssotImpactExpected=ssot-updated（docs/companion/config 均为项目当前事实）。"
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "executionContract": {
+          "expectedChangeSurface": "Exact Portal MCP path handling; Cursor/Codex MCP slots; package and Portal adoption/deployment docs; project validation handoff; Portal browser coverage; packed-consumer verification; and sibling /home/blade/sws gateway/smoke source configuration.",
+          "acceptanceCriteria": "Only /mcp/swui reaches the Portal handler; project Host files contain managed stdio sw plus independent swui URL and no retired credential env; docs and companion match runtime; doctor/type/unit/protocol/build/browser/tarball gates pass; sibling Caddy and outside-in smoke are deploy-ready without deploying.",
+          "validationEvidenceRequired": "sw doctor, sync/design/catalog gates, both typechecks and builds, Portal unit/MCP/browser suites, UI consumer browser matrix, nested and hoisted tarball consumers with byte-identical Agent docs, npm tarball security audit, shell syntax, and caddy validate/adapt evidence.",
+          "rollbackNotes": "No external deployment or publish occurred. Revert the exact-path/config/docs/gate changes together; sibling Caddy and smoke source changes are inert until an authorized deployment. Preserve the separate sw and swui service identities."
+        },
+        "implementationSummary": {
+          "whatChanged": "Tightened the Portal path predicate to exact /mcp/swui; removed retired SW_MCP_* Host env while retaining managed stdio sw and an independent swui URL; synchronized package/Portal/Agent/deploy documentation; made CI handoff truthful; added path and Agent-page browser assertions; made packed-consumer checks use temporary tarballs and verify same-version docs in isolated and hoisted layouts; refreshed namespace screenshots; and prepared exact-first sibling Caddy routing plus a contract-rich outside-in smoke.",
+          "whySatisfiesStep": "Every S-SWQT-0017 local Host, documentation, browser, package-freshness, and deploy-readiness requirement now has executable evidence. The gateway source routes exact /mcp/swui to ui.swqt.net before legacy SWS /mcp* handling, while no reload, production mutation, or npm publish was performed.",
+          "intentionallyUnchanged": "Production gateway runtime, DNS/upstream availability, anonymous policy, npm registry state, and the eight-prompt human Agent SpotCheck remain outside this Step and are owned by S-SWQT-0018 or an authorized operator. Unrelated dirty-worktree changes were preserved."
+        },
+        "changeSurface": {
+          "codeAnchors": "examples/portal/shared/mcp-path.ts; examples/portal/browser.spec.mjs; examples/portal/src/pages/AgentPage.tsx; scripts/verify-packed-consumer.mjs; UI consumer screenshot baselines for the intentional @swqt namespace text.",
+          "configAnchors": ".cursor/mcp.json; .codex/config.toml; .github/workflows/quality.yml; /home/blade/sws/debian/caddy/agent.swqt.net.caddy; /home/blade/sws/scripts/check-mcp-path-smoke.sh.",
+          "documentationAnchors": "packages/ui/docs/ADOPTION.md; packages/ui-tokens/docs/ADOPTION.md; examples/portal/{README.md,DEPLOY.md}; docs/experience/portal-and-mcp.md; .cursor/skills/{README.md,project-swqt-companion/SKILL.md}; generated Portal mirrors.",
+          "dataOrMigrationAnchors": "No data migration. Package tarballs were rebuilt locally as ignored evidence artifacts; no registry upload occurred."
+        },
+        "executionNotes": {
+          "decisionsDuringImplementation": "Treat /mcp/swui as an exact public mount; retain SWS /mcp and /mcp/sws at the sibling gateway; require dual Accept media types; keep Host credentials in user-level sw configuration; byte-compare every packaged Agent/doc file; validate both isolated and workspace-hoisted Bun layouts.",
+          "deviationsFromBrief": "No acceptance deviation. The initial packed browser run exposed eight 39-pixel diffs caused solely by the intentional @swui-to-@swqt visible text migration; the source consumer reproduced them, so the eight baselines were deliberately regenerated and both layouts then passed.",
+          "risksDiscovered": "The environment requires an explicit Bun PATH for nested package scripts. Caddy source validity does not prove deployed routing. The npm audit reports four reviewed URL warnings but zero blocking secret/lifecycle findings. Production and human evidence remains explicitly unclaimed."
+        },
+        "validationReferences": [
+          {
+            "commandOrEvidence": "sw doctor --project .",
+            "result": "passed",
+            "notes": "After required host repair, project-ready is qualified; all required Host surfaces including mcp-slots and managed-digest are satisfied, and project Host files contain no SW_MCP_*/SW_SWS_* env keys."
+          },
+          {
+            "commandOrEvidence": "sync-docs:check + check:design-contract + check:catalog-export + both TypeScript checks",
+            "result": "passed",
+            "notes": "Generated docs are fresh; design contract passed; catalog/export parity is 77/281/77; UI consumer and Portal client/server typechecks exit 0."
+          },
+          {
+            "commandOrEvidence": "Portal Bun tests + in-memory MCP smoke",
+            "result": "passed",
+            "notes": "20 tests, 0 failures, 144 expectations; MCP smoke passed; exact-path negatives and full progressive-disclosure protocol contract are covered."
+          },
+          {
+            "commandOrEvidence": "UI consumer and Portal builds/browser suites",
+            "result": "passed",
+            "notes": "Both builds exit 0; UI consumer browser matrix 34 passed/6 intentionally skipped; Portal browser matrix 34 passed including Agent guidance, initialize, and four negative paths."
+          },
+          {
+            "commandOrEvidence": "scripts/verify-packed-consumer.mjs",
+            "result": "passed",
+            "notes": "Fresh @swqt/ui and @swqt/ui-tokens tarballs installed in isolated and workspace-hoisted layouts; package identity/docs byte parity, typecheck, build, CSS emission, WCAG, visual, theme, and runtime gates passed in both."
+          },
+          {
+            "commandOrEvidence": "bun run pack && bun run check:npm-publish-audit",
+            "result": "passed",
+            "notes": "Two 1.0.0 tarballs rebuilt; 73 files scanned; 0 blocking findings and 4 reviewed canonical/internal URL warnings; nothing published."
+          },
+          {
+            "commandOrEvidence": "bash -n sibling smoke + caddy validate/adapt sibling gateway",
+            "result": "passed",
+            "notes": "Caddy configuration is valid and adapted order shows exact /mcp/swui routed to ui.swqt.net before legacy dev.inet.swqt.net /mcp* handling; no reload/deploy occurred."
+          }
+        ]
+      }
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "done",
+      "items": {
+        "gateOutcomes": [
+          {
+            "gate": "change-posture validation",
+            "result": "passed",
+            "evidence": "sw validation run --scope change-posture --validation-surface auto-segment-review --scope-anchor S-SWQT-0017: pass, 0 findings.",
+            "residualRisk": "none for the user-confirmed break-accepted Host/path cutover.",
+            "counterEvidenceChecked": "Confirmed the new Host and docs surfaces do not retain a hidden legacy endpoint or project credential env."
+          },
+          {
+            "gate": "Host convergence and service separation",
+            "result": "passed",
+            "evidence": "sw doctor --project . is qualified after required host repair; mcp-slots and managed-digest satisfied; .cursor/.codex contain managed stdio sw plus independent https://agent.swqt.net/mcp/swui and no SW_MCP_*/SW_SWS_* env.",
+            "residualRisk": "User-level sw configuration remains external by design.",
+            "counterEvidenceChecked": "Repository-wide targeted scan found only policy/audit references to retired variables, not active Host configuration."
+          },
+          {
+            "gate": "HTTP path and gateway ordering",
+            "result": "passed",
+            "evidence": "Portal unit/browser negatives reject /mcp, /mcp/sws, /mcp/unknown, and /mcp/swui/extra; caddy validate passes and adapted JSON places exact /mcp/swui ui.swqt.net proxy before legacy SWS /mcp*.",
+            "residualRisk": "Source configuration has not been deployed; runtime identity is S-SWQT-0018 evidence.",
+            "counterEvidenceChecked": "Reviewed path-preservation, Host header, TLS server name, Accept handling, and fall-through to SWS."
+          },
+          {
+            "gate": "documentation and companion truth",
+            "result": "passed",
+            "evidence": "sync-docs:check, design-contract, and catalog-export 77/281/77 pass; package adoption docs, Portal README/DEPLOY/Agent page, experience note, companion, and validation handoff consistently describe the new first hop and exact path.",
+            "residualRisk": "Historical research documents intentionally retain observation-time legacy facts.",
+            "counterEvidenceChecked": "Scanned current non-research surfaces for @swui, retired Host env, old ui.swqt.net/mcp, and legacy alias claims."
+          },
+          {
+            "gate": "local runtime and browser matrices",
+            "result": "passed",
+            "evidence": "Both typechecks and builds pass; Portal 20 tests/144 expectations and MCP smoke pass; UI consumer browser 34 passed/6 intentional skips; Portal browser 34 passed.",
+            "residualRisk": "Local Vite/in-memory transport cannot establish deployed gateway availability.",
+            "counterEvidenceChecked": "The initial eight 39-pixel visual diffs reproduced in the source consumer and were traced solely to intentional visible @swqt namespace text before baseline refresh."
+          },
+          {
+            "gate": "packed consumer and publish-safety",
+            "result": "passed",
+            "evidence": "Temporary fresh tarballs pass byte-identical Agent/doc checks, type/build/CSS/WCAG/visual/runtime gates in isolated and workspace-hoisted layouts; release tarballs audit 73 files with 0 blocking findings and 4 reviewed URL warnings.",
+            "residualRisk": "Registry upload and post-publish retrieval are deliberately unexecuted.",
+            "counterEvidenceChecked": "Verified temp packaging avoids stale repository tarballs and checks installed package name/version plus all packaged Markdown docs."
+          },
+          {
+            "gate": "deploy-ready outside-in smoke source",
+            "result": "passed",
+            "evidence": "Sibling smoke passes bash syntax; assertions cover swui identity/instructions, static resource count/bytes/read, one template, exact four read-only tool descriptors, bounded dual-form search, latest resolution followed by exact-version lookup, while retaining SWS /mcp and /mcp/sws checks.",
+            "residualRisk": "The smoke has not passed against production because deployment is unauthorized and current runtime may still expose the old route.",
+            "counterEvidenceChecked": "Review strengthened search statistics/text parity and exact-version behavior rather than accepting a latest-only result."
+          },
+          {
+            "gate": "Tier-1 workflow and patch hygiene",
+            "result": "passed",
+            "evidence": "sw workflow validate: 0 errors/0 warnings; git diff --check passes in both swui and sibling sws; sw doctor remains qualified.",
+            "residualRisk": "The shared worktree contains pre-existing user changes, all preserved.",
+            "counterEvidenceChecked": "No managed AGENTS block was hand-edited; host repair performed the required managed refresh."
+          }
+        ],
+        "projectCompanionFactDecision": "ssot-updated: project-swqt-companion and its validation handoff now record executable CI/E2E/MCP/doctor/package gates, exact service separation, and the honest production/HITL blocker.",
+        "reviewDecision": {
+          "reviewDecision": "passed",
+          "reason": "All S-SWQT-0017 local and deploy-readiness gates pass; review-discovered screenshot baseline drift was explained and corrected, and the external smoke was strengthened. No unresolved issue remains inside this Step's authorized scope.",
+          "reviewProfile": "full Host/public-route/documentation/package review with negative HTTP paths, host qualification, browser matrices, two tarball layouts, security audit, sibling Caddy adaptation, and change-posture validation"
+        },
+        "promotionDisposition": {
+          "promotionDisposition": "promote",
+          "promotionOwner": "swui-maintainers via active auto chain",
+          "promotionRevisitTrigger": "Reopen if Host config regains credential env, Portal accepts a non-exact swui path, docs/tarballs drift, either browser/packed layout fails, Caddy ordering changes, or the deploy smoke contract diverges.",
+          "closureIntegrityCheck": "Implementation record and full review evidence are complete. Production identity, anonymous access, and eight-prompt human Agent evidence remain explicitly assigned to S-SWQT-0018 rather than claimed by local gates."
+        }
+      }
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "done",
+      "items": {
+        "reviewReportRef": "sections.review-report",
+        "deliveredAt": "2026-07-23T09:10:23.000Z",
+        "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0017-host-路由-文档真源与发布包门禁收敛.json",
+        "validationSummary": "delivered: full local Host/path/docs/package/Caddy-source audit passed; production identity and human SpotCheck remain S18",
+        "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
+        "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
+        "testCaseSummary": "delivered: full local Host/path/docs/package/Caddy-source audit passed; production identity and human SpotCheck remain S18",
+        "coverageSummary": "not-recorded-by-delivery-minimum",
+        "explanationSync": "not-recorded-by-delivery-minimum",
+        "explanationRefs": "N/A",
+        "sourceWorkflowRefs": "S-SWQT-0017",
+        "evidenceInvalidationTrigger": "none",
+        "documentTreeMount": "implemented(layout v3 stable Step path).",
+        "archiveSynchronization": "implemented(layout v3 status/ledger final position)."
+      }
+    },
+    "completion-audit": {
+      "sectionStatus": "done",
+      "items": {
+        "completionAuditProfile": "full — Host configuration, public route, package documentation, consumer tarball, and deployment-entry surface",
+        "minimumSetSatisfied": "Yes: implementation record, full review report, executable gate evidence, counter-evidence handling, SSOT update, and downstream external ownership are recorded.",
+        "upgradeToFullAuditReason": "Required by stepProfile=full and the agent-surface/public-route/deployment-entry risk domain.",
+        "requirementAudit": [
+          {
+            "requirement": "Portal only exposes the swui handler on exact /mcp/swui",
+            "status": "implemented",
+            "evidence": "Shared predicate is exact; unit and two-theme browser tests prove /mcp, /mcp/sws, /mcp/unknown, and /mcp/swui/extra do not return swui identity.",
+            "risk": "A future router refactor could bypass the shared predicate.",
+            "followUp": "Keep negative HTTP paths in Portal unit/browser gates."
+          },
+          {
+            "requirement": "Managed Host slots are credential-free and service-separated",
+            "status": "implemented",
+            "evidence": ".cursor and .codex define managed stdio sw and independent swui URL with no retired env; sw doctor project-ready is qualified.",
+            "risk": "User-level sw endpoint/auth remains intentionally outside repository state.",
+            "followUp": "Keep sw doctor in validation handoff."
+          },
+          {
+            "requirement": "Packages, Portal, Agent page, companion, and CI share the new contract truth",
+            "status": "implemented",
+            "evidence": "Docs and project companion name exact path, ordered progressive disclosure, package truth, and real gates; sync-docs/check, design, and catalog parity pass; Portal Agent browser assertions pass.",
+            "risk": "Historical research retains old observation-time facts by design.",
+            "followUp": "Treat packages/* as SSOT and preserve sync-docs:check in CI."
+          },
+          {
+            "requirement": "Portal TypeScript, unit/protocol, build, and browser quality gates pass",
+            "status": "implemented",
+            "evidence": "Both project typechecks/builds pass; Portal has 20 passing tests/144 expectations and MCP smoke; UI consumer and Portal browser matrices each have 34 passes.",
+            "risk": "Build chunk-size warnings are non-blocking and unrelated to this contract.",
+            "followUp": "Retain current CI quality workflow."
+          },
+          {
+            "requirement": "Fresh published-form tarballs carry same-version Agent/docs and work in nested and hoisted consumers",
+            "status": "implemented",
+            "evidence": "verify-packed-consumer creates tarballs in a temporary directory, checks installed name/version and byte parity for AGENTS/llms/all docs, then passes type/build/CSS/WCAG/visual/runtime in both layouts.",
+            "risk": "A future nested docs directory would require recursive enumeration rather than the current flat docs contract.",
+            "followUp": "Extend publishedDocPaths if the package docs hierarchy becomes nested."
+          },
+          {
+            "requirement": "Tarball publish-safety gate is clean",
+            "status": "implemented",
+            "evidence": "Fresh 1.0.0 tarballs contain the expected 7 and 66 files; audit scans 73 files with zero blocking secret, forbidden-file, or lifecycle findings; four URL warnings were reviewed.",
+            "risk": "A real registry publish and retrieval were not authorized.",
+            "followUp": "Run the publish workflow only under separate release authorization."
+          },
+          {
+            "requirement": "Sibling gateway and outside-in smoke are deploy-ready without deployment",
+            "status": "implemented",
+            "evidence": "Caddy validates and adapts exact /mcp/swui before legacy SWS /mcp*; smoke syntax passes and checks identities, first-hop budgets/resources/template, exact tool set, search dual form/budget, and exact package version.",
+            "risk": "ui.swqt.net DNS/upstream, gateway reload, anonymous policy, and current production identity are not proven by static source.",
+            "followUp": "S-SWQT-0018 must execute read-only outside-in checks and report an honest blocker if the new config/build is not deployed."
+          }
+        ],
+        "workflowRunAudit": "Five-stage chain maintained: design artifacts were complete before implementation; implementation evidence preceded implemented; full review and change-posture validation preceded reviewed; auto advanced only after Tier-1 lifecycle writes; promotion is next.",
+        "intermediateDocumentStateAudit": "No durable shadow workflow or handoff document was created. Nested Tier-1 records used tool-owned payload handles; one transient /tmp CLI preview capture was immediately removed and never served as workflow state.",
+        "documentGovernanceAudit": "Package docs remain SSOT and Portal copies are generated. The managed AGENTS block was refreshed only by the required host repair. Sibling deployment files are source-only changes. No npm publish, Caddy reload, DNS change, or production mutation occurred.",
+        "frictionAndImprovementBacklog": "Bun is not inherited by nested scripts unless PATH is explicit in this environment. Packed browser validation correctly caught namespace screenshot drift. The sibling smoke now validates exact-version semantics, but its production run necessarily waits for deployment authority.",
+        "closingSelfAudit": {
+          "closingSelfAudit": "passed",
+          "closingSelfAuditEvidence": "Every in-scope requirement has static plus executable local evidence, with negative route cases, two consumer layouts, security audit, Host qualification, Caddy adaptation, and reviewed smoke assertions.",
+          "closingSelfAuditConsistency": "S-SWQT-0017 claims only local/deploy-ready completion; production runtime and human usability remain explicitly unclaimed and assigned to S-SWQT-0018.",
+          "landingChecklistOutcome": "ready-for-promotion",
+          "pluginSkillFriction": "Host repair initially refused unmanaged Codex ownership until x-sw-managed was restored; after the required marker, convergence and doctor passed without overwriting the independent swui slot.",
+          "terminologyCandidates": "exact-first gateway route; packaged-document byte parity; latest-then-exact outside-in version proof",
+          "reusableWorkflowPattern": "For a separate public MCP mounted behind a shared gateway, gate the exact application path locally, validate adapted proxy order, and carry the same identity/resource/tool assertions into an outside-in smoke.",
+          "retrospectiveHandoff": "S-SWQT-0018 should first observe current DNS/HTTP identities without mutation, then run the strengthened smoke only if the new deployment is actually reachable; human SpotCheck remains a separate evidence class."
+        },
+        "completionStatus": "completed",
+        "requiredFollowUp": "Proceed to S-SWQT-0018 after promotion. Do not publish or deploy implicitly; if production still serves the old identity or human SpotCheck cannot be obtained, record blocked-with-reason and exit the auto chain honestly."
+      }
+    }
+  },
+  "stepProfile": "full",
+  "validationSummary": "delivered: full local Host/path/docs/package/Caddy-source audit passed; production identity and human SpotCheck remain S18"
+}

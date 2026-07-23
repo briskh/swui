@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { ThemeControl, ThemeProvider } from "@swui/ui";
+import { ThemeControl, ThemeProvider } from "@swqt/ui";
 import { CONVENTION_PAGES } from "./lib/portal-content";
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>

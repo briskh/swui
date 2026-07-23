@@ -153,10 +153,10 @@ import {
   notifyError,
   notifyPersistent,
   notifySuccess
-} from "@swui/ui";
-import { CheckboxField, Fieldset, FormActions, FormField } from "@swui/ui/form-field";
-import { Form, FormControl, FormField as HookFormField, FormItem, FormLabel } from "@swui/ui/form";
-import { formatUtcInstantForLocalDisplay, localCalendarDayToUtcIso } from "@swui/ui/date";
+} from "@swqt/ui";
+import { CheckboxField, Fieldset, FormActions, FormField } from "@swqt/ui/form-field";
+import { Form, FormControl, FormField as HookFormField, FormItem, FormLabel } from "@swqt/ui/form";
+import { formatUtcInstantForLocalDisplay, localCalendarDayToUtcIso } from "@swqt/ui/date";
 import type { ColumnDef } from "@tanstack/react-table";
 import { DemoSection, DemoStack, DocumentedException } from "./helpers";
 
@@ -377,7 +377,7 @@ export const componentDemos: Record<string, React.ComponentType> = {
   ),
   Chip: () => (
     <DemoSection title="Variants">
-      <Chip>@swui/ui</Chip>
+      <Chip>@swqt/ui</Chip>
       <Chip variant="outline">1.0.0</Chip>
     </DemoSection>
   ),
@@ -560,7 +560,7 @@ export const componentDemos: Record<string, React.ComponentType> = {
   Accordion: () => (
     <Accordion type="single" collapsible className="max-w-md">
       <AccordionItem value="item-1">
-        <AccordionTrigger>What is @swui/ui?</AccordionTrigger>
+        <AccordionTrigger>What is @swqt/ui?</AccordionTrigger>
         <AccordionContent>Shared React primitives for Skywalker apps.</AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -654,7 +654,7 @@ export const componentDemos: Record<string, React.ComponentType> = {
   HoverCard: () => (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Button variant="link">@swui/ui</Button>
+        <Button variant="link">@swqt/ui</Button>
       </HoverCardTrigger>
       <HoverCardContent className="text-sm">Design system package overview.</HoverCardContent>
     </HoverCard>

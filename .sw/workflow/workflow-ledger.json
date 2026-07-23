@@ -102,6 +102,25 @@
         ]
       }
     },
+    "F-SWQT-0006": {
+      "kind": "feature",
+      "status": "draft",
+      "path": ".sw/workflow/feature/F-SWQT-0006-mcp-与-agent-暴露面渐进披露收敛.json",
+      "deliveryComplete": false,
+      "title": "Feature F-SWQT-0006: MCP 与 Agent 暴露面渐进披露收敛",
+      "stepPlan": {
+        "steps": [
+          "S-SWQT-0016",
+          "S-SWQT-0017",
+          "S-SWQT-0018"
+        ],
+        "computedOrder": [
+          "S-SWQT-0016",
+          "S-SWQT-0017",
+          "S-SWQT-0018"
+        ]
+      }
+    },
     "S-SWQT-0001": {
       "kind": "step",
       "status": "delivered",
@@ -281,6 +300,35 @@
       "validationSummary": "F-SWQT-0005 Phase 2 step 0015",
       "deliveredAt": "2026-07-23T00:00:00.000Z",
       "rootMount": false
+    },
+    "S-SWQT-0016": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0016-mcp-渐进披露核心契约与纵向曳光闭环.json",
+      "sourceFeatureId": "F-SWQT-0006",
+      "title": "Step S-SWQT-0016: MCP 渐进披露核心契约与纵向曳光闭环",
+      "validationSummary": "typecheck; 20 tests/144 expectations; coverage; MCP tracer; catalog/export parity; change-posture and workflow validation passed",
+      "deliveredAt": "2026-07-23T08:56:39.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0017": {
+      "kind": "step",
+      "status": "delivered",
+      "path": ".sw/workflow/steps/S-SWQT-0017-host-路由-文档真源与发布包门禁收敛.json",
+      "sourceFeatureId": "F-SWQT-0006",
+      "title": "Step S-SWQT-0017: Host 路由、文档真源与发布包门禁收敛",
+      "validationSummary": "delivered: full local Host/path/docs/package/Caddy-source audit passed; production identity and human SpotCheck remain S18",
+      "deliveredAt": "2026-07-23T09:10:23.000Z",
+      "rootMount": false
+    },
+    "S-SWQT-0018": {
+      "kind": "step",
+      "status": "implementing",
+      "path": ".sw/workflow/steps/S-SWQT-0018-生产-outside-in-身份与-agent-spotcheck-验收.json",
+      "sourceFeatureId": "F-SWQT-0006",
+      "title": "Step S-SWQT-0018: 生产 outside-in 身份与 Agent SpotCheck 验收",
+      "overlayState": "blocked",
+      "validationSummary": "blocked: fresh outside-in shows ui.swqt.net unresolved and authenticated /mcp/swui still sws 0.1.144 (17 SWS tools, 18 resources, 0 swui.*, 0 templates); 8-prompt human review cannot validly run before deploy"
     }
   },
   "edges": [
@@ -469,8 +517,41 @@
       "from": "S-SWQT-0015",
       "to": "F-SWQT-0005",
       "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0016",
+      "to": "F-SWQT-0006",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0017",
+      "to": "S-SWQT-0016",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0017",
+      "to": "F-SWQT-0006",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0018",
+      "to": "S-SWQT-0016",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0018",
+      "to": "S-SWQT-0017",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0018",
+      "to": "F-SWQT-0006",
+      "rel": "sourceFeature"
     }
   ],
-  "generatedAt": "2026-07-23T06:40:44.364Z",
-  "contentHash": "sha256:49a3ef4fbb15a4b5562b4cfd5d56c20dfba3fc76e6695f7e70b016893b5404cf"
+  "generatedAt": "2026-07-23T09:15:15.866Z",
+  "contentHash": "sha256:dc38621d4332ee12f43de1fbb33d5949682b3a39339a0a37a687ab411321e9a9"
 }

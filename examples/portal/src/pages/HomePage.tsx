@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@swui/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@swqt/ui";
 import { Link } from "react-router-dom";
 import { CONVENTION_PAGES } from "../lib/portal-content";
 
@@ -8,7 +8,7 @@ export function HomePage() {
       <section>
         <h2 className="text-3xl font-semibold">Shared Web UI design system</h2>
         <p className="mt-3 max-w-3xl text-muted-foreground">
-          Canonical human entry for <code>@swui/ui</code> and <code>@swui/ui-tokens</code>. This portal mirrors package
+          Canonical human entry for <code>@swqt/ui</code> and <code>@swqt/ui-tokens</code>. This portal mirrors package
           docs from the monorepo SSOT, exposes registry install guidance, and hosts the read-only <code>swui</code> MCP
           surface for pre-install agent discovery.
         </p>

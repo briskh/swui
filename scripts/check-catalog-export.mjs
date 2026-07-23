@@ -123,7 +123,7 @@ function main() {
       continue;
     }
     if (!packageExports.has(name) && !packageExports.has(CATALOG_PACKAGE_ALIASES[name])) {
-      failures.push(`catalog export "${name}" is missing from @swui/ui public exports`);
+      failures.push(`catalog export "${name}" is missing from @swqt/ui public exports`);
     }
     if (!demoExports.has(name) && !DOCUMENTED_EXCEPTIONS.has(name)) {
       failures.push(`catalog export "${name}" is missing from portal demo registry`);

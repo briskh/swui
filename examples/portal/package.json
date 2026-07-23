@@ -1,5 +1,5 @@
 {
-  "name": "@swui/portal-example",
+  "name": "@swqt/portal-example",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.25.3",
-    "@swui/ui": "workspace:*",
-    "@swui/ui-tokens": "workspace:*",
+    "@swqt/ui": "workspace:*",
+    "@swqt/ui-tokens": "workspace:*",
     "@tailwindcss/vite": "^4.3.0",
     "@tanstack/react-table": "^8.21.3",
     "class-variance-authority": "^0.7.1",

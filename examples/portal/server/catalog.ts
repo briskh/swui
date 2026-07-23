@@ -6,12 +6,53 @@ const scriptDir = dirname(fileURLToPath(import.meta.url));
 const portalRoot = join(scriptDir, "..");
 const repoRoot = join(portalRoot, "../..");
 
-export function readCatalogIndex(portalDir = portalRoot) {
-  const path = join(portalDir, ".generated/catalog-index.json");
-  return JSON.parse(readFileSync(path, "utf8"));
+export interface CatalogExport {
+  name: string;
+  slug: string;
+  notes: string;
 }
 
-export function flattenCatalogExports(index) {
+export interface CatalogGroup {
+  id: string;
+  title: string;
+  exports: CatalogExport[];
+}
+
+export interface CatalogIndex {
+  groups: CatalogGroup[];
+}
+
+export interface FlatCatalogExport extends CatalogExport {
+  groupId: string;
+  groupTitle: string;
+}
+
+export interface ComponentImportHint {
+  packageName: "@swqt/ui";
+  module: string;
+  exportName: string;
+  kind: "named" | "namespace" | "type";
+  statement: string;
+  note: string | null;
+}
+
+export interface ComponentDetails {
+  name: string;
+  group: string;
+  groupId: string;
+  slug: string;
+  notes: string;
+  demoPath: string;
+  resourceUri: string;
+  importHint: ComponentImportHint;
+}
+
+export function readCatalogIndex(portalDir = portalRoot): CatalogIndex {
+  const path = join(portalDir, ".generated/catalog-index.json");
+  return JSON.parse(readFileSync(path, "utf8")) as CatalogIndex;
+}
+
+export function flattenCatalogExports(index: CatalogIndex): FlatCatalogExport[] {
   return index.groups.flatMap((group) =>
     group.exports.map((entry) => ({
       ...entry,
@@ -21,19 +62,70 @@ export function flattenCatalogExports(index) {
   );
 }
 
-export function findCatalogEntry(index, name) {
+export function findCatalogEntry(index: CatalogIndex, name: string): FlatCatalogExport | null {
   return flattenCatalogExports(index).find((entry) => entry.name === name) ?? null;
 }
 
-export function demoUrlPath(groupId, exportSlug) {
+export function demoUrlPath(groupId: string, exportSlug: string) {
   return `/components/${groupId}/${exportSlug}`;
 }
 
-export function componentResourceUri(name) {
-  return `swui://components/${name}`;
+export function componentResourceUri(name: string) {
+  return `swui://components/${encodeURIComponent(name)}`;
 }
 
-export function componentResourceBody(entry) {
+export function componentImportHint(name: string): ComponentImportHint {
+  if (name === "cn") {
+    return {
+      packageName: "@swqt/ui",
+      module: "@swqt/ui/utils",
+      exportName: "cn",
+      kind: "named",
+      statement: 'import { cn } from "@swqt/ui/utils";',
+      note: null
+    };
+  }
+  if (name === "DateHelpers") {
+    return {
+      packageName: "@swqt/ui",
+      module: "@swqt/ui/date",
+      exportName: "*",
+      kind: "namespace",
+      statement: 'import * as DateHelpers from "@swqt/ui/date";',
+      note: "DateHelpers is a documented namespace for the date helper exports."
+    };
+  }
+  if (name === "FormField") {
+    return {
+      packageName: "@swqt/ui",
+      module: "@swqt/ui",
+      exportName: "SimpleFormField",
+      kind: "named",
+      statement: 'import { SimpleFormField as FormField } from "@swqt/ui";',
+      note: "The package root aliases the implementation export as SimpleFormField."
+    };
+  }
+  if (name === "Theme") {
+    return {
+      packageName: "@swqt/ui",
+      module: "@swqt/ui",
+      exportName: "Theme",
+      kind: "type",
+      statement: 'import type { Theme } from "@swqt/ui";',
+      note: "Theme is a TypeScript-only export."
+    };
+  }
+  return {
+    packageName: "@swqt/ui",
+    module: "@swqt/ui",
+    exportName: name,
+    kind: "named",
+    statement: `import { ${name} } from "@swqt/ui";`,
+    note: null
+  };
+}
+
+export function componentResourceBody(entry: FlatCatalogExport) {
   return JSON.stringify(
     {
       name: entry.name,
@@ -42,17 +134,18 @@ export function componentResourceBody(entry) {
       slug: entry.slug,
       notes: entry.notes,
       demoPath: demoUrlPath(entry.groupId, entry.slug),
-      import: `@swui/ui${entry.name === "cn" ? "/utils" : entry.name === "DateHelpers" ? "/date" : ""}`
+      resourceUri: componentResourceUri(entry.name),
+      importHint: componentImportHint(entry.name)
     },
     null,
     2
   );
 }
 
-export function searchCatalog(index, query) {
+export function searchCatalog(index: CatalogIndex, query: string) {
   const needle = query.trim().toLowerCase();
   if (!needle) {
-    return flattenCatalogExports(index);
+    return [];
   }
   return flattenCatalogExports(index).filter((entry) => {
     const haystack = `${entry.name} ${entry.groupTitle} ${entry.notes}`.toLowerCase();
@@ -60,7 +153,7 @@ export function searchCatalog(index, query) {
   });
 }
 
-export function getComponentDetails(index, name) {
+export function getComponentDetails(index: CatalogIndex, name: string): ComponentDetails | null {
   const entry = findCatalogEntry(index, name);
   if (!entry) {
     return null;
@@ -72,7 +165,8 @@ export function getComponentDetails(index, name) {
     slug: entry.slug,
     notes: entry.notes,
     demoPath: demoUrlPath(entry.groupId, entry.slug),
-    resourceUri: componentResourceUri(entry.name)
+    resourceUri: componentResourceUri(entry.name),
+    importHint: componentImportHint(entry.name)
   };
 }
 

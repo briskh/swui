@@ -400,6 +400,162 @@
         "advanceRequired": true
       },
       "chainTerminationReason": "aborted"
+    },
+    {
+      "runId": "auto-20260723T084514726Z",
+      "targetId": "S-SWQT-0016",
+      "targetKind": "step",
+      "startedAt": "2026-07-23T08:45:14.726Z",
+      "endedAt": "2026-07-23T09:15:22.942Z",
+      "exitStatus": "blocked-hitl",
+      "stopTriggered": true,
+      "triggeredBy": "auto-exit",
+      "notes": "S-SWQT-0018 blocked by fresh production evidence: ui.swqt.net unresolved; authenticated /mcp/swui still sws 0.1.144 with no swui tools/templates; deployment plus eight-prompt human review required. No deploy or publish performed.",
+      "chainDepthPolicy": "feature-complete",
+      "scopeAnchor": "F-SWQT-0006",
+      "scopeFeatureId": "F-SWQT-0006",
+      "chainPlan": [
+        {
+          "id": "S-SWQT-0018",
+          "kind": "step",
+          "nextHandoff": "implement",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0018",
+          "kind": "step",
+          "nextHandoff": "review",
+          "segmentKind": "phase"
+        },
+        {
+          "id": "S-SWQT-0018",
+          "kind": "step",
+          "nextHandoff": "deliver",
+          "segmentKind": "phase"
+        }
+      ],
+      "chainProgress": {
+        "completedSegments": [],
+        "currentSegment": {
+          "id": "S-SWQT-0018",
+          "kind": "step",
+          "nextHandoff": "implement",
+          "segmentKind": "phase"
+        },
+        "lastCheckpointAt": "2026-07-23T09:10:36.982Z",
+        "auditMirror": [
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0016",
+              "kind": "step",
+              "nextHandoff": "implement",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T08:53:40.202Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0016",
+              "stepStatus": "implemented",
+              "featureId": "F-SWQT-0006",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0016",
+              "validationSummary": "implemented: typecheck + 19 Bun tests + MCP smoke + catalog/export parity passed"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0016",
+              "kind": "step",
+              "nextHandoff": "review",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T08:55:56.582Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0016",
+              "stepStatus": "reviewed",
+              "featureId": "F-SWQT-0006",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0016",
+              "validationSummary": "reviewed: change-posture + typecheck + 20 tests/144 expectations + coverage + MCP tracer + parity passed"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0016",
+              "kind": "step",
+              "nextHandoff": "deliver",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T08:56:57.274Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0016",
+              "stepStatus": "delivered",
+              "featureId": "F-SWQT-0006",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0016",
+              "validationSummary": "delivered: full completion audit + promote gate + workflow validation passed"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0017",
+              "kind": "step",
+              "nextHandoff": "implement",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T09:07:11.450Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0017",
+              "stepStatus": "implemented",
+              "featureId": "F-SWQT-0006",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0017",
+              "validationSummary": "implemented: doctor, exact path/Host/docs, unit/MCP/build/browser, packed nested+hoisted, tarball audit, and Caddy source gates passed; no publish/deploy"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0017",
+              "kind": "step",
+              "nextHandoff": "review",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T09:09:33.818Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0017",
+              "stepStatus": "reviewed",
+              "featureId": "F-SWQT-0006",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0017",
+              "validationSummary": "reviewed: full Host/public-route/docs/package review passed; exact gateway source and smoke reviewed; remote identity/HITL remains S18"
+            }
+          },
+          {
+            "segmentIndex": 0,
+            "segment": {
+              "id": "S-SWQT-0017",
+              "kind": "step",
+              "nextHandoff": "deliver",
+              "segmentKind": "phase"
+            },
+            "advancedAt": "2026-07-23T09:10:36.982Z",
+            "tier1StatusAfter": {
+              "stepId": "S-SWQT-0017",
+              "stepStatus": "delivered",
+              "featureId": "F-SWQT-0006",
+              "featureStatus": "draft",
+              "tier1WriteRef": "S-SWQT-0017",
+              "validationSummary": "delivered: full completion audit and promote gate passed; no publish/deploy; S18 owns outside-in and human evidence"
+            }
+          }
+        ],
+        "advanceRequired": true
+      },
+      "chainTerminationReason": "blocked-hitl"
     }
   ]
 }

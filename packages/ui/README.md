@@ -1,4 +1,4 @@
-# `@swui/ui`
+# `@swqt/ui`
 
 Skywalker React UI primitives (shadcn/Radix based) plus global `ThemeProvider`, `ThemeControl`, and `WideScreenGate`.
 
@@ -13,22 +13,24 @@ Skywalker React UI primitives (shadcn/Radix based) plus global `ThemeProvider`, 
 | [docs/DO-AND-DONT.md](./docs/DO-AND-DONT.md) | Hard do/don't |
 | [docs/ADOPTION.md](./docs/ADOPTION.md) | Install, Tailwind, ThemeProvider |
 
-These files ship inside the npm tarball (`node_modules/@swui/ui/`).
+These files ship inside the npm tarball (`node_modules/@swqt/ui/`).
 
 ## Install
 
 ```bash
-bun add @swui/ui @swui/ui-tokens
+bun add @swqt/ui @swqt/ui-tokens
 ```
 
 Declare peer dependencies listed in `package.json` (React 19, Radix packages, lucide, etc.).
+
+Published on [npmjs.org](https://www.npmjs.com/package/@swqt/ui) as `@swqt/ui` (with `@swqt/ui-tokens`).
 
 ## Tailwind v4
 
 ```css
 @import "tailwindcss";
-@import "@swui/ui-tokens/tokens.css";
-@source "../node_modules/@swui/ui/src";
+@import "@swqt/ui-tokens/tokens.css";
+@source "../node_modules/@swqt/ui/src";
 ```
 
 ## Theme
@@ -36,7 +38,7 @@ Declare peer dependencies listed in `package.json` (React 19, Radix packages, lu
 Runtime contract supports global `system`, `light`, and `dark` preferences. Use `ThemeProvider` as the only theme authority.
 
 ```tsx
-import { ThemeProvider, Button, WideScreenGate } from "@swui/ui";
+import { ThemeProvider, Button, WideScreenGate } from "@swqt/ui";
 
 export function App() {
   return (

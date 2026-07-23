@@ -47,11 +47,11 @@ test("theme control toggles html data-theme", async ({ page }) => {
 
 test("packages page shows install guidance without tarball download", async ({ page }) => {
   await page.goto("/packages");
-  await expect(page.getByTestId("package-card-@swui/ui")).toBeVisible();
-  await expect(page.getByTestId("package-card-@swui/ui-tokens")).toBeVisible();
-  await expect(page.getByTestId("install-command-bun")).toContainText("bun add @swui/ui @swui/ui-tokens");
-  await expect(page.getByTestId("install-command-npm")).toContainText("npm install @swui/ui @swui/ui-tokens");
-  await expect(page.getByTestId("npmrc-template")).toContainText("@swui:registry=");
+  await expect(page.getByTestId("package-card-@swqt/ui")).toBeVisible();
+  await expect(page.getByTestId("package-card-@swqt/ui-tokens")).toBeVisible();
+  await expect(page.getByTestId("install-command-bun")).toContainText("bun add @swqt/ui @swqt/ui-tokens");
+  await expect(page.getByTestId("install-command-npm")).toContainText("npm install @swqt/ui @swqt/ui-tokens");
+  await expect(page.getByTestId("npmrc-template")).toContainText("npmjs.org");
   await expect(page.getByRole("link", { name: /download/i })).toHaveCount(0);
   await expect(page.getByRole("button", { name: /download/i })).toHaveCount(0);
   await expectNoWcagAaViolations(page);
@@ -59,22 +59,25 @@ test("packages page shows install guidance without tarball download", async ({ p
 
 test("agent page exposes dual-slot MCP example", async ({ page }) => {
   await page.goto("/agent");
+  await expect(page.getByTestId("mcp-public-url")).toContainText("https://agent.swqt.net/mcp/swui");
   await expect(page.getByTestId("mcp-config-example")).toContainText('"swui"');
   await expect(page.getByTestId("mcp-config-example")).toContainText('"sw"');
-  await expect(page.getByTestId("mcp-config-example")).toContainText("https://ui.swqt.net/mcp");
+  await expect(page.getByTestId("mcp-config-example")).toContainText("https://agent.swqt.net/mcp/swui");
+  await expect(page.getByText("swui://packages/ui/llms.txt")).toBeVisible();
+  await expect(page.getByText(/default limit is 10 and the maximum is 25/)).toBeVisible();
   await expectNoWcagAaViolations(page);
 });
 
 test("registry API returns fixture metadata", async ({ request }) => {
-  const response = await request.get("/api/registry/@swui%2fui");
+  const response = await request.get("/api/registry/@swqt%2fui");
   expect(response.ok()).toBeTruthy();
   const payload = await response.json();
-  expect(payload.data.name).toBe("@swui/ui");
+  expect(payload.data.name).toBe("@swqt/ui");
   expect(payload.stale).toBe(false);
 });
 
 test("mcp endpoint accepts initialize", async ({ request }) => {
-  const response = await request.post("/mcp", {
+  const response = await request.post("/mcp/swui", {
     headers: {
       accept: "application/json, text/event-stream",
       "content-type": "application/json"
@@ -94,6 +97,30 @@ test("mcp endpoint accepts initialize", async ({ request }) => {
   const body = await response.text();
   expect(body).toContain("swui");
 });
+
+for (const rejectedPath of ["/mcp", "/mcp/sws", "/mcp/unknown", "/mcp/swui/extra"]) {
+  test(`portal does not route ${rejectedPath} to swui MCP`, async ({ request }) => {
+    const response = await request.post(rejectedPath, {
+      headers: {
+        accept: "application/json, text/event-stream",
+        "content-type": "application/json"
+      },
+      data: {
+        jsonrpc: "2.0",
+        id: 1,
+        method: "initialize",
+        params: {
+          protocolVersion: "2024-11-05",
+          capabilities: {},
+          clientInfo: { name: "negative-path", version: "1.0.0" }
+        }
+      }
+    });
+    const body = await response.text();
+    expect(body).not.toContain('"name":"swui"');
+    expect(body).not.toContain('"name": "swui"');
+  });
+}
 
 test("components index lists catalog groups", async ({ page }) => {
   await page.goto("/components");

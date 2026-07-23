@@ -1,21 +1,21 @@
-# Adopting `@swui/ui`
+# Adopting `@swqt/ui`
 
 ## Install
 
 ```bash
-bun add @swui/ui @swui/ui-tokens
+bun add @swqt/ui @swqt/ui-tokens
 ```
 
 Install peer dependencies listed in this package's `package.json` (React 19, Radix packages, lucide, sonner, etc.).
 
-Private registry default: `https://npm.inet.swqt.net/` (`SWUI_NPM_REGISTRY`).
+Published on the public npm registry (`https://registry.npmjs.org/`). Override with `SWUI_NPM_REGISTRY` only when using an org mirror.
 
 ## CSS + Tailwind v4
 
 ```css
 @import "tailwindcss";
-@import "@swui/ui-tokens/tokens.css";
-@source "../node_modules/@swui/ui/src";
+@import "@swqt/ui-tokens/tokens.css";
+@source "../node_modules/@swqt/ui/src";
 ```
 
 Adjust `@source` for monorepo / hoisting.
@@ -23,7 +23,7 @@ Adjust `@source` for monorepo / hoisting.
 ## App shell sketch
 
 ```tsx
-import { ThemeProvider, ThemeControl, Button, Toaster, WideScreenGate } from "@swui/ui";
+import { ThemeProvider, ThemeControl, Button, Toaster, WideScreenGate } from "@swqt/ui";
 
 export function App({ children }: { children: React.ReactNode }) {
   return (
@@ -40,30 +40,45 @@ export function App({ children }: { children: React.ReactNode }) {
 
 ## AI docs inside the installed package
 
-After install, agents should read from `node_modules/@swui/ui/`:
+After install, agents should read from `node_modules/@swqt/ui/`:
 
 - `AGENTS.md` (first hop)
 - `llms.txt`
 - `docs/*`
 
-Same pattern for `@swui/ui-tokens`.
+Same pattern for `@swqt/ui-tokens`.
 
 ## Portal MCP (pre-install discovery)
 
-Before installing the packages, agents may query the read-only **swui** MCP server hosted by the design-system portal (`https://ui.swqt.net/mcp` in production; local portal dev/preview exposes the same `/mcp` route).
+Before installing the packages, agents may query the read-only **swui** MCP server.
 
-Use **swui** for component catalog resources, adoption snippets, and registry metadata. Keep the separate **sw** MCP server for SWS methodology and workflow tools. After install, prefer version-locked docs in `node_modules/@swui/ui/AGENTS.md`.
+| Entry | URL |
+|-------|-----|
+| **Production (canonical)** | `https://agent.swqt.net/mcp/swui` |
+| **Local dev / preview** | `http://127.0.0.1:4176/mcp/swui` |
+
+The shared agent gateway (`agent.swqt.net`) routes `/mcp/swui` to the portal MCP handler. Human browsing stays on the portal site (`ui.swqt.net` when deployed); agents use the URL above.
+
+Use **swui** for component catalog resources, adoption snippets, and registry metadata. Keep the separate **sw** MCP server for SWS methodology and workflow tools. After install, prefer version-locked docs in `node_modules/@swqt/ui/AGENTS.md`.
 
 MCP tools (read-only):
 
 | Tool | Purpose |
 |------|---------|
-| `swui.package.get` | Registry metadata for `@swui/ui` / `@swui/ui-tokens` |
+| `swui.package.get` | Registry metadata for `@swqt/ui` / `@swqt/ui-tokens` |
 | `swui.package.installHint` | `.npmrc` template + npm/bun install commands |
 | `swui.catalog.search` | Keyword search over `COMPONENT-CATALOG` exports |
 | `swui.component.get` | Single export details + portal demo path |
 
-Resources include `swui://docs/*` plus `swui://components/{ExportName}` entries aligned with the portal catalog.
+Use progressive disclosure:
+
+1. Read `swui://packages/ui/llms.txt` and `swui://packages/ui/AGENTS.md`.
+2. Read the matching `swui://packages/ui/docs/*` resource only when needed.
+3. Call `swui.catalog.search` with a non-empty query (default limit 10, maximum 25).
+4. Read one exact `swui://components/{name}` resource or call `swui.component.get`.
+5. Call `swui.package.get` with an exact `version` before installing.
+
+`resources/list` contains only the stable package-document first hop; components are exposed through the single URI template. Tool results include both `structuredContent` and equivalent JSON text.
 
 Example `.cursor/mcp.json` fragment:
 
@@ -72,17 +87,15 @@ Example `.cursor/mcp.json` fragment:
   "mcpServers": {
     "sw": {
       "command": "sw",
-      "args": ["mcp"],
-      "env": {
-        "SW_MCP_URL": "https://agent.swqt.net/mcp",
-        "SW_MCP_TOKEN": "${SW_MCP_TOKEN}"
-      }
+      "args": ["mcp"]
     },
     "swui": {
-      "url": "https://ui.swqt.net/mcp"
+      "url": "https://agent.swqt.net/mcp/swui"
     }
   }
 }
 ```
 
-Private registry install still requires `_authToken` in `.npmrc`; MCP does not mirror tarballs.
+`sw` resolves its center endpoint and credentials from `~/.sw/config.json`; do not place `SW_MCP_*` URL or token keys in project Host configuration.
+
+Private registry install still requires `_authToken` in `.npmrc`; public npmjs.org install does not. MCP does not mirror tarballs.

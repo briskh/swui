@@ -9,4 +9,9 @@ dist/
 # sw:project-runtime-ignore:begin
 /.sw/config.json
 /.sw/daemon/
+/.sw/workflow/proposals/
+# sw:project-runtime-ignore:end
+# sw:project-runtime-ignore:begin
+/.sw/config.json
+/.sw/daemon/
 # sw:project-runtime-ignore:end

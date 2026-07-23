@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
-import { Button, Card, CardContent, CardHeader, CardTitle, ChartContainer, ChartTooltipContent, Input, LoadingButtonContent, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, ThemeControl, ThemeProvider, WideScreenGate } from "@swui/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle, ChartContainer, ChartTooltipContent, Input, LoadingButtonContent, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, ThemeControl, ThemeProvider, WideScreenGate } from "@swqt/ui";
 import "./styles.css";
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
       <main className="mx-auto flex max-w-3xl flex-col gap-6 p-8">
         <div className="flex items-center justify-between gap-4"><h1 className="text-2xl font-semibold text-foreground">UI consumer spike</h1><ThemeControl /></div>
         <p className="text-sm text-muted-foreground">
-          Second-app adoption proof for <code>@swui/ui-tokens</code> and <code>@swui/ui</code>.
+          Second-app adoption proof for <code>@swqt/ui-tokens</code> and <code>@swqt/ui</code>.
         </p>
         <Card>
           <CardHeader>

@@ -1,10 +1,15 @@
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  buildInstallHint as buildInstallHintFromShared,
+  DEFAULT_NPM_REGISTRY,
+  normalizeRegistryUrl
+} from "../shared/registry-install";
 
-const DEFAULT_REGISTRY = "https://npm.inet.swqt.net/";
+const DEFAULT_REGISTRY = DEFAULT_NPM_REGISTRY;
 const DEFAULT_TTL_MS = 15 * 60 * 1000;
-const PACKAGES = ["@swui/ui", "@swui/ui-tokens"] as const;
+const PACKAGES = ["@swqt/ui", "@swqt/ui-tokens"] as const;
 
 export type SwuiPackageName = (typeof PACKAGES)[number];
 
@@ -25,6 +30,7 @@ export interface RegistryResponse {
   stale: boolean;
   cachedAt: string | null;
   live: boolean;
+  source: "registry" | "cache" | "fixture" | "none";
   registry: string;
   data: RegistryPackageMeta | null;
   error?: string;
@@ -93,13 +99,15 @@ export async function getPackageMetadata(
   const now = options.now ?? Date.now();
   const useFixture = options.useFixture ?? process.env.REGISTRY_FIXTURE === "1";
   const encodedName = encodePackageName(packageName);
-  const cached = cache.get(encodedName);
+  const cacheKey = `${normalizeRegistryUrl(registryUrl)}|${encodedName}`;
+  const cached = cache.get(cacheKey);
 
   if (cached && now - cached.cachedAt < ttlMs) {
     return {
       stale: false,
       cachedAt: new Date(cached.cachedAt).toISOString(),
-      live: !useFixture,
+      live: false,
+      source: "cache",
       registry: registryUrl,
       data: cached.data
     };
@@ -107,11 +115,12 @@ export async function getPackageMetadata(
 
   try {
     const data = useFixture ? loadFixture(encodedName) : await fetchLive(encodedName, registryUrl);
-    cache.set(encodedName, { cachedAt: now, data });
+    cache.set(cacheKey, { cachedAt: now, data });
     return {
       stale: false,
       cachedAt: new Date(now).toISOString(),
       live: !useFixture,
+      source: useFixture ? "fixture" : "registry",
       registry: registryUrl,
       data
     };
@@ -121,6 +130,7 @@ export async function getPackageMetadata(
         stale: true,
         cachedAt: new Date(cached.cachedAt).toISOString(),
         live: false,
+        source: "cache",
         registry: registryUrl,
         data: cached.data,
         error: error instanceof Error ? error.message : String(error)
@@ -130,6 +140,7 @@ export async function getPackageMetadata(
       stale: true,
       cachedAt: null,
       live: false,
+      source: "none",
       registry: registryUrl,
       data: null,
       error: error instanceof Error ? error.message : String(error)
@@ -138,28 +149,28 @@ export async function getPackageMetadata(
 }
 
 export function buildInstallHint(registryUrl = getDefaultRegistryUrl()) {
-  const base = registryUrl.endsWith("/") ? registryUrl : `${registryUrl}/`;
-  return {
-    registry: base,
-    npmrc: `@swui:registry=${base}\n//${new URL(base).host}/:_authToken=\${NPM_TOKEN}`,
-    commands: {
-      bun: "bun add @swui/ui @swui/ui-tokens",
-      npm: "npm install @swui/ui @swui/ui-tokens"
-    }
-  };
+  return buildInstallHintFromShared(registryUrl);
 }
 
-export function summarizePackage(meta: RegistryPackageMeta | null) {
+export function summarizePackage(meta: RegistryPackageMeta | null, requestedVersion?: string) {
   if (!meta) {
     return null;
   }
   const latest = meta["dist-tags"]?.latest ?? null;
-  const latestVersion = latest ? meta.versions?.[latest] : undefined;
+  const resolvedVersion = requestedVersion ?? latest;
+  const versionMeta = resolvedVersion ? meta.versions?.[resolvedVersion] : undefined;
+  if (!resolvedVersion || !versionMeta) {
+    return null;
+  }
   return {
     name: meta.name,
     latest,
+    requestedVersion: requestedVersion ?? null,
+    resolvedVersion,
+    isLatest: resolvedVersion === latest,
     versions: Object.keys(meta.versions ?? {}).sort((a, b) => b.localeCompare(a, undefined, { numeric: true })),
-    peerDependencies: latestVersion?.peerDependencies ?? {}
+    peerDependencies: versionMeta.peerDependencies ?? {},
+    dependencies: versionMeta.dependencies ?? {}
   };
 }
 

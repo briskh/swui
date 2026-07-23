@@ -1,6 +1,6 @@
-# Design summary (shipped with `@swui/ui`)
+# Design summary (shipped with `@swqt/ui`)
 
-Consumer-facing design intent. Token **values** live in `@swui/ui-tokens`.
+Consumer-facing design intent. Token **values** live in `@swqt/ui-tokens`.
 
 ## Checklist (new page / control)
 

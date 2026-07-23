@@ -3,66 +3,38 @@
   "hooks": {
     "beforeMCPExecution": [
       {
-        "command": "sw",
-        "args": [
-          "hook",
-          "beforeMCPExecution"
-        ]
+        "command": "sw hook beforeMCPExecution"
       }
     ],
     "afterMCPExecution": [
       {
-        "command": "sw",
-        "args": [
-          "hook",
-          "afterMCPExecution"
-        ]
+        "command": "sw hook afterMCPExecution"
       }
     ],
     "beforeReadFile": [
       {
-        "command": "sw",
-        "args": [
-          "hook",
-          "beforeReadFile"
-        ]
+        "command": "sw hook beforeReadFile"
       }
     ],
     "postToolUse": [
       {
-        "command": "sw",
-        "args": [
-          "hook",
-          "postToolUse"
-        ],
+        "command": "sw hook postToolUse",
         "matcher": "Read"
       }
     ],
     "sessionStart": [
       {
-        "command": "sw",
-        "args": [
-          "hook",
-          "sessionStart"
-        ]
+        "command": "sw hook sessionStart"
       }
     ],
     "beforeShellExecution": [
       {
-        "command": "sw",
-        "args": [
-          "hook",
-          "beforeShellExecution"
-        ]
+        "command": "sw hook beforeShellExecution"
       }
     ],
     "beforeSubmitPrompt": [
       {
-        "command": "sw",
-        "args": [
-          "hook",
-          "beforeSubmitPrompt"
-        ]
+        "command": "sw hook beforeSubmitPrompt"
       }
     ]
   }

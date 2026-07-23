@@ -43,9 +43,9 @@ The host has already loaded the root agent entry and its managed first-hop block
 
 1. **Select `sw` and read its skill** — Read `.agents/skills/sw/SKILL.md` completely (**MUST**; see table above).
 2. **Connect `sw mcp` and read the runbook** — Read local `sws://reference/mcp-runbook.md`.
-3. **Read the project companion** — .cursor/skills/project-swqt-companion/SKILL.md (paths, commands, gates).
-4. **Choose the semantic Primary** — Read local `sws://routes`, then the selected `sws://skills/<name>` body.
-5. **Emit the routing receipt** — only then begin substantive work.
+3. **Form a provisional selection** — Read local `sws://routes`; choose provisional Primary and Companion candidates.
+4. **Read selected context** — Read the selected `sws://skills/<name>` body and only the matching task-class slice exposed by .cursor/skills/project-swqt-companion/SKILL.md.
+5. **Finalize and emit the routing receipt** — finalize Primary/Companions, emit the receipt, then begin substantive work.
 
 **Forbidden before these actions**: broad MCP discovery, guessing tool or skill names, or using route-debug tools as navigation.
 
@@ -171,7 +171,7 @@ Shared Web UI design system (tokens + React primitives). Not a product shell.
 
 | Package | First hop |
 |---------|-----------|
-| `@swui/ui-tokens` | `packages/ui-tokens/AGENTS.md` |
-| `@swui/ui` | `packages/ui/AGENTS.md` |
+| `@swqt/ui-tokens` | `packages/ui-tokens/AGENTS.md` |
+| `@swqt/ui` | `packages/ui/AGENTS.md` |
 
-Prefer `node_modules/@swui/ui/AGENTS.md` after install. Hard rules: no AppShell/TopBar/routes; one global ThemeProvider owns system/light/dark theme selection; semantic tokens; ship agent docs with publish.
+Prefer `node_modules/@swqt/ui/AGENTS.md` after install. Hard rules: no AppShell/TopBar/routes; one global ThemeProvider owns system/light/dark theme selection; semantic tokens; ship agent docs with publish.

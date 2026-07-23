@@ -14,16 +14,16 @@
     "noEmit": true,
     "isolatedModules": true,
     "paths": {
-      "@swui/ui": [
+      "@swqt/ui": [
         "../../packages/ui/src/index.ts"
       ],
-      "@swui/ui/*": [
+      "@swqt/ui/*": [
         "../../packages/ui/src/components/*"
       ],
-      "@swui/ui/utils": [
+      "@swqt/ui/utils": [
         "../../packages/ui/src/lib/utils.ts"
       ],
-      "@swui/ui/theme": [
+      "@swqt/ui/theme": [
         "../../packages/ui/src/theme.tsx"
       ]
     }

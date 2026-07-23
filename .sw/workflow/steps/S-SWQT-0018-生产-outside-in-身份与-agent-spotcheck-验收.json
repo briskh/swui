@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0018",
+  "status": "implementing",
+  "overlay": {
+    "state": "blocked",
+    "reason": "Deployment/HITL hard gate: provision ui.swqt.net Portal runtime, deploy/reload exact /mcp/swui gateway route and anonymous policy, pass outside-in smoke, then complete the eight-prompt human review."
+  },
+  "links": [],
+  "title": "Step S-SWQT-0018: 生产 outside-in 身份与 Agent SpotCheck 验收",
+  "sourceFeature": {
+    "id": "F-SWQT-0006",
+    "href": "../feature/F-SWQT-0006-mcp-与-agent-暴露面渐进披露收敛.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-23T08:40:32.970Z",
+  "updatedAt": "2026-07-23T08:40:32.970Z",
+  "supersedes": "N/A",
+  "nextHandoff": "implement",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "对最终部署入口执行 SWS/swui 身份隔离、匿名策略、DNS/upstream 与 8 个代表性提示的真实 Agent+人工 SpotCheck，形成可对证的生产验收结论。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "只读探测 https://agent.swqt.net/mcp、/mcp/sws、/mcp/swui 的 initialize、tools/resources/templates 身份与预算。",
+          "确认 /mcp 与 /mcp/sws 只呈现 SWS，/mcp/swui 只呈现 swui.*，并记录匿名 2xx/401 策略、DNS 与 upstream 事实。",
+          "运行或交付可重复 outside-in smoke；若生产未部署，记录精确 blocker、owner、部署后复验触发条件和残余风险。",
+          "执行 8 个代表性提示的真实 Agent 走读并由人类复核首跳正确率、过读、误路由和纠偏。",
+          "闭合 Feature 级 production identity 与 human evidence hard gates。"
+        ],
+        "outOfScope": [
+          "未经用户明示执行生产 Caddy reload、DNS 修改、服务部署或凭据变更。",
+          "npm publish。",
+          "以本地 in-memory smoke、静态 Caddy syntax 或模型自评替代真实 outside-in 与 human SpotCheck。"
+        ]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "sourceFeature": "F-SWQT-0006；依赖 S-SWQT-0016、S-SWQT-0017 的本地契约与 deploy-ready 证据。",
+        "researchEvidence": "当前 outside-in：匿名 /mcp/swui=401；认证后 /mcp、/mcp/sws、/mcp/swui 均曾标识 sws 0.1.144；ui.swqt.net DNS 缺失。",
+        "optionsTelos": "生产身份与 human evidence 是 Feature hard gate；无权限时必须 blocked-with-reason，不得以 local-fixed 伪装完成。",
+        "projectCompanionRefs": "project-swqt-companion 中的 MCP/outside-in/browser/doctor gate；sibling deploy runbook/smoke。"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": [
+          "S-SWQT-0016",
+          "S-SWQT-0017"
+        ],
+        "externalDependencies": [
+          "部署 owner 将经过验证的 Caddy/upstream 配置应用到生产。",
+          "生产 DNS、TLS、upstream 和匿名访问策略可被只读探测。",
+          "真实 Agent 会话与人类 reviewer 可执行 SpotCheck。"
+        ],
+        "userDecisions": [
+          "不自动生产部署或 npm publish。",
+          "Q-05=auto 仅授权推进可执行工作，不扩大外部权限。"
+        ],
+        "projectResources": [
+          "examples/portal/scripts/mcp-smoke.mjs",
+          "examples/portal/DEPLOY.md",
+          "/home/blade/sws/scripts/check-mcp-path-smoke.sh",
+          "/home/blade/sws/debian/caddy/agent.swqt.net.caddy"
+        ],
+        "axisPositioning": "required；axisTrigger=public-runtime+external-human-evidence；axisCoordinate=stage:design, application:production-agent-entry, validation:outside-in+human, layer:deployment, evidence:runtime-fresh；远端结果是证据，不由坐标推断。",
+        "axisSplitSnapshot": "axisSplitSignals=layer-boundary,evidence-boundary,validation-boundary；独立于本地实现以防把静态/本地绿误当生产可用；单 Step 保留因为 remote identity 与 human SpotCheck共同裁决最终 Agent 入口。",
+        "postDesignClarification": "not-applicable；外部权限边界已在 Feature 中明确，不是新开放方案问题。",
+        "temporaryArtifactLifecycle": "允许 smoke 输出与 SpotCheck 记录作为验证证据；永久摘要目标为本 Step Implementation Record/Review Report；不得保存凭据或原始敏感响应。"
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "testDrivenDesign": {
+          "testCaseDesign": "Outside-in protocol smoke + identity negative matrix + 8-prompt Agent task set + human review rubric。",
+          "acceptanceToTestMapping": "AC11→三个 endpoint 身份/tools/resources/templates/匿名/DNS；AC13→8 prompts 逐项首跳正确率、过读、误路由、纠偏；AC14→生产 tracer 链完整复演。",
+          "riskToTestLevelMapping": "public runtime routing→outside-in integration + negative identity cases；user-visible Agent discovery→真实 Agent acceptance + human SpotCheck；静态配置仅作前置证据。",
+          "regressionTestDesign": "designed：远端 /mcp/swui 返回 SWS、匿名 401、DNS/upstream 缺失均作为失败基线重测。",
+          "coverageAssessment": "not-needed",
+          "coverageMetric": "N/A",
+          "coverageSkipReason": "skipped-with-reason(evidence-only Step 不新增应用逻辑；风险由 outside-in protocol 与 human acceptance 覆盖)",
+          "residualRisk": "无生产部署权限或人类 reviewer 时 hard gate 不能通过，Step 必须 overlay.blocked 并保留复验触发条件。",
+          "followUp": "owner=deployment maintainer + human reviewer；trigger=生产配置应用且匿名策略确认后立即复跑。"
+        },
+        "explanationSyncBrief": "最终远端事实回写 Step、Feature handoff/closure、project companion/DEPLOY 事实；不得提前写成已上线。",
+        "problemDefinition": "本地代码和静态配置无法证明公网请求到达 swui，也无法证明真实 Agent 会按预期首跳；当前远端证据还明确显示身份错路由。",
+        "requirementsDefinition": "用新鲜生产协议证据和人类可复核的真实 Agent 行为证据证明入口隔离、预算和可用性；否则形成可恢复 blocker。",
+        "nonGoals": [
+          "不越权部署或修改 DNS。",
+          "不把机器矩阵当成人工 SpotCheck。",
+          "不泄露认证信息或生产响应中的敏感数据。"
+        ],
+        "plainLanguage": {
+          "unclear": "仓库里看起来正确，不等于公网真的接到了正确服务，也不等于 Agent 会照地图走。",
+          "why": "最后一公里的代理、DNS、认证和人类可理解性只能在真实入口验证。",
+          "outcome": "通过时有三端身份与 8 提示证据；失败时有准确 owner/触发条件，而不是模糊‘待部署’。",
+          "prose": "去门外实际敲门，并让真实使用者按说明走一遍。"
+        },
+        "options": [
+          {
+            "id": "A",
+            "name": "真实生产 outside-in + Agent/human gate",
+            "cuttingPoint": "在部署完成后直接探测公网并执行真实 Agent 任务集。",
+            "impact": "能证明最终用户路径和身份隔离。",
+            "risk": "依赖外部部署权限、人类时间和匿名策略。",
+            "validationCost": "高但为 Feature 硬门。",
+            "rejectWhen": "仅当 Feature 明确降低生产验收（当前未授权）。"
+          },
+          {
+            "id": "B",
+            "name": "仅接受本地/静态证据",
+            "cuttingPoint": "以 in-memory smoke、Caddy validate 和模型自评代替生产证据。",
+            "impact": "可立即收口。",
+            "risk": "重复当前假绿，无法证明公网身份或真实 Agent 行为。",
+            "validationCost": "低但不满足验收。",
+            "rejectWhen": "outside-in 与 human SpotCheck 是硬验收。"
+          }
+        ],
+        "openDecisions": [],
+        "recommendedOption": {
+          "option": "A",
+          "rationale": "Feature 明确把生产 identity 与 human SpotCheck 设为 hard gate；只有真实入口能推翻当前错路由证据。",
+          "assumptionsFromFeature": "部署与发布不在自动授权范围；read-only remote smoke 在范围内；人类证据不能由模型伪造。",
+          "assumptionChanges": "none"
+        },
+        "granularity": {
+          "granularityDecision": "fine-enough",
+          "whySmallEnough": "仅处理生产最终证据和 human acceptance，不包含本地实现。",
+          "whyNotSplitFurther": "两类证据共同裁决同一外部 Agent 入口能否 promotion；拆开会产生一个无法独立宣称完成的半门禁。",
+          "splitSignals": "若部署执行本身获得单独授权，应另开有审批/回滚边界的运维 Step，不并入只读验收。",
+          "coarseJustification": "共享 hard-promotion gate 与同一最终身份链。",
+          "proposedChildSteps": "N/A"
+        },
+        "readiness": {
+          "readiness": "Yes",
+          "reason": "测试方法、endpoint、失败基线、owner 和阻塞语义均明确；可先执行只读 outside-in 并记录真实结果。部署授权不是设计缺口。",
+          "missingItems": "生产配置尚未应用、人类 reviewer 尚未执行；这些是 implement/review 的外部 gate，不是未决方案。",
+          "partiallySafeToProceed": "可执行全部只读探测与证据准备；若 gate 未通过则 overlay.blocked，不得 promote。"
+        },
+        "forwardImpact": [
+          {
+            "target": "F-SWQT-0006 lifecycle",
+            "impactType": "hard promotion gate",
+            "timing": "must-update-now",
+            "owner": "S-SWQT-0018",
+            "resolution": "只有 remote identity 与 Agent/human evidence 都通过，Feature 才可 delivered。"
+          },
+          {
+            "target": "deployment maintainer",
+            "impactType": "external action",
+            "timing": "defer-with-reason",
+            "owner": "deployment maintainer",
+            "resolution": "若当前仍错路由，记录精确配置目标、部署后复验 trigger 和 residual risk；不越权执行。"
+          }
+        ],
+        "profileNote": "stepProfile=full；guardrail risk domain=runtime-integration+agent-surface；promotionHardGate=production identity + 8-prompt Agent/human SpotCheck；ssotImpactExpected=ssot-update-required only after fresh remote evidence。"
+      }
+    },
+    "implementation-record": {
+      "sectionStatus": "done",
+      "items": {
+        "executionContract": {
+          "expectedChangeSurface": "Read-only DNS/TLS/HTTP MCP observations for agent.swqt.net and ui.swqt.net; authenticated identity/tools/resources/templates summary without credential disclosure; repeatable sibling smoke execution; and an eight-prompt Agent/human SpotCheck checklist.",
+          "acceptanceCriteria": "/mcp and /mcp/sws identify only SWS; /mcp/swui identifies swui and exposes the bounded swui contract; anonymous policy/DNS/upstream are explicit; eight independent Agent prompts receive human review.",
+          "validationEvidenceRequired": "Fresh production initialize plus tools/resources/templates for all three endpoints, anonymous status matrix, DNS/root reachability, strengthened check-mcp-path-smoke result, and human-reviewed prompt records.",
+          "rollbackNotes": "Evidence-only work made no remote mutation. Remove only the newly added SpotCheck runbook section if the rubric is replaced; do not alter observed production facts."
+        },
+        "implementationSummary": {
+          "whatChanged": "Executed fresh anonymous and authenticated outside-in probes; ran the deploy-ready shared-origin smoke; summarized identities and disclosure counts without printing credentials; and added the exact eight-prompt human SpotCheck rubric to examples/portal/DEPLOY.md.",
+          "whySatisfiesStep": "All safe, authorized evidence collection and handoff preparation is complete. The evidence conclusively identifies the remaining external blockers instead of treating local or static success as production completion.",
+          "intentionallyUnchanged": "No Caddy reload, DNS/upstream change, Portal deployment, authentication-policy change, npm publish, or fabricated Agent/human acceptance evidence."
+        },
+        "changeSurface": {
+          "codeAnchors": "N/A — evidence-only Step; no application logic changed.",
+          "configAnchors": "Observed /home/blade/sws/debian/caddy/agent.swqt.net.caddy as deploy-ready source; production configuration was not changed.",
+          "documentationAnchors": "examples/portal/DEPLOY.md now contains the eight prompts, per-run evidence fields, 8/8 first-hop and zero-misroute gate, and explicit human-review requirement.",
+          "dataOrMigrationAnchors": "No data migration. Remote responses were summarized in Tier-1 evidence and no raw credential or sensitive payload was persisted."
+        },
+        "executionNotes": {
+          "decisionsDuringImplementation": "Probe anonymously first, then use the existing user-level SWS credential only for read-only identity/list calls; print only status, server identity, counts, and bounded tool-name samples; stop before any deployment or human-evidence substitution.",
+          "deviationsFromBrief": "The production and human hard gates could not pass because the new route/upstream is not deployed and no human reviewer has executed the prompt set. The required blocked overlay and exact recovery trigger replace promotion.",
+          "risksDiscovered": "ui.swqt.net does not resolve; all anonymous MCP paths return the same 401; authenticated /mcp/swui is routed to SWS 0.1.144 and exposes SWS rather than swui. Running the eight prompts now would test the wrong service and could not yield valid acceptance evidence."
+        },
+        "validationReferences": [
+          {
+            "commandOrEvidence": "Fresh DNS and anonymous HTTP probe at 2026-07-23T09:11Z",
+            "result": "blocked",
+            "notes": "agent.swqt.net resolves and its root returns 404; ui.swqt.net cannot be resolved. Anonymous POST initialize to /mcp, /mcp/sws, and /mcp/swui each returns 401 'missing Authorization bearer token'."
+          },
+          {
+            "commandOrEvidence": "Authenticated initialize identity matrix using existing user-level SWS configuration",
+            "result": "failed-hard-gate",
+            "notes": "/mcp, /mcp/sws, and /mcp/swui each return HTTP 200 text/event-stream with serverInfo sws 0.1.144; no credential value was logged."
+          },
+          {
+            "commandOrEvidence": "Authenticated tools/resources/templates matrix",
+            "result": "failed-hard-gate",
+            "notes": "Each path returns the same 17 tools (0 swui.*), 18 resources (0 swui://), and 0 templates. Therefore /mcp/swui is conclusively still the SWS surface."
+          },
+          {
+            "commandOrEvidence": "SWUI_MCP_SMOKE=1 /home/blade/sws/scripts/check-mcp-path-smoke.sh https://agent.swqt.net",
+            "result": "failed-as-expected",
+            "notes": "/mcp and /mcp/sws initialize as SWS and pass health_check; /mcp/swui initializes as SWS and the smoke stops at the swui identity/first-hop assertion."
+          },
+          {
+            "commandOrEvidence": "Eight-prompt Agent + human SpotCheck",
+            "result": "blocked-not-run",
+            "notes": "Invalid until /mcp/swui reaches swui; a real human reviewer is also required. The exact prompt/rubric set is now in DEPLOY.md, and no model self-review is substituted."
+          }
+        ],
+        "blocker": {
+          "state": "blocked",
+          "reason": "Production has not applied the validated swui gateway/upstream deployment: ui.swqt.net lacks DNS and /mcp/swui still resolves to authenticated SWS 0.1.144. The mandatory eight-prompt human review is also outstanding.",
+          "owner": "deployment maintainer for DNS/Portal/Caddy/anonymous-policy rollout; designated human reviewer for SpotCheck",
+          "recoveryTrigger": "Provision and deploy ui.swqt.net Portal runtime; apply/reload the reviewed agent.swqt.net exact /mcp/swui route; confirm intended anonymous read-only policy; rerun the shared smoke until all three identities pass; then execute and sign off the eight prompts.",
+          "residualRisk": "Until recovery, public Agent configuration points /mcp/swui at the wrong management service and the Feature must not be promoted or described as production-ready."
+        }
+      }
+    },
+    "use-case": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "review-report": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "delivered-registry-entry": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    },
+    "completion-audit": {
+      "sectionStatus": "not-applicable",
+      "items": {}
+    }
+  },
+  "stepProfile": "full",
+  "validationSummary": "blocked: fresh outside-in shows ui.swqt.net unresolved and authenticated /mcp/swui still sws 0.1.144 (17 SWS tools, 18 resources, 0 swui.*, 0 templates); 8-prompt human review cannot validly run before deploy"
+}

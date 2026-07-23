@@ -1,4 +1,4 @@
-# Token set (`@swui/ui-tokens`)
+# Token set (`@swqt/ui-tokens`)
 
 Calibrated 2026-07-16; **eauth chroma alignment** pass 2026-07-23 (`../eauth/ui/src/index.css` as reference for passkey + minor drift). Values match `src/tokens.css`.
 
@@ -6,7 +6,7 @@ Calibrated 2026-07-16; **eauth chroma alignment** pass 2026-07-23 (`../eauth/ui/
 
 | Axis | Contract |
 |------|----------|
-| Runtime (organization apps) | `@swui/ui` ThemeProvider resolves global `system`, `light`, or `dark` preference; do not mount a competing selector. |
+| Runtime (organization apps) | `@swqt/ui` ThemeProvider resolves global `system`, `light`, or `dark` preference; do not mount a competing selector. |
 | CSS | `:root` (light) and `.dark` (reserved) both defined. |
 | Authority | Published `src/tokens.css` is the value SSOT for consumers. |
 
@@ -49,7 +49,7 @@ Light mode: warm olive/brown primary on warm paper. Dark (reserved): high-chroma
 | `--metric-instrument` | `oklch(0.24 0.05 65)` | `oklch(0.80 0.22 92)` | Instrument emphasis |
 | `--metric-asset` | `oklch(0.50 0.03 70)` | `oklch(0.72 0.20 72)` | Asset emphasis |
 
-Use `@swui/ui` `Button variant="passkey"` for passkey step-up and WebAuthn CTAs; do not reuse `primary` for those flows.
+Use `@swqt/ui` `Button variant="passkey"` for passkey step-up and WebAuthn CTAs; do not reuse `primary` for those flows.
 
 ### eauth reference drift (intentional)
 

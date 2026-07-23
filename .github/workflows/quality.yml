@@ -19,13 +19,13 @@ jobs:
       - run: bun run sync-docs
       - run: bun run sync-docs:check
       - run: bun run check:catalog-export
-      - run: bun run --filter '@swui/ui-consumer-example' typecheck
-      - run: bun run --filter '@swui/portal-example' typecheck
-      - run: bun run --filter '@swui/portal-example' test
-      - run: bun run --filter '@swui/portal-example' mcp:smoke
+      - run: bun run --filter '@swqt/ui-consumer-example' typecheck
+      - run: bun run --filter '@swqt/portal-example' typecheck
+      - run: bun run --filter '@swqt/portal-example' test
+      - run: bun run --filter '@swqt/portal-example' mcp:smoke
       - run: bun run check:design-contract
       - run: bun run example:build
       - run: bun run portal:build
-      - run: bun run --filter '@swui/ui-consumer-example' test:browser
-      - run: bun run --filter '@swui/portal-example' test:browser
+      - run: bun run --filter '@swqt/ui-consumer-example' test:browser
+      - run: bun run --filter '@swqt/portal-example' test:browser
       - run: bun run verify:packed-consumer

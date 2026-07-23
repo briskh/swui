@@ -7,15 +7,16 @@
     "examples/*"
   ],
   "scripts": {
-    "pack": "bun run --filter '@swui/ui-tokens' pack && bun run --filter '@swui/ui' pack",
-    "publish:dry": "bun run --filter '@swui/ui-tokens' publish:dry && bun run --filter '@swui/ui' publish:dry",
-    "example:build": "bun run --filter '@swui/ui-consumer-example' build",
-    "sync-docs": "bun run --filter '@swui/portal-example' sync-docs",
+    "pack": "bun run --filter '@swqt/ui-tokens' pack && bun run --filter '@swqt/ui' pack",
+    "publish:dry": "bun run --filter '@swqt/ui-tokens' publish:dry && bun run --filter '@swqt/ui' publish:dry",
+    "example:build": "bun run --filter '@swqt/ui-consumer-example' build",
+    "sync-docs": "bun run --filter '@swqt/portal-example' sync-docs",
     "sync-docs:check": "node examples/portal/scripts/sync-docs.mjs --check",
-    "portal:dev": "bun run --filter '@swui/portal-example' dev",
-    "portal:build": "bun run --filter '@swui/portal-example' build",
+    "portal:dev": "bun run --filter '@swqt/portal-example' dev",
+    "portal:build": "bun run --filter '@swqt/portal-example' build",
     "check:design-contract": "node scripts/check-design-contract.mjs",
     "check:catalog-export": "node scripts/check-catalog-export.mjs",
+    "check:npm-publish-audit": "node scripts/audit-npm-publish.mjs",
     "verify:packed-consumer": "node scripts/verify-packed-consumer.mjs"
   }
 }

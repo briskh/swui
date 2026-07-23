@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "@swui/ui-tokens/tokens.css";
+@import "@swqt/ui-tokens/tokens.css";
 @source "../../../packages/ui/src";
 
 body {

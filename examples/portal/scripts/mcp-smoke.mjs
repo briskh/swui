@@ -15,13 +15,45 @@ const client = await import("@modelcontextprotocol/sdk/client/index.js").then(({
   return instance;
 });
 await client.connect(clientTransport);
+if (
+  client.getServerVersion()?.name !== "swui" ||
+  !client.getInstructions()?.includes("swui://packages/ui/llms.txt")
+) {
+  throw new Error("initialize response is missing the swui identity or first-hop instructions");
+}
 
 const resources = await client.listResources();
 const resourceUris = resources.resources.map((resource) => resource.uri);
-for (const uri of ["swui://docs/AGENTS.md", "swui://docs/ADOPTION.md", "swui://docs/COMPONENT-CATALOG.md"]) {
+for (const uri of [
+  "swui://packages/ui/AGENTS.md",
+  "swui://packages/ui/llms.txt",
+  "swui://packages/ui/docs/ADOPTION.md",
+  "swui://packages/ui/docs/DESIGN-SUMMARY.md",
+  "swui://packages/ui/docs/COMPONENT-CATALOG.md",
+  "swui://packages/ui/docs/DO-AND-DONT.md",
+  "swui://packages/ui-tokens/AGENTS.md",
+  "swui://packages/ui-tokens/llms.txt",
+  "swui://packages/ui-tokens/docs/ADOPTION.md",
+  "swui://packages/ui-tokens/docs/TOKENS.md"
+]) {
   if (!resourceUris.includes(uri)) {
     throw new Error(`missing resource ${uri}`);
   }
+  const resource = await client.readResource({ uri });
+  if (!resource.contents?.[0]?.text) {
+    throw new Error(`empty or unreadable resource ${uri}`);
+  }
+}
+if (resources.resources.length > 12 || Buffer.byteLength(JSON.stringify(resources), "utf8") > 12 * 1024) {
+  throw new Error("static resource disclosure exceeds its count or byte budget");
+}
+
+const templates = await client.listResourceTemplates();
+if (
+  templates.resourceTemplates.length !== 1 ||
+  templates.resourceTemplates[0].uriTemplate !== "swui://components/{name}"
+) {
+  throw new Error("component resource template contract is missing");
 }
 
 const tools = await client.listTools();
@@ -31,22 +63,34 @@ for (const name of ["swui.package.get", "swui.package.installHint", "swui.catalo
     throw new Error(`missing tool ${name}`);
   }
 }
+for (const tool of tools.tools) {
+  if (!tool.title || !tool.inputSchema || !tool.outputSchema || tool.annotations?.readOnlyHint !== true) {
+    throw new Error(`tool ${tool.name} is missing contract metadata`);
+  }
+}
 
-const packageResult = await client.callTool({ name: "swui.package.get", arguments: { name: "@swui/ui" } });
+const packageResult = await client.callTool({
+  name: "swui.package.get",
+  arguments: { name: "@swqt/ui", version: "1.0.0" }
+});
 const packageText = packageResult.content?.[0]?.type === "text" ? packageResult.content[0].text : "";
-if (!packageText.includes('"latest": "1.0.0"')) {
-  throw new Error("package.get did not return expected latest version");
+if (!packageText.includes('"resolvedVersion": "1.0.0"') || !packageResult.structuredContent) {
+  throw new Error("package.get did not resolve the expected exact version");
 }
 
 const hintResult = await client.callTool({ name: "swui.package.installHint", arguments: {} });
 const hintText = hintResult.content?.[0]?.type === "text" ? hintResult.content[0].text : "";
-if (!hintText.includes("npm install @swui/ui")) {
+if (!hintText.includes("npm install @swqt/ui")) {
   throw new Error("installHint missing npm install command");
 }
 
 const searchResult = await client.callTool({ name: "swui.catalog.search", arguments: { query: "Button" } });
 const searchText = searchResult.content?.[0]?.type === "text" ? searchResult.content[0].text : "";
-if (!searchText.includes('"name": "Button"')) {
+if (
+  !searchText.includes('"name": "Button"') ||
+  !searchResult.structuredContent ||
+  Buffer.byteLength(JSON.stringify(searchResult), "utf8") > 16 * 1024
+) {
   throw new Error("catalog.search did not return Button");
 }
 

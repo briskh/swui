@@ -1,5 +1,5 @@
 {
-  "name": "@swui/ui-consumer-example",
+  "name": "@swqt/ui-consumer-example",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,8 +11,8 @@
     "test:browser:update": "playwright test --update-snapshots"
   },
   "dependencies": {
-    "@swui/ui": "workspace:*",
-    "@swui/ui-tokens": "workspace:*",
+    "@swqt/ui": "workspace:*",
+    "@swqt/ui-tokens": "workspace:*",
     "@tailwindcss/vite": "^4.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

@@ -9,15 +9,15 @@
 
 ## Dimensions And Responsive Behavior
 
-- Use 4px-based spacing and the semantic aliases in `@swui/ui-tokens`; core control heights are `compact=32`, `sm=36`, `md=40`, and `lg=48` pixels. `micro=24` and `xs=28` preserve documented dense-table and calendar geometry; they are not general primary-action sizes.
+- Use 4px-based spacing and the semantic aliases in `@swqt/ui-tokens`; core control heights are `compact=32`, `sm=36`, `md=40`, and `lg=48` pixels. `micro=24` and `xs=28` preserve documented dense-table and calendar geometry; they are not general primary-action sizes.
 - Use the named global breakpoints from the token package. `data-dense` is not a page breakpoint: it is solely the threshold for information-dense controls.
 - Tailwind `max-*` variants are exclusive. To implement the intended `<=820px` compact behavior, use `max-data-dense` with `data-dense=821px`, not `max-[820px]`.
 
 ## Consumer Validation
 
-- A consumer CSS entry must import Tailwind, import `@swui/ui-tokens/tokens.css`, then use an accurate `@source` path for UI source. The example lives at `examples/ui-consumer/src/styles.css`; its monorepo path is `../../../packages/ui/src`.
+- A consumer CSS entry must import Tailwind, import `@swqt/ui-tokens/tokens.css`, then use an accurate `@source` path for UI source. The example lives at `examples/ui-consumer/src/styles.css`; its monorepo path is `../../../packages/ui/src`.
 - Verify the emitted CSS contains component utilities. A successful build alone can hide a wrong `@source` path.
-- Run `bun run --filter '@swui/ui-consumer-example' typecheck`, `bun run example:build`, and `bun run --filter '@swui/ui-consumer-example' test:browser` with Bun on `PATH`. The browser command executes light/dark × compact/data-dense/lg/xl, includes accessibility checks, and maintains one screenshot baseline per project.
+- Run `bun run --filter '@swqt/ui-consumer-example' typecheck`, `bun run example:build`, and `bun run --filter '@swqt/ui-consumer-example' test:browser` with Bun on `PATH`. The browser command executes light/dark × compact/data-dense/lg/xl, includes accessibility checks, and maintains one screenshot baseline per project.
 - Run `bun run check:design-contract` to reject unapproved raw control dimensions and colors, missing/cyclic token references, theme-selector bypasses, and declared semantic foreground/background pairs below WCAG AA 4.5:1. Its intentionally small exception register is [design-contract-exceptions.md](design-contract-exceptions.md).
 - Run `bun run verify:packed-consumer` before release. It packs both 1.0.0 packages and verifies two isolated consumers: a nested installation and a workspace-hoisted installation. Each is type-checked, built, checks its emitted CSS for component utilities and the dark-theme selector, then runs the Playwright browser matrix against the installed tarball. This proves component rendering and theme switching from publish-shaped layouts, not only workspace source.
 
