@@ -177,7 +177,7 @@
         },
         "implementationSummary": {
           "whatChanged": "Post-deploy outside-in audit at 2026-07-23T09:50Z confirmed anonymous /mcp/swui identifies swui 1.0.0 with bounded resources/templates/tools; eight-prompt Agent walkthrough passed 8/8 with zero misroutes; human reviewer signed off (签收). Updated project companion outside-in facts.",
-          "whySatisfiesStep": "Production swui identity and human SpotCheck hard gates are satisfied for the public Agent entry. Residual unverified items (ui.swqt.net public DNS, authenticated SWS path matrix) are documented without blocking swui promotion.",
+          "whySatisfiesStep": "Production swui identity and human SpotCheck hard gates are satisfied for the public Agent entry. ui.swqt.net is live on public DNS; Tailscale-only audit hosts may not resolve it locally.",
           "intentionallyUnchanged": "No npm publish, no workflow mutation on SWS center service, no credential logging."
         },
         "changeSurface": {
@@ -189,7 +189,7 @@
         "executionNotes": {
           "decisionsDuringImplementation": "Probe anonymously first; execute Agent SpotCheck against live /mcp/swui; record human sign-off from project owner.",
           "deviationsFromBrief": "Full three-endpoint smoke script still stops at authenticated /mcp because anonymous 401; SWS identity assumed by policy not re-probed with bearer in this session.",
-          "risksDiscovered": "ui.swqt.net remains unresolved on public DNS from audit host; gateway upstream may be private-only."
+          "risksDiscovered": "Split-horizon DNS: Tailscale resolver (100.100.100.100) returns no A record for ui.swqt.net while public resolvers (8.8.8.8) return Cloudflare IPs and HTTP 200."
         },
         "validationReferences": [
           {
@@ -213,9 +213,9 @@
             "notes": "HTTP 401; SWS identity not re-verified without bearer token."
           },
           {
-            "commandOrEvidence": "ui.swqt.net DNS",
-            "result": "partial",
-            "notes": "Public DNS still unresolved from audit host; gateway upstream routing to swui succeeds via agent.swqt.net."
+            "commandOrEvidence": "ui.swqt.net DNS + HTTP reachability",
+            "result": "passed",
+            "notes": "Public DNS (8.8.8.8): 104.21.6.152 / 172.67.134.249 (Cloudflare); curl --resolve → HTTP 200. Tailscale DNS (100.100.100.100): no A record — split-horizon only; not a deployment failure."
           },
           {
             "commandOrEvidence": "SWUI_MCP_SMOKE=1 check-mcp-path-smoke.sh",
@@ -233,7 +233,7 @@
           "reason": "Production /mcp/swui swui identity and human SpotCheck signed off.",
           "owner": "human reviewer (user)",
           "recoveryTrigger": "N/A",
-          "residualRisk": "Optional follow-up: verify /mcp and /mcp/sws with bearer; publish ui.swqt.net public DNS if human portal must be directly reachable."
+          "residualRisk": "Optional follow-up: verify /mcp and /mcp/sws with bearer; add ui.swqt.net to Tailscale split DNS if tailnet clients must resolve it without public resolvers."
         }
       }
     },
@@ -284,7 +284,7 @@
           "promotionDisposition": "promote",
           "promotionOwner": "swui-maintainers after human sign-off",
           "promotionRevisitTrigger": "Reopen if /mcp/swui regresses to SWS, resources/list exceeds budget, or SpotCheck rubric fails on fresh Agent sessions.",
-          "closureIntegrityCheck": "Human sign-off recorded; no fabricated production claims for ui.swqt.net public DNS."
+          "closureIntegrityCheck": "Human sign-off recorded; ui.swqt.net public DNS verified separately from Tailscale audit-host resolver gap."
         }
       }
     },
@@ -294,7 +294,7 @@
         "reviewReportRef": "sections.review-report",
         "deliveredAt": "2026-07-23",
         "finalDocumentEntry": ".sw/workflow/steps/S-SWQT-0018-生产-outside-in-身份与-agent-spotcheck-验收.json",
-        "validationSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; partial SWS bearer + ui.swqt.net DNS",
+        "validationSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; ui.swqt.net on public DNS (Tailscale split-DNS gap on audit host); partial SWS bearer",
         "rootMount": "Yes - layout v3 stable Step path; no physical archive move.",
         "hardPromotionGateSummary": "minimum auto-filled by workflow promote; validationSummary provided.",
         "testCaseSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; partial SWS bearer + ui.swqt.net DNS",
@@ -342,5 +342,5 @@
     }
   },
   "stepProfile": "full",
-  "validationSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; partial SWS bearer + ui.swqt.net DNS"
+  "validationSummary": "delivered: production /mcp/swui swui 1.0.0; 8/8 SpotCheck with human sign-off; ui.swqt.net on public DNS (Tailscale split-DNS gap on audit host); partial SWS bearer"
 }

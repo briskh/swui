@@ -111,4 +111,4 @@ The gate requires 8/8 correct first hops, 0 service misroutes, and human approva
 
 ## External dependency
 
-Last outside-in observation (2026-07-23 post-deploy): anonymous `https://agent.swqt.net/mcp/swui` identifies **swui** 1.0.0 with bounded resources/templates/tools; eight-prompt Agent SpotCheck **8/8 pass** with human sign-off. Residual optional checks: public `ui.swqt.net` DNS and authenticated `/mcp` + `/mcp/sws` SWS identity with bearer token.
+Last outside-in observation (2026-07-23 post-deploy): anonymous `https://agent.swqt.net/mcp/swui` identifies **swui** 1.0.0 with bounded resources/templates/tools; eight-prompt Agent SpotCheck **8/8 pass** with human sign-off. `https://ui.swqt.net` serves **HTTP 200 on public DNS** (Cloudflare). Hosts using **Tailscale split DNS** may not resolve `ui.swqt.net` locally even when the site is live — verify with `dig +short ui.swqt.net @8.8.8.8` or `curl --resolve ui.swqt.net:443:104.21.6.152 https://ui.swqt.net/`. Residual optional checks: authenticated `/mcp` + `/mcp/sws` SWS identity with bearer token.
