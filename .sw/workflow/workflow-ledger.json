@@ -83,6 +83,25 @@
         ]
       }
     },
+    "F-SWQT-0005": {
+      "kind": "feature",
+      "status": "draft",
+      "path": ".sw/workflow/feature/F-SWQT-0005-门户全量组件-catalog-与-mcp-扩展.json",
+      "deliveryComplete": false,
+      "title": "Feature F-SWQT-0005: 门户全量组件 Catalog 与 MCP 扩展",
+      "stepPlan": {
+        "steps": [
+          "S-SWQT-0013",
+          "S-SWQT-0014",
+          "S-SWQT-0015"
+        ],
+        "computedOrder": [
+          "S-SWQT-0013",
+          "S-SWQT-0014",
+          "S-SWQT-0015"
+        ]
+      }
+    },
     "S-SWQT-0001": {
       "kind": "step",
       "status": "delivered",
@@ -220,6 +239,27 @@
       "path": ".sw/workflow/steps/S-SWQT-0012-ci-部署-runbook-与-mvp-交付验收.json",
       "sourceFeatureId": "F-SWQT-0004",
       "title": "Step S-SWQT-0012: CI、部署 runbook 与 MVP 交付验收"
+    },
+    "S-SWQT-0013": {
+      "kind": "step",
+      "status": "designed",
+      "path": ".sw/workflow/steps/S-SWQT-0013-组件-catalog-浏览与-demo-页.json",
+      "sourceFeatureId": "F-SWQT-0005",
+      "title": "Step S-SWQT-0013: 组件 Catalog 浏览与 Demo 页"
+    },
+    "S-SWQT-0014": {
+      "kind": "step",
+      "status": "designed",
+      "path": ".sw/workflow/steps/S-SWQT-0014-mcp-catalog-search-与-component-get.json",
+      "sourceFeatureId": "F-SWQT-0005",
+      "title": "Step S-SWQT-0014: MCP catalog.search / component.get 与组件资源"
+    },
+    "S-SWQT-0015": {
+      "kind": "step",
+      "status": "designed",
+      "path": ".sw/workflow/steps/S-SWQT-0015-catalog-导出门禁与-playwright-走读.json",
+      "sourceFeatureId": "F-SWQT-0005",
+      "title": "Step S-SWQT-0015: Catalog 导出门禁与 Playwright 走读"
     }
   },
   "edges": [
@@ -375,8 +415,41 @@
       "from": "S-SWQT-0012",
       "to": "F-SWQT-0004",
       "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0013",
+      "to": "F-SWQT-0005",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0014",
+      "to": "S-SWQT-0013",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0014",
+      "to": "F-SWQT-0005",
+      "rel": "sourceFeature"
+    },
+    {
+      "from": "S-SWQT-0015",
+      "to": "S-SWQT-0013",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0015",
+      "to": "S-SWQT-0014",
+      "rel": "dependsOn",
+      "kind": "hard"
+    },
+    {
+      "from": "S-SWQT-0015",
+      "to": "F-SWQT-0005",
+      "rel": "sourceFeature"
     }
   ],
-  "generatedAt": "2026-07-23T05:03:50.971Z",
-  "contentHash": "sha256:f3f6748a5318cafe4d9971598d7a8655e8d9aea44cd8911f4eb269c035c0da66"
+  "generatedAt": "2026-07-23T05:32:23.708Z",
+  "contentHash": "sha256:5a9213f621192c437e7b6d1b5caa06a841a3bb52dc03c85ea956c05cb87186ce"
 }

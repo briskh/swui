@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 6,
+  "kind": "feature",
+  "featureId": "F-SWQT-0005",
+  "status": "draft",
+  "overlay": {
+    "state": "none"
+  },
+  "links": [],
+  "title": "Feature F-SWQT-0005: 门户全量组件 Catalog 与 MCP 扩展",
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-23T05:35:00.000Z",
+  "updatedAt": "2026-07-23T05:35:00.000Z",
+  "supersedes": "N/A",
+  "nextHandoff": "design",
+  "sections": {
+    "background": {
+      "sectionStatus": "done",
+      "items": {
+        "trigger": "F-SWQT-0004 已交付 portal MVP（约定页、/packages、基础 MCP）；R-SWUI-002 §11.2 Phase 2 要求全量组件 demo 与扩展 MCP tools。",
+        "affectedParties": "设计系统消费者、Agent 用户、swui-maintainers。",
+        "whyNow": "MVP 已提供 install 前发现面；缺少按 COMPONENT-CATALOG 分组的可浏览 demo 与 swui.catalog.search / swui.component.get。",
+        "bullets": [
+          "交付 R-SWUI-002 §11.2：/components 全量 catalog demo + MCP 扩展。",
+          "Playwright 截图/regression 证据仍留 ui-consumer（R-SWUI-004）；portal 只做人类浏览 demo。",
+          "不含 Storybook MCP 试点（R-SWUI-004 P2）与 sws facade。"
+        ]
+      }
+    },
+    "problem-statement": {
+      "sectionStatus": "done",
+      "items": {
+        "coreProblem": "Agent 与人类无法在 portal 上按 catalog 分组浏览全部导出组件及其 variants；MCP 无法结构化搜索组件或返回单组件说明与 swui://components/{name} 资源。",
+        "nonGoals": [
+          "不重做 F-SWQT-0004 MVP（sync-docs、registry、package tools 已交付）。",
+          "不将 Playwright 矩阵迁入 portal；不扩展 ui-consumer 为文档站。",
+          "不启动 Storybook 试点或 Chromatic（属 R-SWUI-004 P2/P3）。",
+          "不在 @swui/ui 包内嵌 MCP 或展示宿主代码。"
+        ]
+      }
+    },
+    "context-constraints": {
+      "sectionStatus": "done",
+      "items": {
+        "researchSource": "docs/research/R-SWUI-002-design-system-portal-mcp-registry-research.md §11.2；docs/research/R-SWUI-004-storybook-mcp-vs-playwright-fixture-draft.md",
+        "projectConstraints": [
+          "基于现有 examples/portal；遵守 AGENTS.md 层边界（无 AppShell/业务路由）。",
+          "组件 demo 使用 workspace @swui/ui；theme/density 上下文沿用 portal ThemeControl。",
+          "swui://components/{name} 由 COMPONENT-CATALOG 表行生成；与 exports 不一致时 CI fail。"
+        ],
+        "axisPositioning": "required: application=portal-catalog-phase2; surface=/components+MCP-search; validation=playwright-catalog-walkthrough+catalog-export-check.",
+        "axisSnapshot": "三 Step：catalog 浏览 UI → MCP 扩展 → 测试与 catalog 导出门禁。"
+      }
+    },
+    "research-evidence": {
+      "sectionStatus": "done",
+      "items": {
+        "level": "boundary-only",
+        "evidence": [
+          {
+            "source": "R-SWUI-002 §11.2",
+            "retrievedAt": "2026-07-23",
+            "conclusion": "Phase 2 = 全量 demo + swui.catalog.search + swui.component.get。",
+            "applicability": "直接定义本 Feature 范围。"
+          },
+          {
+            "source": "F-SWQT-0004 acceptance + docs/experience/portal-and-mcp.md",
+            "retrievedAt": "2026-07-23",
+            "conclusion": "MVP portal/MCP/registry 已落地；Phase 2 是增量。",
+            "applicability": "前置依赖与边界。"
+          },
+          {
+            "source": "packages/ui/docs/COMPONENT-CATALOG.md",
+            "retrievedAt": "2026-07-23",
+            "conclusion": "catalog 分组与 export 表是 demo 与 MCP 资源 SSOT。",
+            "applicability": "索引生成与验收。"
+          }
+        ]
+      }
+    },
+    "options-telos": {
+      "sectionStatus": "done",
+      "items": {
+        "options": [
+          {
+            "id": "A",
+            "name": "仅扩展 MCP，不做 /components demo",
+            "technical": "Agent 可搜索但人类无可视 catalog。",
+            "economic": "成本低。",
+            "legal": "无影响。",
+            "operational": "不满足 R-SWUI-002 人类浏览成功定义。",
+            "schedule": "快但不完整。"
+          },
+          {
+            "id": "B",
+            "name": "全量 /components demo + MCP search/get + CI catalog 对齐",
+            "technical": "完整 Phase 2 目标态。",
+            "economic": "中等；复用 portal 与 sync 管道。",
+            "legal": "无影响。",
+            "operational": "与 ui-consumer 测试职责分离清晰。",
+            "schedule": "三 Step 可顺序交付。"
+          }
+        ],
+        "recommended": "B",
+        "conclusion": "ProceedWithTargetState：交付 R-SWUI-002 §11.2 完整 Phase 2。"
+      }
+    },
+    "decision-summary": {
+      "sectionStatus": "done",
+      "items": {
+        "changePosture": "migrate-forward",
+        "changePostureSource": "user-confirmed",
+        "proposedDecision": "在 examples/portal 增加 /components 分组浏览与 per-export demo；扩展 MCP：swui.catalog.search、swui.component.get、swui://components/{name}；CI 增加 catalog-export 对齐检查与 Playwright catalog 走读。",
+        "observableSuccess": "人类可按 catalog 分组打开每个正式 export 的 demo；Agent 可 search/get 组件；catalog 与 exports 漂移被 CI 捕获。",
+        "primaryIntegrationSurface": "examples/portal /components/* + server/handlers.ts MCP tools。",
+        "firstDemonstrableSlice": "/components 索引页列出 COMPONENT-CATALOG 分组并可进入一个 Button demo。"
+      }
+    },
+    "acceptance-criteria": {
+      "sectionStatus": "done",
+      "items": {
+        "criteria": [
+          "/components 索引页按 COMPONENT-CATALOG 分组展示全部正式 export，并可导航到各 demo 页。",
+          "每个 catalog 条目至少有一个可渲染 demo（variants 在 demo 内展示；无法实现的状态文档化例外）。",
+          "MCP 暴露 swui.catalog.search、swui.component.get；resources 含 swui://components/{name}（与 catalog 一致）。",
+          "CI：catalog 表行与 packages/ui exports 对齐检查；Playwright 覆盖 /components 索引与代表性 demo 页。",
+          "不回归 F-SWQT-0004 MVP gates（sync-docs、packages、package MCP tools、ui-consumer 矩阵）。"
+        ],
+        "observableSuccess": "上述每项由 UI、MCP smoke、CI log 或 documented 例外验证。"
+      }
+    },
+    "step-breakdown": {
+      "sectionStatus": "done",
+      "items": {
+        "steps": [
+          {
+            "stepId": "S-SWQT-0013",
+            "title": "组件 Catalog 浏览与 Demo 页",
+            "phase": "components-ui",
+            "dependencies": "F-SWQT-0004 MVP delivered。",
+            "materialized": true,
+            "summary": "/components 索引 + 按 catalog 分组的 demo 路由与示例渲染。",
+            "status": "designed",
+            "boundary": "portal UI only；不改 @swui/ui 公共 API。",
+            "purpose": "人类可浏览全量 catalog。",
+            "executionOwner": "swui-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0014",
+            "title": "MCP catalog.search / component.get 与组件资源",
+            "phase": "mcp-catalog",
+            "dependencies": "S-SWQT-0013 catalog 索引与 demo 元数据。",
+            "materialized": true,
+            "summary": "扩展 handlers.ts：search/get tools + swui://components/* resources。",
+            "status": "designed",
+            "boundary": "只读 MCP；复用 .generated/ catalog。",
+            "purpose": "安装前 Agent 结构化组件查询。",
+            "executionOwner": "swui-maintainers"
+          },
+          {
+            "stepId": "S-SWQT-0015",
+            "title": "Catalog 导出门禁与 Playwright 走读",
+            "phase": "catalog-validation",
+            "dependencies": "S-SWQT-0013、S-SWQT-0014。",
+            "materialized": true,
+            "summary": "check:catalog-export、扩展 browser.spec、更新 experience 文档。",
+            "status": "designed",
+            "boundary": "CI 与测试；不引入 Storybook。",
+            "purpose": "关闭 Phase 2 可重复验收。",
+            "executionOwner": "swui-maintainers"
+          }
+        ]
+      }
+    },
+    "open-questions": {
+      "sectionStatus": "done",
+      "items": {
+        "blocking": [],
+        "nonBlocking": [
+          {
+            "item": "skywalker showcase 加 canonical 链接",
+            "reasonNotBlockingCurrentWork": "可在 Phase 2 demo 齐后由跨仓库 PR 完成。",
+            "moduleBoundary": "skywalker apps/web",
+            "targetAnchor": "S-SWQT-0015 或后续协调",
+            "consumerOwner": "skywalker + swui-maintainers",
+            "revisitTrigger": "portal /components 全量 demo 交付后",
+            "residualRisk": "短期双 showcase 面仍存在。"
+          }
+        ]
+      }
+    },
+    "handoff-gate": {
+      "sectionStatus": "done",
+      "items": {
+        "informationComplete": "Yes",
+        "blockingOpenQuestions": "none",
+        "confirmationMechanism": "Opened after F-SWQT-0004 commit; follows R-SWUI-002 §11.2.",
+        "nextHandoff": "design",
+        "designConfirmation": "pending",
+        "nextAction": "Review step breakdown; confirm design then implement S-SWQT-0013."
+      }
+    },
+    "questions": {
+      "sectionStatus": "done",
+      "items": {
+        "schemaVersion": 1,
+        "items": [],
+        "sessionStatus": "not-started"
+      }
+    }
+  },
+  "closingStepId": "S-SWQT-0015"
+}

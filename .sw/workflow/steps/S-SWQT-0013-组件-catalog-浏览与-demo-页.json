@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0013",
+  "status": "designed",
+  "overlay": { "state": "none" },
+  "links": [],
+  "title": "Step S-SWQT-0013: 组件 Catalog 浏览与 Demo 页",
+  "sourceFeature": {
+    "id": "F-SWQT-0005",
+    "href": "../feature/F-SWQT-0005-门户全量组件-catalog-与-mcp-扩展.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-23T05:35:00.000Z",
+  "updatedAt": "2026-07-23T05:35:00.000Z",
+  "supersedes": "N/A",
+  "nextHandoff": "implement",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "交付 /components 索引与按 COMPONENT-CATALOG 分组的 demo 页，使人类可浏览全部正式 export。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "解析 COMPONENT-CATALOG.md 生成 catalog 索引（build 或 sync 步骤）。",
+          "/components 索引页与 /components/:group/:name demo 路由。",
+          "每个 export 至少一个可渲染 demo；复杂组件可最小代表性 state。",
+          "导航从 Overview 与 header 链入 /components。"
+        ],
+        "outOfScope": ["MCP tools 扩展", "Playwright 全量截图", "Storybook"]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "researchEvidence": "R-SWUI-002 §11.2；packages/ui/docs/COMPONENT-CATALOG.md",
+        "integrationSurface": "examples/portal/src/pages/Components*.tsx"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": [],
+        "externalDependencies": ["F-SWQT-0004 portal MVP"],
+        "projectResources": ["examples/portal", "packages/ui/src"]
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "problemDefinition": "MVP portal 无组件级浏览面。",
+        "requirementsDefinition": "catalog 分组索引 + 可打开的 demo 页。",
+        "nonGoals": ["AppShell", "业务数据"],
+        "plainLanguage": "像设计系统文档站一样能点进每个组件看效果。",
+        "firstSlice": "/components 列表 + Button demo 页。",
+        "readiness": { "readiness": "Yes", "reason": "F-SWQT-0004 portal 骨架与 ThemeControl 已就绪。" }
+      }
+    },
+    "implementation-record": { "sectionStatus": "not-applicable", "items": {} },
+    "use-case": { "sectionStatus": "not-applicable", "items": {} },
+    "review-report": { "sectionStatus": "not-applicable", "items": {} },
+    "delivered-registry-entry": { "sectionStatus": "not-applicable", "items": {} },
+    "completion-audit": { "sectionStatus": "not-applicable", "items": {} }
+  }
+}

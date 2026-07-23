@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0015",
+  "status": "designed",
+  "overlay": { "state": "none" },
+  "links": [],
+  "title": "Step S-SWQT-0015: Catalog 导出门禁与 Playwright 走读",
+  "sourceFeature": {
+    "id": "F-SWQT-0005",
+    "href": "../feature/F-SWQT-0005-门户全量组件-catalog-与-mcp-扩展.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-23T05:35:00.000Z",
+  "updatedAt": "2026-07-23T05:35:00.000Z",
+  "supersedes": "N/A",
+  "nextHandoff": "implement",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "建立 catalog-export CI 检查、扩展 Playwright /components 走读，并更新 experience 文档关闭 Phase 2。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "scripts/check-catalog-export.mjs（或扩展现有 check）对齐 catalog 与 exports。",
+          "browser.spec.mjs 增加 /components 索引与代表性 demo 用例。",
+          "quality.yml 集成新检查；mcp-smoke 覆盖新 tools。",
+          "docs/experience/portal-and-mcp.md Phase 2 节；R-SWUI-002 状态更新。"
+        ],
+        "outOfScope": ["Storybook", "skywalker 强制下线"]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "researchEvidence": "R-SWUI-004 §4 catalog/fixture 漂移门禁",
+        "integrationSurface": ".github/workflows/quality.yml"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": ["S-SWQT-0013", "S-SWQT-0014"]
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "problemDefinition": "catalog demo 与 exports 可能漂移且无回归。",
+        "requirementsDefinition": "CI fail on drift；Playwright 覆盖主路径。",
+        "firstSlice": "check:catalog-export 在本地可运行。",
+        "readiness": { "readiness": "Yes", "reason": "0013/0014 完成后集成。" }
+      }
+    },
+    "implementation-record": { "sectionStatus": "not-applicable", "items": {} },
+    "use-case": { "sectionStatus": "not-applicable", "items": {} },
+    "review-report": { "sectionStatus": "not-applicable", "items": {} },
+    "delivered-registry-entry": { "sectionStatus": "not-applicable", "items": {} },
+    "completion-audit": { "sectionStatus": "not-applicable", "items": {} }
+  }
+}

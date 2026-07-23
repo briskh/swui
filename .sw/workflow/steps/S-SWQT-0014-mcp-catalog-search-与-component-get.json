@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 6,
+  "kind": "step",
+  "stepId": "S-SWQT-0014",
+  "status": "designed",
+  "overlay": { "state": "none" },
+  "links": [],
+  "title": "Step S-SWQT-0014: MCP catalog.search / component.get 与组件资源",
+  "sourceFeature": {
+    "id": "F-SWQT-0005",
+    "href": "../feature/F-SWQT-0005-门户全量组件-catalog-与-mcp-扩展.json"
+  },
+  "owner": "swui-maintainers",
+  "createdAt": "2026-07-23T05:35:00.000Z",
+  "updatedAt": "2026-07-23T05:35:00.000Z",
+  "supersedes": "N/A",
+  "nextHandoff": "implement",
+  "sections": {
+    "goal": {
+      "sectionStatus": "done",
+      "items": {
+        "statement": "扩展 swui MCP：swui.catalog.search、swui.component.get 与 swui://components/{name} resources。"
+      }
+    },
+    "scope": {
+      "sectionStatus": "done",
+      "items": {
+        "inScope": [
+          "server/handlers.ts 注册新 tools 与 resources。",
+          "从 catalog 索引生成 component 资源正文（export、variants、notes）。",
+          "mcp-smoke 扩展覆盖 search/get。"
+        ],
+        "outOfScope": ["swui.quality.getMatrix（可选 P1）", "stdio MCP"]
+      }
+    },
+    "inputs": {
+      "sectionStatus": "done",
+      "items": {
+        "researchEvidence": "R-SWUI-002 §7.2；F-SWQT-0004 MCP 基础",
+        "integrationSurface": "examples/portal/server/handlers.ts"
+      }
+    },
+    "dependencies": {
+      "sectionStatus": "done",
+      "items": {
+        "previousSteps": ["S-SWQT-0013"],
+        "projectResources": ["examples/portal/scripts/mcp-smoke.mjs"]
+      }
+    },
+    "implementation-ready-brief": {
+      "sectionStatus": "done",
+      "items": {
+        "problemDefinition": "Agent 无法结构化查询单个组件。",
+        "requirementsDefinition": "search 返回匹配条目；get 返回 export 详情。",
+        "firstSlice": "swui.component.get name=Button 返回 catalog 段落。",
+        "readiness": { "readiness": "Yes", "reason": "依赖 S-SWQT-0013 catalog 索引。" }
+      }
+    },
+    "implementation-record": { "sectionStatus": "not-applicable", "items": {} },
+    "use-case": { "sectionStatus": "not-applicable", "items": {} },
+    "review-report": { "sectionStatus": "not-applicable", "items": {} },
+    "delivered-registry-entry": { "sectionStatus": "not-applicable", "items": {} },
+    "completion-audit": { "sectionStatus": "not-applicable", "items": {} }
+  }
+}
