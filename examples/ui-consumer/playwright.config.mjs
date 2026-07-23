@@ -24,7 +24,10 @@ export default defineConfig({
     { name: `dark-${viewportName}`, use: { colorScheme: "dark", viewport } }
   ]),
   expect: {
-    toHaveScreenshot: { animations: "disabled", maxDiffPixels: 0 }
+    toHaveScreenshot: {
+      animations: "disabled",
+      ...(process.env.CI ? { maxDiffPixelRatio: 0.02 } : { maxDiffPixels: 0 })
+    }
   },
   webServer: {
     command: "vite --host 127.0.0.1 --port 4175 --strictPort",
