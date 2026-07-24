@@ -85,7 +85,7 @@ test("design summary renders component patterns as a table", async ({ page }) =>
   await expect(table).toBeVisible();
   await expect(table.getByRole("columnheader", { name: "Need" })).toBeVisible();
   await expect(table.getByRole("columnheader", { name: "Use" })).toBeVisible();
-  await expect(table.getByRole("row")).toHaveCount(15);
+  await expect(table.getByRole("row")).toHaveCount(16);
   await expect(page.getByText("| Need | Use |")).toHaveCount(0);
 });
 
@@ -231,6 +231,20 @@ test("source code and tty demos expose copy controls", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Copy" })).toBeVisible();
   await page.goto("/components/data-display/tty");
   await expect(page.getByRole("button", { name: "Copy" })).toBeVisible();
+});
+
+test("description list and copyable text demos expose detail fields", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/components/data-display/descriptionlist");
+  await expect(page.getByText("ada.lovelace")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Copy User ID" })).toBeVisible();
+  await expect(page.getByText("JSON", { exact: true })).toBeVisible();
+  await expect(page.getByText("openid")).toBeVisible();
+  await expect(page.getByText("—").first()).toBeVisible();
+  await expect(page.getByText("Compact · 1 column")).toBeVisible();
+
+  await page.goto("/components/data-display/copyabletext");
+  await expect(page.getByRole("button", { name: "Copy" })).toHaveCount(2);
 });
 
 test("form field demo renders labeled input", async ({ page }) => {

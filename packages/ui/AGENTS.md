@@ -36,9 +36,10 @@ Before implementing UI, actively consult `https://ui.swqt.net/colors`, `/typogra
 5. Theme: use one global `ThemeProvider`; `ThemeControl` owns system/light/dark preference and consumers must not mount a competing local theme controller.
 6. Toasts: use `Toaster` / `notify*` from this package only — no second Sonner wrapper.
 7. Dense tables: `DataTable` (client) vs `ServerDataTable` (server cursor) — do not overload one with the other. Use `WideScreenGate` for non-adaptable dense tables (`<=820px` gate).
-8. Do **not** expect product `AppShell` / `TopBar` / route IA in this package — those stay in each app.
-9. There is **no** separate `@swqt/ui-shell` package; import gate helpers from `@swqt/ui`.
-10. HTML-first: use standard elements and attributes when they satisfy the full behavior contract; do not repeat implicit roles or simulate controls with neutral elements. See `docs/HTML-STANDARDS.md`.
+8. Detail pages: list=`ServerDataTable`, fields=`DescriptionList`/`DescriptionItem`, JSON=`SourceCode`, IDs=`CopyableText`, nav=`Breadcrumb`. Do not hand-roll long-lived `dl`/grid forks or overload form `Field*`.
+9. Do **not** expect product `AppShell` / `TopBar` / route IA in this package — those stay in each app.
+10. There is **no** separate `@swqt/ui-shell` package; import gate helpers from `@swqt/ui`.
+11. HTML-first: use standard elements and attributes when they satisfy the full behavior contract; do not repeat implicit roles or simulate controls with neutral elements. See `docs/HTML-STANDARDS.md`.
 
 ## Import patterns
 

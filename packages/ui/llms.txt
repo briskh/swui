@@ -35,6 +35,7 @@
 ## Includes
 
 - Primitives (Button, forms, tables, overlays, …)
+- Detail fields: DescriptionList / DescriptionItem / DescriptionSection / CopyableText
 - WideScreenGate / WideScreenPlaceholder
 
 ## Not in this package

@@ -54,9 +54,13 @@ import {
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
+  CopyableText,
   DataTable,
   DatePicker,
   DateRangePresetPicker,
+  DescriptionItem,
+  DescriptionList,
+  DescriptionSection,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -612,6 +616,77 @@ export const componentDemos: Record<string, React.ComponentType> = {
         </div>
       </section>
     </DemoStack>
+  ),
+  DescriptionList: () => (
+    <DemoStack>
+      <section className="grid w-full max-w-3xl gap-3">
+        <h3 className="text-sm font-medium text-foreground">User / client summary</h3>
+        <DescriptionList>
+          <DescriptionItem label="Username">ada.lovelace</DescriptionItem>
+          <DescriptionItem label="Email">ada@example.com</DescriptionItem>
+          <DescriptionItem label="Status">
+            <Badge variant="success">Active</Badge>
+          </DescriptionItem>
+          <DescriptionItem label="User ID" mono copyable>
+            018f3c2a-9b1e-7d4c-8a2f-1e6b0c9d4a7e
+          </DescriptionItem>
+          <DescriptionItem label="Scopes" values={["openid", "profile", "email", "offline_access"]} />
+          <DescriptionItem label="Secondary email" />
+          <DescriptionItem label="Audit details" span="full">
+            <SourceCode
+              language="json"
+              maxHeightClassName="max-h-48"
+              value={`{
+  "event": "client.updated",
+  "actor": "admin@example.com",
+  "changes": ["redirect_uris", "scopes"]
+}`}
+            />
+          </DescriptionItem>
+        </DescriptionList>
+      </section>
+      <section className="grid w-full max-w-md gap-3">
+        <h3 className="text-sm font-medium text-foreground">Compact · 1 column</h3>
+        <DescriptionList columns={1} compact>
+          <DescriptionItem label="Client ID" mono copyable>
+            oauth_client_01HZX…
+          </DescriptionItem>
+          <DescriptionItem label="Grant types" values={["authorization_code", "refresh_token"]} />
+          <DescriptionItem label="Deleted at" empty="Never" />
+        </DescriptionList>
+      </section>
+    </DemoStack>
+  ),
+  DescriptionItem: () => (
+    <DescriptionList className="max-w-md" columns={1}>
+      <DescriptionItem label="Client ID" hint="Opaque public identifier" mono copyable>
+        0190abcd-ef12-3456-7890-abcdef012345
+      </DescriptionItem>
+      <DescriptionItem label="Redirect URIs" values={["https://app.example.com/callback"]} />
+    </DescriptionList>
+  ),
+  DescriptionSection: () => (
+    <DescriptionSection
+      className="max-w-3xl"
+      title="OAuth client"
+      description="Read-only summary fields for the selected client."
+    >
+      <DescriptionList>
+        <DescriptionItem label="Name">Portal public client</DescriptionItem>
+        <DescriptionItem label="Status">
+          <Badge variant="ready">Ready</Badge>
+        </DescriptionItem>
+        <DescriptionItem label="client_id" mono copyable>
+          0190abcd-ef12-3456-7890-abcdef012345
+        </DescriptionItem>
+      </DescriptionList>
+    </DescriptionSection>
+  ),
+  CopyableText: () => (
+    <DemoSection title="Inline copy">
+      <CopyableText value="0190abcd-ef12-3456-7890-abcdef012345" mono />
+      <CopyableText value="https://app.example.com/invite/abc" />
+    </DemoSection>
   ),
   Table: () => (
     <Table>

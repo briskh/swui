@@ -41,6 +41,8 @@ Import from `@swqt/ui` or `@swqt/ui/<name>`.
 | Export | Notes |
 |--------|--------|
 | `Card` (+ header/content/title helpers) | Panels. |
+| `DescriptionList` `DescriptionItem` `DescriptionSection` | Read-only detail field grid (`dl`/`dt`/`dd`); sections are plain titled partitions. |
+| `CopyableText` | Inline value + icon-compact copy (no toast; aligns with `SourceCode`). |
 | `SourceCode` | Source snippets; language label, syntax highlighting, copy icon. |
 | `TtyLine` | Single-line shell snippet; dark canvas, syntax highlighting, copy without prompt. |
 | `Tty` | Multi-line shell session / log; same copy rules as `TtyLine`. |

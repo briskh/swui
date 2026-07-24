@@ -32,7 +32,7 @@ describe("sync-docs", () => {
     expect(
       JSON.parse(readFileSync(join(portalDir, ".generated/release-versions.json"), "utf8"))
     ).toEqual({
-      "@swqt/ui": "1.1.0",
+      "@swqt/ui": "1.2.0",
       "@swqt/ui-tokens": "1.1.0"
     });
   });

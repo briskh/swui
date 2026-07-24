@@ -38,6 +38,20 @@ export function App({ children }: { children: React.ReactNode }) {
 
 `ThemeProvider` supports `system`, `light`, and `dark` preferences. For applications that render their document head, place `themeInitializationScript` inline before the application bundle to prevent an initial color flash.
 
+## Detail page pattern
+
+For admin list → detail flows:
+
+| Surface | Use |
+|---------|-----|
+| Dense list | `ServerDataTable` (+ `WideScreenGate` when non-adaptable) |
+| Detail fields | `DescriptionList` / `DescriptionItem` / `DescriptionSection` |
+| UUID / client_id / URLs | `CopyableText` or `DescriptionItem copyable` |
+| JSON / JWKS / audit payload | `SourceCode` (full-span item; pretty-print in the caller) |
+| Navigation | `Breadcrumb` / `BreadcrumbTrail` |
+
+Keep product `PageHeader`, routes, permissions, and edit `Dialog`s in the app. Do not build a parallel detail-field grid in the consumer.
+
 ## AI docs inside the installed package
 
 After install, agents should read from `node_modules/@swqt/ui/`:

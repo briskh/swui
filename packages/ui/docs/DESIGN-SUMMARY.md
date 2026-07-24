@@ -33,6 +33,7 @@ Consumer-facing design intent. Token **values** live in `@swqt/ui-tokens`.
 | Static table | `Table` + `ScrollArea` / `Pagination` |
 | Client sort/filter/select | `DataTable` |
 | Server search/sort/cursor | `ServerDataTable` |
+| Detail page fields | `DescriptionList` + `DescriptionItem` (+ optional `DescriptionSection`); IDs via `CopyableText` / `copyable`; JSON via `SourceCode` |
 | Failures | `Alert` (default / destructive / success / warning) |
 | Status labels | `Badge` (incl. success / warning / destructive / outline) · `Chip` · `InlineNotice` |
 | Empty | `Empty` (`zero-data` / …) · `EmptyState` (simple card wrapper) |

@@ -17,7 +17,7 @@ const client = await import("@modelcontextprotocol/sdk/client/index.js").then(({
 await client.connect(clientTransport);
 if (
   client.getServerVersion()?.name !== "swui" ||
-  client.getServerVersion()?.version !== "1.1.0" ||
+  client.getServerVersion()?.version !== "1.2.0" ||
   !client.getInstructions()?.includes("swui://packages/ui/llms.txt")
 ) {
   throw new Error("initialize response is missing the swui identity or first-hop instructions");
@@ -78,7 +78,7 @@ const packageResult = await client.callTool({
 const packageText = packageResult.content?.[0]?.type === "text" ? packageResult.content[0].text : "";
 if (
   !packageText.includes('"resolvedVersion": "1.0.0"') ||
-  !packageText.includes('"sourceVersion": "1.1.0"') ||
+  !packageText.includes('"sourceVersion": "1.2.0"') ||
   !packageText.includes('"releaseStatus": "source-ahead"') ||
   !packageResult.structuredContent
 ) {

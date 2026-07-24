@@ -39,7 +39,7 @@ describe("mcp tool payloads", () => {
     expect(payload.package?.isLatest).toBe(false);
     expect(payload.meta.stale).toBe(false);
     expect(payload.meta.source).toBe("fixture");
-    expect(payload.sourceVersion).toBe("1.1.0");
+    expect(payload.sourceVersion).toBe("1.2.0");
     expect(payload.sourcePublished).toBe(false);
     expect(payload.releaseStatus).toBe("source-ahead");
 
@@ -128,7 +128,7 @@ describe("mcp tool payloads", () => {
 
   test("exposes a small static first hop and one component resource template", async () => {
     expect(client.getServerVersion()?.name).toBe("swui");
-    expect(client.getServerVersion()?.version).toBe("1.1.0");
+    expect(client.getServerVersion()?.version).toBe("1.2.0");
     expect(client.getInstructions()).toContain("swui://packages/ui/llms.txt");
     expect(client.getInstructions()).toContain("swui://packages/ui/docs/HTML-STANDARDS.md");
     expect(client.getInstructions()).toContain("https://ui.swqt.net/icons");
