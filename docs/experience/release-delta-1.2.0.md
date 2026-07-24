@@ -31,10 +31,18 @@ import {
 | npm `@swqt/ui-tokens` | still `1.1.0` |
 | Production Portal / MCP | unchanged until separately authorized deploy |
 
-## Verification (2026-07-24 pre-publish)
+## Verification (2026-07-24)
+
+**Pre-publish**
 
 - `sync-docs` / `sync-docs:check` / `check:catalog-export` / `check:design-contract`: passed
 - `pack` + `check:npm-publish-audit`: **0 blocking**, 4 reviewed public service URL warnings
 - Portal unit tests: passed
 - `example:build` + `portal:build`: passed
 - `verify:packed-consumer`: nested and workspace-hoisted each **34 passed / 6 declared skips**; shipped docs byte-match SSOT
+
+**Post-publish (outside-in)**
+
+- GitHub Release [`v1.2.0`](https://github.com/briskh/swui/releases/tag/v1.2.0) → Actions `publish-npm.yml` succeeded (`+ @swqt/ui@1.2.0`, provenance published)
+- Registry (after CDN lag): `npm view @swqt/ui version` → **1.2.0**; `@swqt/ui-tokens` → **1.1.0**
+- Package: https://www.npmjs.com/package/@swqt/ui
